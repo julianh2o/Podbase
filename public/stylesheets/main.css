@@ -1,4 +1,23 @@
+li {
+	list-style: none;
+}
+
 .created {
 	font-size: 80%;
 	color: grey;
+}
+
+ul.bordered li {
+	border: 1px solid #3333ff;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	padding: 5px;
+	width: 600px;
+	margin: 3px;
+}
+
+select#browser {
+	display: block;
+	width: 400px;
+	height: 400px;
 }

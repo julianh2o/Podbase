@@ -36,8 +36,14 @@ public class ImageBrowser extends Controller {
 		File f = new File(PodbaseUtil.concatenatePaths(root,path));
 		if (!canAccessFile(f)) forbidden();
 		
+		
 		File[] files = f.listFiles();
-		renderJSON(files);
+		FileWrapper[] fileWrappers = new FileWrapper[files.length];
+		for (int i = 0; i<files.length; i++) {
+			fileWrappers[i] = new FileWrapper(getRootDirectory(),files[i]);
+		}
+		
+		renderJSON(fileWrappers);
 	}
 	
 	public static void script() {
