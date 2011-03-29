@@ -21,8 +21,12 @@ public class ImageBrowser extends Controller {
 	
 	protected static boolean canAccessFile(File f) {
 		String root = getRootDirectory();
-		String path = f.getAbsolutePath();
-		if (path.startsWith(root)) return true;
+		try {
+			String path = f.getCanonicalPath();
+			if (path.startsWith(root)) return true;
+		} catch (Exception e) {
+			return false;
+		}
 		return false;
 	}
 	
@@ -30,7 +34,7 @@ public class ImageBrowser extends Controller {
 		String root = getRootDirectory();
 		
 		File f = new File(PodbaseUtil.concatenatePaths(root,path));
-		if (!canAccessFile(f)) error("Invalid path");
+		if (!canAccessFile(f)) forbidden();
 		
 		File[] files = f.listFiles();
 		renderJSON(files);
