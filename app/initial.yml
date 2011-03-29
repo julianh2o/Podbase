@@ -1,0 +1,5 @@
+Project(p1):
+    name: My Cool Project
+ 
+Project(p2):
+    name: My other cool project

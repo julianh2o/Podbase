@@ -1,0 +1,8 @@
+Model Annotations:
+@PostLoad
+@PostPersist
+@PostRemove
+@PostUpdate
+@PrePersist
+@PreRemove
+@PreUpdate 

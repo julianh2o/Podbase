@@ -1,0 +1,6 @@
+tmp
+logs
+*.log
+eclipse
+.project
+.classpath

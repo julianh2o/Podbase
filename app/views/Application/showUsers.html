@@ -1,0 +1,8 @@
+#{extends 'main.html' /}
+#{set title:'Project Listing' /}
+
+<h1>Users</h1>
+
+#{list items:users, as:'user'}
+	${user.email} (${user.created})<br/>
+#{/list}

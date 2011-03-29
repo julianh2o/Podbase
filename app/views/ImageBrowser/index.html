@@ -1,0 +1,16 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+#{set 'moreScripts'}
+	<script src="@{ImageBrowser.script}" type="text/javascript" charset="utf-8"> </script>
+#{/set}
+
+
+<h1>Image Browser</h1>
+
+<input type="text" id="pathField" />
+<button id="button">Click Me</button>
+<div id="browser">
+
+</div>
+
+<a href="@{Application.showProjects}">Projects</a>

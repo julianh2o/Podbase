@@ -1,0 +1,26 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET     /                                       Application.index
+GET     /users   	                            Application.showUsers
+GET     /projects                               Application.showProjects
+*       /project/delete/{name}                  Application.createProject
+*       /project/delete/{name}                  Application.deleteProject
+GET     /project/{id}                           Application.showProject
+
+GET		/browser								ImageBrowser.index
+
+
+# Import CRUD routes
+*      	/admin									module:crud
+
+# Import Secure routes
+*      /  						                module:secure
+
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/                                staticDir:public
+
+# Catch all
+*       /{controller}/{action}                  {controller}.{action}
