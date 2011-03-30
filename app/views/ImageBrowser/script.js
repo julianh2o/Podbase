@@ -26,7 +26,7 @@ new function($) {
 		}
 	}
 	
-	function FileBrowser(path) {
+	function FileBrowser(select,path) {
 		this.path = path;
 		this.directoryCache = new Cache();
 		
@@ -57,6 +57,18 @@ new function($) {
 			});
 		}
 		
+		this.selectionChanged = function(event) {
+			var select = event.target;
+			var option = select.options[select.selectedIndex];
+			var file = $(option).data("file");
+			if (!file.isDir) {
+				console.log("file: "+file.path);
+				$("#selected").empty();
+				$("#selected").append("<img src='/data"+file.path+"'")
+			}
+		}
+		select.change(this.selectionChanged);
+		
 		this.optionTriggered = function(event) {
 			var that = event.data.browser;
 			var option = event.target;
@@ -67,8 +79,8 @@ new function($) {
 		}
 	}
 	
-	browser = new FileBrowser("/");
 	$(document).ready(function() {
+		browser = new FileBrowser($("#browser"),"/");
 		$("#button").click(function() {
 			browser.loadPath($("#pathField").val());
 		}).click();
