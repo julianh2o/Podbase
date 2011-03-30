@@ -33,17 +33,17 @@ new function($) {
 		this.loadPath = function(path) {
 			this.path = path;
 			if (this.directoryCache.has(path)) {
-				this.loadFiles(this.directoryCache.get(path));
+				this.loadFiles(path,this.directoryCache.get(path));
 			} else {
 				var that = this;
 				$.post("@{ImageBrowser.fetch()}",{path:path},function(files) {
 					that.directoryCache.put(path,files);
-					that.loadFiles(files);
+					that.loadFiles(path,files);
 				},'json');
 			}
 		}
 		
-		this.loadFiles = function(files) {
+		this.loadFiles = function(path,files) {
 			var that = this;
 			$("#browser").empty();
 			
@@ -61,7 +61,9 @@ new function($) {
 			var that = event.data.browser;
 			var option = event.target;
 			var file = $(option).data("file");
-			that.loadPath(file.path);
+			if (file.isDir) {
+				that.loadPath(file.path);
+			}
 		}
 	}
 	

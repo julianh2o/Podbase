@@ -10,6 +10,7 @@ GET     /projects                               Application.showProjects
 GET     /project/{id}                           Application.showProject
 
 GET		/browser								ImageBrowser.index
+*		/data/{<.*>path}						ImageBrowser.resolveFile
 
 
 # Import CRUD routes
