@@ -1,8 +1,19 @@
-new function($) {
-	var Util = {
+var ImageBrowser = function($) {
+	String.prototype.endsWith = function(suffix) {
+	    return this.indexOf(suffix, this.length - suffix.length) !== -1;
+	};
+
+	this.Util = {
 		getFileName : function(path) {
 			var tokens = path.split("/");
 			return tokens[tokens.length-1];
+		},
+		getParentDirectory : function(path) {
+			if (path.endsWith("/")) {
+				path = path.substr(0,path.length-2);
+			}
+			var index = path.lastIndexOf("/");
+			return path.substr(0,index);
 		}
 	}
 	
@@ -45,15 +56,29 @@ new function($) {
 		
 		this.loadFiles = function(path,files) {
 			var that = this;
-			$("#browser").empty();
 			
-			$.each(files,function() {
+			function renderOption(file) {
 				var option = new Option();
-				option.text = Util.getFileName(this.path)+(this.isDir?"/":"");
-				option.value = this.path;
-				$(option).data("file",this)
+				
+				if (file.display) {
+					option.text = file.display;
+				} else {
+					option.text = Util.getFileName(file.path)+(file.isDir?"/":"");
+				}
+				
+				option.value = file.path;
+				$(option).data("file",file)
 				$(option).bind('dblclick',{browser: that},that.optionTriggered)
 				$("#browser").append(option);
+			}
+			
+			$("#browser").empty();
+			if (path != "") {
+				var parent = {display:"../",path:Util.getParentDirectory(path),isDir:true};
+				renderOption(parent);
+			}
+			$.each(files,function() {
+				renderOption(this);
 			});
 		}
 		
@@ -62,9 +87,10 @@ new function($) {
 			var option = select.options[select.selectedIndex];
 			var file = $(option).data("file");
 			if (!file.isDir) {
-				console.log("file: "+file.path);
+				$("#selected").hide();
 				$("#selected").empty();
 				$("#selected").append("<img src='/data"+file.path+"'")
+				$("#selected").show();
 			}
 		}
 		select.change(this.selectionChanged);
@@ -86,7 +112,5 @@ new function($) {
 		}).click();
 	});
 	
-	
-	
-	
-}(jQuery);
+};
+ImageBrowser(jQuery);
