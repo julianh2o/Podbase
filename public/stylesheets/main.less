@@ -1,0 +1,90 @@
+li {
+	list-style: none;
+}
+
+.left {
+	float: left;
+}
+
+.clear {
+	clear: both;
+}
+
+
+/********** Main panel **********/
+@panelHeaderColor: #0052A3;
+@panelBorderColor: #999999;
+@panelBorderSize: 1px;
+@panelBorderRadius: .8em;
+
+.panel {
+	margin: .4em;
+	.head {
+		border: @panelBorderSize solid;
+		border-bottom: none;
+		border-color: @panelHeaderColor;
+		border-top-left-radius: @panelBorderRadius;
+		border-top-right-radius: @panelBorderRadius;
+		-moz-border-radius-topleft: @panelBorderRadius;
+		-moz-border-radius-topright: @panelBorderRadius;
+			
+		background: @panelHeaderColor;
+		padding: .4em .6em;
+		color: white;
+		font-weight: bold;
+		font-size: 120%;
+	}
+	
+	.body {
+		border: @panelBorderSize solid;
+		border-top: none;
+		border-color: @panelBorderColor;
+		//border-bottom-left-radius: @panelBorderRadius;
+		//border-bottom-right-radius: @panelBorderRadius;
+		//-moz-border-radius-bottomleft: @panelBorderRadius;
+		//-moz-border-radius-bottomright: @panelBorderRadius;
+	}
+}
+
+/********** Sub panel **********/
+@subPanelHeaderColor: #5C85AD;
+@subPanelBorderColor: #000000;
+@subPanelBorderSize: 1px;
+@subPanelBorderRadius: .6em;
+.subpanel {
+	margin: .3em;
+	.head {
+		border: @subPanelBorderSize solid;
+		border-bottom: none;
+		border-color: @subPanelBorderColor;
+		border-top-left-radius: @subPanelBorderRadius;
+		border-top-right-radius: @subPanelBorderRadius;
+		-moz-border-radius-topleft: @subPanelBorderRadius;
+		-moz-border-radius-topright: @subPanelBorderRadius;
+			
+		background: @subPanelHeaderColor;
+		padding: .2em .4em;
+		color: white;
+		font-weight: bold;
+		font-size: 105%;
+	}
+	
+	.body {
+		min-height: 2em;
+		border: @subPanelBorderSize solid;
+		border-top: none;
+		border-color: @subPanelBorderColor;
+		//border-bottom-left-radius: @subPanelBorderRadius;
+		//border-bottom-right-radius: @subPanelBorderRadius;
+		//-moz-border-radius-bottomleft: @subPanelBorderRadius;
+		//-moz-border-radius-bottomright: @subPanelBorderRadius;
+	}
+}
+
+
+/********** User list **********/
+.created {
+	font-size: 80%;
+	color: grey;
+}
+

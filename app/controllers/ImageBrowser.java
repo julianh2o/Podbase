@@ -45,9 +45,13 @@ public class ImageBrowser extends Controller {
 		String root = getRootDirectory();
 		
 		File f = new File(PodbaseUtil.concatenatePaths(root,path));
-		if (!canAccessFile(f)) forbidden();
+		while(!f.isDirectory()) f = f.getParentFile();
 		
+		if (!f.exists()) error("File not Found");
+		if (!canAccessFile(f)) forbidden();
+	
 		File[] files = f.listFiles();
+		if (files == null || files.length == 0) error("No contents");
 		FileWrapper[] fileWrappers = new FileWrapper[files.length];
 		for (int i = 0; i<files.length; i++) {
 			fileWrappers[i] = new FileWrapper(getRootDirectory(),files[i]);
@@ -85,8 +89,14 @@ public class ImageBrowser extends Controller {
 	
 	public static void fetchInfo(String path) {
 		DatabaseImage image = DatabaseImage.find("byPath", path).first();
+		List<ImageAttribute> attributes;
+		
+		if (image == null)
+			attributes = new LinkedList<ImageAttribute>();
+		else 
+			attributes = image.attributes;
 		
 	    Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-	    renderJSON(gson.toJson(image.attributes));  
+	    renderJSON(gson.toJson(attributes));  
 	}
 }
