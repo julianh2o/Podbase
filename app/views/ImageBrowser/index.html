@@ -3,15 +3,38 @@
 #{set 'moreScripts'}
 	<script src="@{ImageBrowser.script}" type="text/javascript" charset="utf-8"> </script>
 #{/set}
+#{set 'moreStyles'}
+	<link rel="stylesheet" href="@{'public/stylesheets/imagebrowser.less'}" type="text/css" charset="utf-8"> </style>
+#{/set}
 
 
-<h1>Image Browser</h1>
 
-<input type="text" id="pathField" />
-<button id="button">Click Me</button>
-<select multiple id="browser">
-
-</select>
-<div id="selected"> </div>
-
-<a href="@{Application.showProjects}">Projects</a>
+<div id="imagebrowser" class="panel">
+	<div class="head">
+	Image Browser
+	</div>
+	<div class="body">
+		<div id="leftcolumn" class="left">
+			<div class="subpanel">
+				<div class="head">Browse</div>
+				<div class="body">
+					<select multiple id="browser"></select>
+				</div>
+			</div>
+			
+			<div class="subpanel">
+				<div class="head">Preview</div>
+				<div class="body">
+					<div id="preview"></div>
+				</div>
+			</div>
+		</div>
+	
+		<div class="left">
+			<div class="subpanel">
+			<div class="head">Metadata</div>
+			<div id="metadata" class="body"></div>
+			</div>
+		</div>
+	</div>
+</div>

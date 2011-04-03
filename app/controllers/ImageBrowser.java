@@ -14,6 +14,9 @@ import java.util.*;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import models.*;
 import util.*;
 
@@ -64,7 +67,7 @@ public class ImageBrowser extends Controller {
 		try {
 			image = ImageIO.read(imageFile);
 			
-			image = PodbaseUtil.scaleImageToFit(image,500,500);
+			image = PodbaseUtil.scaleImageToFit(image,300,300);
 
 			//ImageInputStream is = ImageIO.createImageInputStream(image);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -79,4 +82,11 @@ public class ImageBrowser extends Controller {
 		}
 	}
 
+	
+	public static void fetchInfo(String path) {
+		DatabaseImage image = DatabaseImage.find("byPath", path).first();
+		
+	    Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+	    renderJSON(gson.toJson(image.attributes));  
+	}
 }

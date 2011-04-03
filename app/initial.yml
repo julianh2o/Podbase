@@ -3,3 +3,11 @@ Project(p1):
  
 Project(p2):
     name: My other cool project
+
+DatabaseImage(img):
+    path: /alana/1.png
+
+ImageAttribute(attr):
+    image: img
+    attribute: foo
+    value: bar

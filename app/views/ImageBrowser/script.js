@@ -67,13 +67,14 @@ var ImageBrowser = function($) {
 				}
 				
 				option.value = file.path;
+				option.title = file.path;
 				$(option).data("file",file)
 				$(option).bind('dblclick',{browser: that},that.optionTriggered)
 				$("#browser").append(option);
 			}
 			
 			$("#browser").empty();
-			if (path != "") {
+			if (path != "" && path != "/") {
 				var parent = {display:"../",path:Util.getParentDirectory(path),isDir:true};
 				renderOption(parent);
 			}
@@ -87,10 +88,20 @@ var ImageBrowser = function($) {
 			var option = select.options[select.selectedIndex];
 			var file = $(option).data("file");
 			if (!file.isDir) {
-				$("#selected").hide();
-				$("#selected").empty();
-				$("#selected").append("<img src='/data"+file.path+"'")
-				$("#selected").show();
+				$("#preview").hide();
+				$("#preview").empty();
+				$("#preview").append("<img src='/data"+file.path+"'>");
+				$("#preview").show();
+				
+				$.post("@{ImageBrowser.fetchInfo()}",{path:file.path},function(attributes) {
+					$("#metadata").empty();
+					var html = "<table>";
+					$.each(attributes,function(){
+						html += "<tr><td>"+this.attribute+"</td><td>"+this.value+"</td></tr>";
+					});
+					html += "</table>";
+					$("#metadata").append(html);
+				},'json');
 			}
 		}
 		select.change(this.selectionChanged);
@@ -107,9 +118,7 @@ var ImageBrowser = function($) {
 	
 	$(document).ready(function() {
 		browser = new FileBrowser($("#browser"),"/");
-		$("#button").click(function() {
-			browser.loadPath($("#pathField").val());
-		}).click();
+		browser.loadPath("/");
 	});
 	
 };

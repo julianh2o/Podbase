@@ -11,6 +11,7 @@ public class Project extends TimestampModel {
 	public String name;
 
 	public Project(String name) {
+		super();
 		this.name = name;
 	}
 }

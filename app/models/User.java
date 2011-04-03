@@ -17,6 +17,7 @@ public class User extends TimestampModel {
 	public String password;
 	
 	public User(String email, String password) {
+		super();
 		this.email = email;
 		setCleartextPassword(password);
 	}
