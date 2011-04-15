@@ -2,6 +2,28 @@ var ImageBrowser = function($) {
 	String.prototype.endsWith = function(suffix) {
 	    return this.indexOf(suffix, this.length - suffix.length) !== -1;
 	};
+	
+	this.HashHandler = (function() {
+		var internalHash = window.location.hash;
+		$(document).ready(function() {
+			$(window).hashchange(function() {
+				var newHash = window.location.hash.substring(1);
+				if (internalHash == newHash) return;
+				
+				internalHash = newHash;
+				$(window).trigger("hashEdited",newHash);
+			});
+		});
+		
+		
+		return ({
+			setHash : function(hash) {
+				internalHash = hash;
+				window.location.hash = hash;
+			}
+		})
+		
+	})();
 
 	this.Util = {
 		getFileName : function(path) {
@@ -122,7 +144,8 @@ var ImageBrowser = function($) {
 		}
 		
 		this.optionSelected = function(option) {
-			window.location.hash = option.value;
+			HashHandler.setHash(option.value);
+			
 			var file = $(option).data("file");
 			if (!file.isDir) {
 				$("#preview").hide();
@@ -130,15 +153,35 @@ var ImageBrowser = function($) {
 				$("#preview").append("<img src='/data"+file.path+"'>");
 				$("#preview").show();
 				
+				
 				$("#metadata").empty();
+				
+				var table = $("<table><tbody /><tfoot /></table>");
+				$("#metadata").append(table);
+				var container = table.find("tbody");
+				
 				$.post("@{ImageBrowser.fetchInfo()}",{path:file.path},function(attributes) {
-					var html = "<table>";
 					$.each(attributes,function(){
-						html += "<tr><td>"+this.attribute+"</td><td>"+this.value+"</td></tr>";
+						var at = new ImageAttribute(this,true);
+						container.append(at.element);
 					});
-					html += "</table>";
-					$("#metadata").append(html);
 				},'json');
+				
+				var addnew = $("<tr><td colspan=2><a /></td></tr>")
+				var a = addnew.find("a")
+				a.html("Add new attribute");
+				a.attr("href","#");
+				a.click(function() {
+					var attribute = prompt("Attribute name");
+					if (attribute == "") return false;
+					$.post("@{ImageBrowser.createAttribute()}",{path:file.path,attribute:attribute,value:""},function(attribute) {
+						console.log(attribute);
+						var imageAttribute = new ImageAttribute(attribute,true);
+						$("#metadata").find("tbody").append(imageAttribute.element);
+					},'json');
+					return false;
+				});
+				table.find("tfoot").append(addnew);
 			}
 		}
 		select.change(this.selectionChanged);
@@ -153,20 +196,81 @@ var ImageBrowser = function($) {
 		}
 	}
 	
+	function ImageAttribute(dbo,editmode) {
+		this.dbo = dbo;
+		this.editmode = editmode;
+		this.element = this.render();
+		
+		var that = this;
+	}
+	
+	ImageAttribute.prototype = {
+		render : function() {
+			var row = $("<tr><td class='attribute'></td><td class='value'></td></tr>");
+			var attr = row.find(".attribute");
+			this.renderAttribute(attr,this.editmode);
+			var val = row.find(".value");
+			this.renderValue(val,this.editmode);
+			return row;
+		},
+		
+		refresh : function() {
+			this.renderAttribute(this.element.find(".attribute"),this.editmode);
+			this.renderValue(this.element.find(".value"),this.editmode);
+		},
+		
+		renderAttribute : function(element,editmode) {
+			element.html(this.dbo.attribute);
+		},
+		
+		renderValue : function(element,editmode) {
+			element.unbind("click");
+			if (editmode) {
+				var input = $("<input />");
+				input.val(this.dbo.value);
+				element.empty().append(input);
+				input.bind("blur",{that:this},this.handleValueBlur);
+			} else {
+				element.html(this.dbo.value);
+				element.bind("click",{that:this},this.handleValueClick);
+			}
+		},
+	
+		handleValueClick : function(event) {
+			var that = event.data.that;
+			if (that.editmode) {
+				that.editmode = false;
+			} else {
+				that.editmode = true;
+			}
+			that.refresh();
+		},
+		
+		handleValueBlur : function(event) {
+			var that = event.data.that;
+			that.value = this.value;
+			that.saveAttribute();
+		},
+		
+		saveAttribute : function(event) {
+			$.post("@{ImageBrowser.updateAttribute()}",{id:this.dbo.id,value:this.value},function(attribute) {
+			},'json');
+		}
+	}
+	
 	var browser;
 	function loadCurrentPath() {
 		var pageParameters = Util.parseLocationHash();
 		var path = pageParameters[" "];
-		if (path == "") {
+		if (path == "" || path == undefined) {
 			path = "/";
 		}
 		browser.loadPath(path);
 	}
 	
 	$(document).ready(function() {
-		$(window).hashchange(function() {
-			console.log("hash changed: "+location.hash);
-			//loadCurrentPath();
+		$(window).bind('hashEdited',function(str) {
+			loadCurrentPath();
 		});
 		
 		browser = new FileBrowser($("#browser"),"/");

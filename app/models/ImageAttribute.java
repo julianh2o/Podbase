@@ -10,12 +10,11 @@ import com.google.gson.annotations.Expose;
 
 @Entity
 public class ImageAttribute extends TimestampModel {
-	@Expose
 	public String attribute;
-	@Expose
 	public String value;
 	
 	@ManyToOne
+	@GsonTransient
 	public DatabaseImage image;
 	
 	public ImageAttribute(DatabaseImage image, String attribute, String value) {

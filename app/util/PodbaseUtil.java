@@ -4,6 +4,13 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
+import models.GsonTransient;
+
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 public class PodbaseUtil {
 	public static String concatenatePaths(String path, String rel) {
 		String sep = "/";
@@ -53,5 +60,20 @@ public class PodbaseUtil {
 		graphics2D.dispose();
 	
 		return scaled;
+	}
+	
+	public static Gson getGsonExcludesGsonTransient() {
+    	Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
+			@Override
+			public boolean shouldSkipClass(Class<?> arg0) {
+				return false;
+			}
+
+			@Override
+			public boolean shouldSkipField(FieldAttributes field) {
+				GsonTransient annotation = field.getAnnotation(GsonTransient.class);
+				return annotation != null;
+			}}).create();
+    	return gson;
 	}
 }

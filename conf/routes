@@ -4,12 +4,17 @@
 
 GET     /                                       Application.index
 GET     /users   	                            Application.showUsers
-GET     /projects                               Application.showProjects
-*       /project/delete/{name}                  Application.createProject
-*       /project/delete/{name}                  Application.deleteProject
-GET     /project/{id}                           Application.showProject
+GET     /project                                Application.listProjects
+*       /project/create/{name}                  Application.createProject
+*       /project/delete/{projectId}             Application.deleteProject
+GET     /project/{projectId}                    Application.showProject
+
+GET		/template/?								TemplateManager.index
+GET		/template/{projectId}					TemplateManager.listTemplates
+GET		/template/{projectId}/{templateId}		TemplateManager.showTemplate
 
 GET		/browser								ImageBrowser.index
+GET		/browser/{projectId}					ImageBrowser.projectIndex
 *		/data/{<.*>path}						ImageBrowser.resolveFile
 
 

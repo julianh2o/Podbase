@@ -19,26 +19,38 @@ public class Application extends Controller {
     	render(users);
     }
     
-    public static void showProjects() {
+    public static void listProjects() {
     	List<Project> projects = Project.findAll();
     	render(projects);
     }
     
-    public static void showProject(Long id) {
-    	Project project = Project.findById(id);
+    public static void showProject(long projectId) {
+    	Project project = Project.findById(projectId);
     	render(project);
     }
     
     public static void createProject(String name) {
     	Project project = new Project(name);
     	project.save();
-    	showProjects();
+    	listProjects();
     }
     
-    public static void deleteProject(Long id) {
-    	Project project = Project.findById(id);
+    public static void deleteProject(long projectId) {
+    	Project project = Project.findById(projectId);
     	project.delete();
-    	showProjects();
+    	listProjects();
+    }
+    
+    public static void addDirectory(long projectId, String path) {
+    	Project project = Project.findById(projectId);
+    	project.addDirectory(path);
+    	showProject(project.id);
+    }
+    
+    public static void removeDirectory(long directoryId) {
+    	Directory directory = Directory.findById(directoryId);
+    	directory.delete();
+    	showProject(directory.project.id);
     }
     
     public static void logout() {

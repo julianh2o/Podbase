@@ -9,11 +9,16 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.util.*;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -23,7 +28,14 @@ import util.*;
 public class ImageBrowser extends Controller {
 	
 	public static void index() {
+		System.out.println("Here!");
 		render();
+	}
+	
+	public static void projectIndex(long projectId) {
+		Project project = Project.findById(projectId);
+		System.out.println("projectIndex: "+projectId);
+		renderTemplate("ImageBrowser/index.html", project);
 	}
 	
 	protected static String getRootDirectory() {
@@ -52,6 +64,9 @@ public class ImageBrowser extends Controller {
 	
 		File[] files = f.listFiles();
 		if (files == null || files.length == 0) error("No contents");
+		
+		Arrays.sort(files);
+		
 		FileWrapper[] fileWrappers = new FileWrapper[files.length];
 		for (int i = 0; i<files.length; i++) {
 			fileWrappers[i] = new FileWrapper(getRootDirectory(),files[i]);
@@ -85,10 +100,14 @@ public class ImageBrowser extends Controller {
 			error(e);
 		}
 	}
-
+	
+	protected static void renderJSON(Object o) {
+	    Gson gson = PodbaseUtil.getGsonExcludesGsonTransient();
+	    renderJSON(gson.toJson(o));  
+	}
 	
 	public static void fetchInfo(String path) {
-		DatabaseImage image = DatabaseImage.find("byPath", path).first();
+		DatabaseImage image = DatabaseImage.find("path", path).first();
 		List<ImageAttribute> attributes;
 		
 		if (image == null)
@@ -96,7 +115,25 @@ public class ImageBrowser extends Controller {
 		else 
 			attributes = image.attributes;
 		
-	    Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-	    renderJSON(gson.toJson(attributes));  
+	    renderJSON(attributes);  
+	}
+	
+	public static void createAttribute(String path, String attribute, String value) {
+		DatabaseImage image = DatabaseImage.find("path",path).first();
+		ImageAttribute attr = image.addAttribute(attribute, value);
+		renderJSON(attr);
+	}
+	
+	public static void updateAttribute(long id, String value) {
+		ImageAttribute attribute = ImageAttribute.findById(id);
+		attribute.value = value;
+		attribute.save();
+		renderJSON(attribute);
+	}
+	
+	public static void deleteAttribute(long id) {
+		ImageAttribute attribute = ImageAttribute.findById(id);
+		attribute.delete();
+		ok();
 	}
 }

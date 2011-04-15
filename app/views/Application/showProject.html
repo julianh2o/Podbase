@@ -2,3 +2,19 @@
 #{set title:'Project Listing' /}
 
 <h1>Project: ${project.name}</h1>
+
+<ul>
+	#{list items:project.directories, as:'directory'}
+		<li>
+			#{objectRender directory /}
+			<a href="@{Application.removeDirectory(directory.id)}">Remove</a>
+		</li>
+	#{/list}
+</ul>
+
+#{form @Application.addDirectory()}
+	<input type="hidden" name="projectId" value="${project.id}" />
+	
+	Path: <input type="text" name="path" />
+	<input type="submit" value="Add Directory" />
+#{/form}

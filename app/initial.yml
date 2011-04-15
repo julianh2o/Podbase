@@ -1,5 +1,13 @@
 Project(p1):
     name: My Cool Project
+
+Directory(d1):
+    project: p1
+    path: /alana
+    
+Directory(d2):
+    project: p1
+    path: /julian
  
 Project(p2):
     name: My other cool project
@@ -11,3 +19,19 @@ ImageAttribute(attr):
     image: img
     attribute: foo
     value: bar
+    
+Template(t1):
+    project: p1
+    name: my cool template
+
+TemplateAttribute(a1):
+    template: t1
+    name: Name
+    
+TemplateAttribute(a2):
+    template: t1
+    name: Magnification
+    
+TemplateAttribute(a3):
+    template: t1
+    name: Species
