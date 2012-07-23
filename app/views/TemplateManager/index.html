@@ -1,0 +1,38 @@
+#{extends 'main.html' /}
+#{set title:'TemplateManager' /}
+#{set 'moreScripts'}
+	<script src="@{TemplateManager.script}" type="text/javascript" charset="utf-8"> </script>
+	<script src="@{'public/javascripts/jquery.hash.js'}" type="text/javascript" charset="utf-8"> </script>
+	<script type="text/javascript">
+		var projectId = ${project?project.id:'null'};
+	</script>
+#{/set}
+#{set 'moreStyles'}
+	<link rel="stylesheet" href="@{'public/stylesheets/templatemanager.less'}" type="text/css" charset="utf-8"> </style>
+#{/set}
+
+<div id="templatemanager" class="panel main">
+	<div class="head">
+		Template manager
+	</div>
+	<div class="body">
+		<div id="leftcolumn" class="left">
+			<div id="templates" class="subpanel">
+				<div class="head">Templates</div>
+				<div class="body">
+				
+				</div>
+			</div>
+		</div>
+	
+		<div class="left">
+			<div id="templateinfo" class="subpanel">
+				<div class="head">Attributes</div>
+				<div class="body">
+					<div id="attributes"> </div>
+					<div id="addattribute" class="hide"><a href="#">Add attribute</a></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

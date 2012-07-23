@@ -16,6 +16,10 @@ public class User extends TimestampModel {
 	
 	public String password;
 	
+	@OneToMany(mappedBy="user",cascade=CascadeType.ALL)
+	public List<UserPermission> userPermissions;
+	
+	
 	public User(String email, String password) {
 		super();
 		this.email = email;
@@ -40,5 +44,17 @@ public class User extends TimestampModel {
 	
 	public String toString() {
 		return email + " ["+created+"]";
+	}
+	
+	public List<UserPermission> getPermissionsForProject(Project project) {
+		return project.getPermissionsForUser(this);
+	}
+	
+	public List<Project> getProjectsWithPermission(String permission) {
+		List<UserPermission> permissions = UserPermission.find("byUserAndPermission", this,permission).fetch();
+		List<UserPermission> everyonePermissions = UserPermission.find("byUserAndPermission", null,permission).fetch();
+		
+		permissions.addAll(everyonePermissions);
+		return UserPermission.getProjectList(new LinkedList<UserPermission>(new HashSet<UserPermission>(permissions)));
 	}
 }

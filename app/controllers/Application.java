@@ -7,20 +7,45 @@ import java.util.*;
 
 import models.*;
 
-public class Application extends Controller {
+public class Application extends ParentController {
 
     public static void index() {
     	render();
     }
     
+	public static void script() {
+		renderTemplate("Application/script.js");
+	}
+	
+	public static void loadJavascript(String path) {
+		renderTemplate("/public/javascripts/"+path);
+	}
+    
     public static void showUsers() {
-    	Security.checkPermission();
     	List<User> users = User.findAll();
     	render(users);
     }
     
+    public static void getProjects() {
+    	User user = Security.getUser();
+    	List<Project> projects = null;
+    	if (user == null) {
+    		projects = UserPermission.getProjectList(Project.getProjectsWithGuestPermission("visible"));
+    	} else {
+	    	projects = Security.getUser().getProjectsWithPermission("visible");
+    	}
+    	renderJSON(projects);
+    }
+    
+    @Deprecated
     public static void listProjects() {
-    	List<Project> projects = Project.findAll();
+    	User user = Security.getUser();
+    	List<Project> projects = null;
+    	if (user == null) {
+    		projects = UserPermission.getProjectList(Project.getProjectsWithGuestPermission("visible"));
+    	} else {
+	    	projects = Security.getUser().getProjectsWithPermission("visible");
+    	}
     	render(projects);
     }
     
@@ -32,13 +57,13 @@ public class Application extends Controller {
     public static void createProject(String name) {
     	Project project = new Project(name);
     	project.save();
-    	listProjects();
+    	getProjects();
     }
     
     public static void deleteProject(long projectId) {
     	Project project = Project.findById(projectId);
     	project.delete();
-    	listProjects();
+    	getProjects();
     }
     
     public static void addDirectory(long projectId, String path) {
@@ -51,14 +76,5 @@ public class Application extends Controller {
     	Directory directory = Directory.findById(directoryId);
     	directory.delete();
     	showProject(directory.project.id);
-    }
-    
-    public static void logout() {
-    	try {
-    		Secure.logout();
-    	} catch (Throwable t) {
-    		error();
-    	}
-    	index();
     }
 }

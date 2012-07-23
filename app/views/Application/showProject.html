@@ -2,7 +2,9 @@
 #{set title:'Project Listing' /}
 
 <h1>Project: ${project.name}</h1>
-
+<a href="@{ImageBrowser.projectIndex(project.id)}">Go to Image Browser</a> | 
+<a href="@{TemplateManager.projectIndex(project.id)}">Go to TemplateManager</a> | 
+<a href="@{ProjectManager.index(project.id)}">Manage Users</a>
 <ul>
 	#{list items:project.directories, as:'directory'}
 		<li>
@@ -12,9 +14,14 @@
 	#{/list}
 </ul>
 
+<hr />
+
 #{form @Application.addDirectory()}
 	<input type="hidden" name="projectId" value="${project.id}" />
 	
 	Path: <input type="text" name="path" />
 	<input type="submit" value="Add Directory" />
 #{/form}
+
+<hr/>
+

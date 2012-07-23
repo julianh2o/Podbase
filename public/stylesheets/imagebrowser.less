@@ -1,7 +1,3 @@
-#imagebrowser {
-	width: 60em;
-}
-
 //this clears the floating elements
 #imagebrowser > .body {
 	overflow: auto;
@@ -9,6 +5,13 @@
 
 #leftcolumn {
 	width: 20em;
+}
+
+#templatechooser {
+	border: none;
+	border-bottom: 1px solid black;
+	width: 100%;
+	background: white;
 }
 	
 #browser {
@@ -27,29 +30,34 @@
 	width: 100%;
 }
 
-#metadata {
+.metadata {
 	width: 38em;
 	height: 20em;
 }
 
-#metadata table {
+.metadata table {
 	width: 100%;
 	border-collapse: collapse;
 }
 
-#metadata table tr td {
+.metadata table tr td {
 	border-bottom: 1px dotted black;
 	padding: .2em;
 }
 
-#metadata table tr .attribute {
+.metadata table tr.templated td {
+	background-color: #DDEEFF;
+}
+
+.metadata table tr .attribute {
 	width: 15em;
 }
 
-#metadata table tr .value input {
+.metadata table tr .attribute.novalue {
+	color: #999999;
+}
+
+.metadata table tr .value input {
 	width: 100%;
 	height: 100%;
-	margin: 0;
-	padding: 0;
-	border: none;
 }

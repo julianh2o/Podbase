@@ -1,0 +1,34 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+#{set 'moreScripts'}
+	<script src="@{ImageViewer.script}" type="text/javascript" charset="utf-8"> </script>
+	<script src="@{'public/javascripts/lib/jquery.hash.js'}" type="text/javascript" charset="utf-8"> </script>
+	<script type="text/javascript">
+		var path = "/data/${path}";
+		var width = ${width};
+		var height = ${height};
+	</script>
+#{/set}
+#{set 'moreStyles'}
+	<link rel="stylesheet" href="@{'public/stylesheets/imageviewer.less'}" type="text/css" charset="utf-8"> </style>
+#{/set}
+
+
+<div id="imageviewer" class="panel main">
+	<div class="head">
+		Image Viewer
+	</div>
+	<div class="body">
+		<div class="controls">
+			<a href="#" class="zoomin">Zoom In</a> | <a href="#"class="zoomout">Zoom Out</a>
+			<br/>
+			<a href="#" class="brighten">Brighten</a> | <a href="#"class="darken">Darken</a>
+			<br/>
+			<a href="#" class="increaseContrast">Increase Contrast</a> | <a href="#"class="decreaseContrast">Decrease Contrast</a>
+		</div>
+		<div class="container">
+			<img class="imageblock" id="image" />
+			<div class="imageblock" id="cover"></div>
+		</div>
+	</div>
+</div>

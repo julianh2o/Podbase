@@ -28,4 +28,13 @@ public class DatabaseImage extends TimestampModel {
 		this.save();
 		return attr;
 	}
+	
+	public static DatabaseImage forPath(String path) {
+		DatabaseImage image = DatabaseImage.find("path",path).first();
+		if (image == null) {
+			image = new DatabaseImage(path);
+			image.save();
+		}
+		return image;
+	}
 }

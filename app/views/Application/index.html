@@ -1,6 +1,13 @@
 #{extends 'main.html' /}
 #{set title:'Home' /}
+#{set 'moreScripts'}
+    <script data-main="/public/javascripts/script.js" src="@{'/public/javascripts/lib/require.js'}" type="text/javascript" charset="utf-8"></script>
+#{/set}
+
+#{set 'moreStyles'}
+    <link rel="stylesheet" type="text/css" media="screen" href="/public/stylesheets/imagebrowser.less" />
+#{/set}
 
 <h1>Podbase home</h1>
 
-<a href="@{Application.showProjects}">Projects</a>
+<div id="main"></div>

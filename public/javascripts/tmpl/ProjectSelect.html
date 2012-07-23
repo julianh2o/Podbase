@@ -1,0 +1,9 @@
+<ul class="nav nav-pills">
+	<% _.each(projects,function(project) { %>
+		<li>
+			<a class="project" href="#" data-project-id="<%= project.id %>">
+				<%= project.name %>
+			</a>
+		</li>
+	<% }); %>
+</div>

@@ -8,6 +8,10 @@ Directory(d1):
 Directory(d2):
     project: p1
     path: /julian
+    
+Directory(d3):
+    project: p1
+    path: /alana/folder
  
 Project(p2):
     name: My other cool project
@@ -27,11 +31,14 @@ Template(t1):
 TemplateAttribute(a1):
     template: t1
     name: Name
+    sort: 0
     
 TemplateAttribute(a2):
     template: t1
     name: Magnification
+    sort: 1
     
 TemplateAttribute(a3):
     template: t1
     name: Species
+    sort: 2

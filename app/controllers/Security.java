@@ -16,4 +16,9 @@ public class Security extends Secure.Security {
     	User user = User.find("byEmail", email).first();
     	if (user == null) redirect("/login");
     }
+    
+    static User getUser() {
+    	User user = User.find("email", Security.connected()).first();
+    	return user;
+    }
 }

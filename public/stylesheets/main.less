@@ -1,7 +1,15 @@
+/********** Normalize Styles **********/
+ul {
+	margin: 0;
+	padding: 0;
+}
+
 li {
 	list-style: none;
 }
 
+
+/********** Utility **********/
 .left {
 	float: left;
 }
@@ -10,12 +18,26 @@ li {
 	clear: both;
 }
 
+.hide {
+	display: none;
+}
+
+.seamless {
+	margin: 0;
+	padding: 0;
+	border: none;
+	background: transparent;
+}
 
 /********** Main panel **********/
 @panelHeaderColor: #0052A3;
 @panelBorderColor: #999999;
 @panelBorderSize: 1px;
 @panelBorderRadius: .8em;
+
+.main {
+	width: 60em;
+}
 
 .panel {
 	margin: .4em;
@@ -82,9 +104,14 @@ li {
 }
 
 
-/********** User list **********/
+/********** Misc **********/
 .created {
 	font-size: 80%;
 	color: grey;
 }
 
+.user {
+	border: 1px solid grey;
+	padding: 5px;
+	margin: 5px 0;
+}

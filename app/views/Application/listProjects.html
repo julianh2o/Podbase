@@ -1,0 +1,56 @@
+#{extends 'main.html' /}
+#{set title:'Project Listing' /}
+
+#{set 'moreScripts'}
+	<script src="@{'public/javascripts/jquery.tmpl.min.js'}" type="text/javascript" charset="utf-8"> </script>
+#{/set}
+
+<script id="projectTemplate" type="text/x-jquery-tmpl">
+    <li>
+		${name}<br/>
+		${created}<br/>
+		${id}
+	</li>
+</script>
+
+<script type="text/javascript">
+	$.post("@{ProjectController.fetchProjects()}", null, function(projects) {
+			$("#projectTemplate").tmpl(projects).appendTo("#inject");
+	}, 'json');
+</script>
+
+<ul id="inject"></ul>
+
+
+<div id="projects" class="panel main">
+	<div class="head">
+		Projects
+	</div>
+	<div class="body">
+		<ul>
+			#{list items:projects, as:'project'}
+				<li>
+					<a href="@{Application.showProject(project.id)}">
+						${project.name}
+					</a>
+					<br/>
+					<span class="created">Created: ${project.created}</span>
+					
+					<ul class="actions">
+						<li>
+							<a href="@{Application.deleteProject(project.id)}">Delete</a>
+						</li>
+					</ul>
+				</li>
+				
+			#{/list}
+		</ul>
+		
+		<hr/>
+		
+		<form action="@{Application.createProject()}" method="POST" enctype="multipart/form-data">
+		    <input type="text" name="name" />
+		    <input type="submit" value="Create Project" />
+		</form>
+	</div>
+</div>

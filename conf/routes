@@ -4,18 +4,22 @@
 
 GET     /                                       Application.index
 GET     /users   	                            Application.showUsers
-GET     /project                                Application.listProjects
+GET     /project                                ProjectController.getProjects
+PUT     /project                                ProjectController.newProjects
 *       /project/create/{name}                  Application.createProject
 *       /project/delete/{projectId}             Application.deleteProject
-GET     /project/{projectId}                    Application.showProject
+GET     /project/{projectId}                    ProjectManager.index
 
 GET		/template/?								TemplateManager.index
-GET		/template/{projectId}					TemplateManager.listTemplates
+GET		/template/{projectId}					TemplateController.getTemplates
 GET		/template/{projectId}/{templateId}		TemplateManager.showTemplate
 
 GET		/browser								ImageBrowser.index
 GET		/browser/{projectId}					ImageBrowser.projectIndex
 *		/data/{<.*>path}						ImageBrowser.resolveFile
+
+*		/view									ImageViewer.index
+*		/view/{<.*>path}						ImageViewer.index
 
 
 # Import CRUD routes
@@ -26,6 +30,8 @@ GET		/browser/{projectId}					ImageBrowser.projectIndex
 
 
 # Map static resources from the /app/public folder to the /public path
+GET		/public/javascripts/lib/ 	  			staticDir:public
+GET		/public/javascripts/{<.*>path} 			Application.loadJavascript
 GET     /public/                                staticDir:public
 
 # Catch all

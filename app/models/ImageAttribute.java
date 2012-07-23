@@ -17,10 +17,18 @@ public class ImageAttribute extends TimestampModel {
 	@GsonTransient
 	public DatabaseImage image;
 	
+	@Transient
+	public boolean templated = false;
+	
 	public ImageAttribute(DatabaseImage image, String attribute, String value) {
+		this(image,attribute,value,false);
+	}
+	
+	public ImageAttribute(DatabaseImage image, String attribute, String value, boolean templated) {
 		super();
 		this.image = image;
 		this.attribute = attribute;
 		this.value = value;
+		this.templated = templated;
 	}
 }

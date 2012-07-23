@@ -3,14 +3,16 @@
 #{set 'moreScripts'}
 	<script src="@{ImageBrowser.script}" type="text/javascript" charset="utf-8"> </script>
 	<script src="@{'public/javascripts/jquery.hash.js'}" type="text/javascript" charset="utf-8"> </script>
+	<script type="text/javascript">
+		var projectId = ${project?project.id:'null'};
+	</script>
 #{/set}
 #{set 'moreStyles'}
 	<link rel="stylesheet" href="@{'public/stylesheets/imagebrowser.less'}" type="text/css" charset="utf-8"> </style>
 #{/set}
 
 
-
-<div id="imagebrowser" class="panel">
+<div id="imagebrowser" class="panel main">
 	<div class="head">
 	Image Browser${project != null?": "+project.name:""}
 	</div>
@@ -19,6 +21,7 @@
 			<div class="subpanel">
 				<div class="head">Browse</div>
 				<div class="body">
+					<select id="templatechooser"> </select>
 					<select multiple id="browser"></select>
 				</div>
 			</div>

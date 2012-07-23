@@ -1,0 +1,14 @@
+<ul>
+	<% _.each(tabs,function(tab) { %>
+		<li>
+			<a href="#<%= tab.id %>">
+				<%= tab.label %>
+			</a>
+		</li>
+	<% }); %>
+	
+</ul>
+
+<% _.each(tabs,function(tab) { %>
+	<div id="<%= tab.id %>"></div>
+<% }); %>
