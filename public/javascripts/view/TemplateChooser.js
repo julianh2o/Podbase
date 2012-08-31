@@ -5,6 +5,8 @@ define(
 			template: _.template( tmpl ),
 			
 			initialize: function() {
+				this.project = this.options.project;
+				
 				this.templates = null;
 				this.templateCache = new Cache();
 				
@@ -15,13 +17,13 @@ define(
 				
 				$("html").on("PathChanged",$.proxy(this.pathChanged,this));
 				
-				this.setProject(this.options.projectId);
+				this.setProject(this.options.project);
 			},
 			
-			setProject : function(projectId) {
-				this.projectId = projectId;
+			setProject : function(project) {
+				this.project = project;
 				
-				Link.getInstance().template.get({projectId:this.projectId}).asap($.proxy(this.templatesLoaded,this));
+				Link.getInstance().templates.get({projectId:this.project.id}).asap($.proxy(this.templatesLoaded,this));
 			},
 			
 			refresh : function() {
@@ -53,7 +55,7 @@ define(
 				var templateId = event.currentTarget.value;
 				var templateAssignment = this.templateCache.get(this.path);
 				
-				$.post("@{TemplateController.setFolderTemplate()}", {projectId:this.projectId,templateId:templateId,path:this.path},$.proxy(this.handleTemplateForPath,this),'json');
+				$.post("@{TemplateController.setFolderTemplate()}", {projectId:this.project.id,templateId:templateId,path:this.path},$.proxy(this.handleTemplateForPath,this),'json');
 				
 				$("html").trigger("TemplateChanged",[templateId]);
 			},
@@ -64,7 +66,7 @@ define(
 					this.setSelectedTemplate(this.templateCache.get(path));
 				} else {
 					this.templateCache.put(path,null);
-					$.post("@{TemplateController.getTemplateForPath()}", {projectId:this.projectId,path:path},$.proxy(this.handleTemplateForPath,this), 'json');
+					$.post("@{TemplateController.getTemplateForPath()}", {projectId:this.project.id,path:path},$.proxy(this.handleTemplateForPath,this), 'json');
 				}
 			},
 			

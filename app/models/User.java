@@ -11,18 +11,21 @@ import play.libs.Codec;
 @Entity
 public class User extends TimestampModel {
 	@Email
-	@Required
 	public String email;
 	
 	public String password;
 	
+	public boolean root;
+	public boolean guest;
+	
 	@OneToMany(mappedBy="user",cascade=CascadeType.ALL)
 	public List<UserPermission> userPermissions;
 	
-	
 	public User(String email, String password) {
 		super();
+		this.root = false;
 		this.email = email;
+		this.guest = false;
 		setCleartextPassword(password);
 	}
 	
@@ -56,5 +59,9 @@ public class User extends TimestampModel {
 		
 		permissions.addAll(everyonePermissions);
 		return UserPermission.getProjectList(new LinkedList<UserPermission>(new HashSet<UserPermission>(permissions)));
+	}
+	
+	public static User getGuestAccount() {
+		return User.find("guest", true).first();
 	}
 }

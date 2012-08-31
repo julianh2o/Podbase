@@ -2,7 +2,9 @@ package controllers;
 
 import java.util.List;
 
+import models.Project;
 import models.User;
+import models.UserPermission;
  
 public class Security extends Secure.Security {
 	
@@ -18,7 +20,10 @@ public class Security extends Secure.Security {
     }
     
     static User getUser() {
-    	User user = User.find("email", Security.connected()).first();
+    	User user = null;
+    	if (Security.connected() != null) user = User.find("email", Security.connected()).first();
+    	
+    	if (user == null) return User.getGuestAccount();
     	return user;
     }
 }

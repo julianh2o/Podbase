@@ -6,16 +6,18 @@ define(
 			template: _.template( tmpl ),
 			
 			initialize: function() {
+				this.project = this.options.project;
+				
 				this.render();
 				
 				this.$browser = $(".browser",this.el);
 				this.$preview = $(".preview",this.el);
 				this.$metadata = $(".metadata",this.el);
 				
-				this.templateChooser = new TemplateChooser();
+				this.templateChooser = new TemplateChooser({project:this.project});
 				$(".templatechooser",this.el).append(this.templateChooser.el);
 				
-				$("html").on("ProjectSelected",$.proxy(this.onProjectSelected,this));
+				//$("html").on("ProjectSelected",$.proxy(this.onProjectSelected,this));
 				
 				this.path = this.options.path;
 				this.directoryCache = new Cache();
@@ -37,7 +39,7 @@ define(
 					loadCurrentPath();
 				});
 				
-				this.fileBrowser = new FileBrowser();
+				this.fileBrowser = new FileBrowser({project:this.project});
 				this.$browser.append(this.fileBrowser.el);
 				
 				this.imagePreview = new ImagePreview();
@@ -48,12 +50,6 @@ define(
 				
 				$(this.fileBrowser).on("PathChanged PathSelected PathDeselected", Util.debugEvent);
 				$(this.fileBrowser).on("PathSelected",$.proxy(this.onPathSelected,this));
-			},
-			
-			onProjectSelected : function(e,projectId) {
-				this.templateChooser.setProject(projectId);
-				this.fileBrowser.setProject(projectId);
-				this.projectId = projectId;
 			},
 			
 			onPathSelected : function(e,path,file) {

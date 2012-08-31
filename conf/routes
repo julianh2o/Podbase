@@ -11,7 +11,9 @@ PUT     /project                                ProjectController.newProjects
 GET     /project/{projectId}                    ProjectManager.index
 
 GET		/template/?								TemplateManager.index
-GET		/template/{projectId}					TemplateController.getTemplates
+GET		/project/{projectId}/templates			TemplateController.getTemplates
+GET		/project/{projectId}/users				ProjectController.getUserPermissions
+GET		/project/{projectId}/permissions		ProjectController.getPermissionsForProject
 GET		/template/{projectId}/{templateId}		TemplateManager.showTemplate
 
 GET		/browser								ImageBrowser.index

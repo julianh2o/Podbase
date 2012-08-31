@@ -1,0 +1,19 @@
+<%= user.email %> <span class="created">created <%= user.created %></span>
+
+<hr/>
+
+<table>
+	<% _.each(permissions,function(perm) { %>
+		<tr>
+			<td>
+				<input type="checkbox" name="permission" value="<%= perm %>" <%= userPermissionMap[perm]?"checked":"" %> >
+				</input>
+			</td>
+			<td>
+				<label>
+					<%= perm %>
+				</label>
+			</td>
+		</tr>
+	<% }); %>
+</table>

@@ -1,0 +1,9 @@
+<ul class="nav nav-pills nav-stacked">
+	<% _.each(users,function(user,index) { %>
+		<li>
+			<a class="user" href="#" data-index="<%=index%>">
+				<%= user.email %>
+			</a>
+		</li>
+	<% }); %>
+</ul>

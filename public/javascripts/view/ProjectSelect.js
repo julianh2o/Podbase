@@ -16,21 +16,20 @@ define(
 				
 				this.render();
 				
-				if (this.selectedProject == null) {
-					var p = localStorage.getItem("selectedProject");
-					
-					found = false;
-					for (i in this.model.projects) {
-						if (p == this.model.projects[i].id) found = true;
-					}
-					if (!found) p = null;
-					
-					if (!p) p = this.model.projects[0].id;
-					
-					this.selectProject(p);
-				}
+				var p = localStorage.getItem("selectedProject");
+				
+				var selectedProject = Link.getInstance().projects.getData("byId")[p];
+				if (!selectedProject) p = null;
+				
+				if (!p) p = this.model.projects[0].id;
+				
+				this.selectProject(p);
 				
 				$(".project",this.el).click($.proxy(this.projectClicked,this));
+			},
+			
+			getSelectedProject : function() {
+				return Link.getInstance().projects.getData("byId")[this.selectedProject];
 			},
 			
 			projectClicked : function(event) {
@@ -49,7 +48,8 @@ define(
 				var $el = $("a[data-project-id='"+id+"']",this.el)
 				$el.parent().addClass("active");
 				
-				$("html").trigger("ProjectSelected", [id]);
+				var project = Link.getInstance().projects.getData("byId")[id];
+				$("html").trigger("ProjectSelected", [id,project]);
 			}
 		});
 	}

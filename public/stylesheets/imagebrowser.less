@@ -1,63 +1,63 @@
 //this clears the floating elements
-#imagebrowser > .body {
-	overflow: auto;
-}
-
-#leftcolumn {
-	width: 20em;
-}
-
-#templatechooser {
-	border: none;
-	border-bottom: 1px solid black;
-	width: 100%;
-	background: white;
-}
-	
-#browser {
-	border: none;
-	width: 100%;
-	height: 20em;
-	background: white;
-}
-
-#preview {
+preview {
 	width: 100%;
 	height: 20em;
 }
 
-#preview img {
+.browser {
+	background: white;
+}
+
+.preview img {
 	width: 100%;
 }
 
 .metadata {
-	width: 38em;
 	height: 20em;
 }
 
-.metadata table {
-	width: 100%;
-	border-collapse: collapse;
-}
-
-.metadata table tr td {
+.metadata .data-row {
 	border-bottom: 1px dotted black;
 	padding: .2em;
 }
 
-.metadata table tr.templated td {
+.metadata .templated {
 	background-color: #DDEEFF;
 }
 
-.metadata table tr .attribute {
-	width: 15em;
-}
-
-.metadata table tr .attribute.novalue {
+.metadata .attribute.novalue {
 	color: #999999;
 }
 
-.metadata table tr .value input {
+.metadata .value input {
 	width: 100%;
 	height: 100%;
+}
+
+.row-fluid [class*='span'] {
+	min-height: 0;
+}
+
+.ui-widget-content {
+	background: white;
+}
+
+//Template Editor
+.template-entry {
+	margin: 2px 0px;
+	
+	> div {
+		vertical-align: middle;
+		display: inline-block;
+	}
+}
+
+.add-field {
+	font-size: .9em;
+	padding: 3px;
+}
+
+//Project Settings
+.directory .iconColumn {
+	width: 30px;
 }

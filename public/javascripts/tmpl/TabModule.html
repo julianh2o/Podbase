@@ -1,14 +1,20 @@
-<ul>
-	<% _.each(tabs,function(tab) { %>
-		<li>
-			<a href="#<%= tab.id %>">
-				<%= tab.label %>
-			</a>
-		</li>
-	<% }); %>
+<div class="tabbable">
+	<ul class="nav nav-tabs">
+		<% _.each(tabs,function(tab) { %>
+			<li>
+				<a href="#<%= tab.id %>" data-toggle="tab">
+					<%= tab.label %>
+				</a>
+			</li>
+		<% }); %>
+	</ul>
 	
-</ul>
+	<div class="tab-content">
 
-<% _.each(tabs,function(tab) { %>
-	<div id="<%= tab.id %>"></div>
-<% }); %>
+		<% _.each(tabs,function(tab) { %>
+			<div class="tab-pane" id="<%= tab.id %>"></div>
+		<% }); %>
+	
+	</div>
+
+</div>

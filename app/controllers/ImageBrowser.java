@@ -109,19 +109,10 @@ public class ImageBrowser extends ParentController {
 		} else {
 			files = Arrays.asList(directory.listFiles());
 		}
-		if (files == null || files.isEmpty()) error("No contents");
 		
 		Collections.sort(files);
 		
 		List<FileWrapper> fileWrappers = new LinkedList<FileWrapper>();
-//		if (!isRoot) {
-//			//if the current directory is one of the project directories, the ".." points directly to the project listing
-//			if (projectFiles.contains(directory)) {
-//				fileWrappers.add(new FileWrapper("..",getRootImageDirectory(), getRootImageDirectoryFile()));
-//			} else {
-//				fileWrappers.add(new FileWrapper("..",getRootImageDirectory(), directory.getParentFile()));
-//			}
-//		}
 		for (File f : files) {
 			fileWrappers.add(new FileWrapper(getRootImageDirectory(),f));
 		}

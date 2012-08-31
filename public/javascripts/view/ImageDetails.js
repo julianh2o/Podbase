@@ -8,7 +8,7 @@ define(
 			initialize: function() {
 				this.refresh();
 				
-				this.$body = $("tbody",this.el);
+				this.$body = $(".attributes",this.el);
 				
 				this.loadDetails(this.options.file);
 			},

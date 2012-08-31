@@ -27,7 +27,18 @@ define(
 					$("#"+tab.id,self.el).empty().append(tab.content.el || tab.content);
 				});
 				
-				$(this.el).tabs();
+				
+				$("li a",this.el).click(function(e) {
+					e.preventDefault();
+					$(this).tab('show');
+				});
+				
+				$("li a",this.el).first().tab("show");
+				$(".tab-pane",this.el).first().addClass("active");
+			},
+			
+			select : function(id) {
+				$("#"+id,this.el).tab("show");
 			}
 		});
 	}

@@ -20,6 +20,10 @@ define(
 
 			clear : function(key) {
 				this.data[key] = undefined;
+			},
+			
+			purge : function() {
+				this.data = new Array();
 			}
 		});
 		

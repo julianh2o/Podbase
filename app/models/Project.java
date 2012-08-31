@@ -45,6 +45,7 @@ public class Project extends TimestampModel {
 	
 	public List<UserPermission> getPermissionsForUser(User user) {
 		List<UserPermission> permissions = UserPermission.find("byProjectAndUser", this, user).fetch();
+		System.out.println(permissions);
 		return permissions;
 	}
 	

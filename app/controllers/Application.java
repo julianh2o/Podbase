@@ -32,7 +32,7 @@ public class Application extends ParentController {
     	if (user == null) {
     		projects = UserPermission.getProjectList(Project.getProjectsWithGuestPermission("visible"));
     	} else {
-	    	projects = Security.getUser().getProjectsWithPermission("visible");
+	    	projects = user.getProjectsWithPermission("visible");
     	}
     	renderJSON(projects);
     }

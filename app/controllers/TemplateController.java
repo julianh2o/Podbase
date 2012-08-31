@@ -23,6 +23,14 @@ public class TemplateController extends ParentController {
 		renderJSON(templates);
 	}
 	
+	public static void addTemplate(Long projectId, String templateName) {
+		Project project = Project.findById(projectId);
+		
+		Template template = new Template(project,templateName);
+		project.templates.add(template);
+		template.save();
+	}
+	
 	public static void setFolderTemplate(Long projectId, long templateId, String path) {
 		Project project = null;
 		if (projectId != null) project = Project.findById(projectId);
@@ -37,7 +45,6 @@ public class TemplateController extends ParentController {
 		}
 		
 		assignment.save();
-		debug(assignment);
 		renderJSON(assignment);
 	}
 	

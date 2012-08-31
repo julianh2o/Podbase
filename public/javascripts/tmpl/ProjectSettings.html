@@ -1,0 +1,17 @@
+<table class="table table-condensed">
+	<% _.each(project.directories,function(dir) { %>
+		<tr class="directory" data-id="<%= dir.id %>">
+			<td class="iconColumn">
+				<a href="#" class="remove">
+					<i class="icon-remove" />
+				</a>
+			</td>
+			
+			<td>
+				<%= dir.path %>
+			</td>
+		</tr>
+	<% }); %>
+</table>
+
+<a href="#" class="add">Add Directory</a>

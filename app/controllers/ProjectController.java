@@ -9,7 +9,8 @@ import models.UserPermission;
 
 public class ProjectController extends ParentController {
     public static void getProjects() {
-    	List<Project> projects = Project.findAll();
+    	User user = Security.getUser();
+    	List<Project> projects = user.getProjectsWithPermission("visible");
     	renderJSON(projects);
     }
     
@@ -42,6 +43,16 @@ public class ProjectController extends ParentController {
     	ok();
     }
     
+    public static void getUserPermissions(Long projectId) {
+    	Project project = Project.findById(projectId);
+    	List<User> users = project.getUsersWithPermission("listed");
+    	renderJSON(users);
+    }
+    
+    public static void getAllProjectPermissions() {
+    	renderJSON(UserPermission.permissionList);
+    }
+    
     public static void setUserPermission(Long projectId, Long userId, String permission, boolean value) {
 		Project project = Project.findById(projectId);
     	User user = User.findById(userId);
@@ -53,6 +64,11 @@ public class ProjectController extends ParentController {
     	} else if (userPermission != null && !value) {
     		userPermission.delete();
     	}
-    	ProjectManager.index(projectId);
+    	ok();
+    }
+    
+    public static void getPermissionsForProject(Long projectId) {
+    	Project project = Project.findById(projectId);
+    	renderJSON(project.getPermissionsForUser(Security.getUser()));
     }
 }

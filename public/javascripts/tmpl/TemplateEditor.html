@@ -1,0 +1,26 @@
+<div class="template-editor">
+	<% _.each(template.attributes,function(attr,index) { %>
+		<div class='row template-entry' data-index="<%= index %>">
+			<div class="pull-left">
+				<span class="handle">
+					<i class="icon-resize-vertical"/>
+				</a>
+			</div>
+			
+			<div class='pull-left field'>
+				<input type='text' name='name' class='seamless' value="<%= attr.name %>"/>
+			</div>
+			
+			<div clas="pull-left">
+				<a href="#" class="remove">
+					<i class="icon-remove"/>
+				</a>
+			</div>
+		</div>
+	<% }); %>
+</div>
+<div class="row">
+	<div class="pull-right">
+		<a href="#" class="add">Add Field</a>
+	</div>
+</div>

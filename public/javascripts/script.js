@@ -19,6 +19,14 @@ require(
 			}
 			return this;
 		};
+		Array.prototype.remove = function(object) {
+			for (var i=0; i<this.length; i++) {
+				if (this[i] == object) {
+					this.splice(i,1); 
+					return;
+				}
+			}
+		};
 		
 		$(document).ready(function() {
 			var main = new Main();

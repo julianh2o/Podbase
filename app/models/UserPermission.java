@@ -11,9 +11,11 @@ import play.libs.Codec;
 @Entity
 public class UserPermission extends TimestampModel {
 	@OneToOne
+	@GsonTransient
 	public User user;
 	
 	@OneToOne
+	@GsonTransient
 	public Project project;
 	
 	public String permission;
@@ -22,7 +24,16 @@ public class UserPermission extends TimestampModel {
 	//visible - this project is visible to this user
 	//owner - this user is the owner of this project
 	//managePermissions - this user can manage the permissions of this project
-	public static String[] permissionList = new String[] {"listed","visible","owner","managePermissions"};
+	//editMetadata - this user can edit metadata
+	//setTemplate - this user can set the template for a folder
+	public static String[] permissionList = new String[] {"listed","visible","owner","managePermissions","editMetadata","setTemplate","editTemplates","manageProject"};
+	public static HashMap<String,List<String>> implications = new HashMap<String,List<String>>();
+	
+	
+	//NOT IMPLEMENTED YET
+	static {
+		implications.put("owner", Arrays.asList("listed","visible","managePermissions","editMetadata","setTemplate","editTemplate"));
+	}
 
 	public UserPermission(Project project, User user, String permission) {
 		super();
@@ -44,7 +55,7 @@ public class UserPermission extends TimestampModel {
 	}
 	
 	public String toString() {
-		return user.email + "has "+permission+" with project "+project.name;
+		return (user!=null?user.email:null) + " has "+permission+" with project "+(project!=null?project.name:null);
 	}
 	
 	public static List<User> getUserList(List<UserPermission> permissions) {

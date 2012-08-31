@@ -1,0 +1,21 @@
+<% if (templates && templates.length) { %>
+	<ul class="nav nav-pills nav-stacked">
+		<% _.each(templates,function(template,index) { %>
+			<li>
+				<a class="template" href="#" data-index="<%=index%>">
+					<%= template.name %>
+				</a>
+			</li>
+		<% }); %>
+	</ul>
+<% } else { %>
+	<div>
+		There are no templates associated with this project.
+	</div>
+<% } %>
+
+<div class="row">
+	<div class="pull-right">
+		<a href="#" class="add">Add Template</a>
+	</div>
+</div>

@@ -20,11 +20,12 @@ define(
 			
 			setProject : function(projectId) {
 				this.projectId = projectId;
+				this.directoryCache.purge();
 				this.loadPath("/");
 			},
 			
 			loadPath : function(path, selectedFile) {
-				path = path || "";
+				path = path || "/";
 				this.path = path.chopEnd("/") + "/";
 				this.$path.html(this.path);
 				$(this).trigger("PathChanged",[this.path]);
