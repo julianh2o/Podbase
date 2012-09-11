@@ -1,0 +1,12 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+#{set 'moreScripts'}
+	<script type="text/javascript">
+		window.projectId = ${project.id};
+	</script>
+    <script data-main="/public/javascripts/entry.js" src="@{'/public/javascripts/lib/require.js'}" type="text/javascript" charset="utf-8"></script>
+#{/set}
+
+#{set 'moreStyles'}
+    <link rel="stylesheet" type="text/css" media="screen" href="/public/stylesheets/index.less" />
+#{/set}

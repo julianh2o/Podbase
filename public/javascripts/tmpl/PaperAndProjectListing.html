@@ -1,0 +1,27 @@
+<div class="row-fluid">
+	<div class="span6 projects">
+		<h1>Projects</h1>
+		<ul>
+			<% _.each(projects,function(project) { %>
+				<li>
+					<a href="/entry/<%= project.id %>">
+						<%= project.name %><br/>
+					</a>
+				</li>
+			<% }); %>
+		</ul>
+	</div>
+	
+	<div class="span6 papers">
+		<h1>Papers</h1>
+		<ul>
+			<% _.each(papers,function(paper) { %>
+				<li>
+					<a href="/paper/<%= paper.id %>">
+						<%= paper.name %><br/>
+					</a>
+				</li>
+			<% }); %>
+		</ul>
+	</div>
+</div>

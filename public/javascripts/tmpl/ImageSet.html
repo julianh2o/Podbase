@@ -1,0 +1,14 @@
+<% function getName(path) {
+	var spl = path.split("/");
+	return spl[spl.length-1];
+} %>
+
+<% _.each(imageset.images,function(mem) { %>
+	<% var image = mem.image; %>
+	<div class="image" data-path="<%= image.path %>">
+		<a href="#" class="remove"><i class="icon-remove" /></span>
+		<a href="#<%= image.path %>" title="<%= image.path %>">
+			<%= getName(image.path) %>
+		</a>
+	</div>
+<% }); %>
