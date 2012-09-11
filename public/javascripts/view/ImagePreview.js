@@ -10,11 +10,18 @@ define(
 			},
 			
 			loadPreview : function(file) {
-				if (file) {
-					this.model = {file:file};
-					this.render();
-				}
+				this.model = {file:file};
+				this.render();
+				
+				$(".add-to-image-set",this.el).unbind('click').click($.proxy(this.addToImageSet,this));
 			},
+			
+			addToImageSet : function(e) {
+				var file = this.model.file;
+				$("html").trigger("AddImageToCurrentSet", [file]);
+				
+				e.preventDefault();
+			}
 		});
 		
 		$.extend(This,{

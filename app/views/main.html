@@ -18,18 +18,6 @@
         #{get 'moreScripts' /}
     </head>
     <body>
-    	<a href="@{Application.listProjects}">Projects</a> |
-    	<a href="@{ImageBrowser.index}">Image Browser</a> |
-    	<a href="@{Application.showUsers}">Users</a>
-    	<br />
-    	
-    	#{if current_user != null}
-	    	Logged in as: ${current_user} <a href="@{Secure.logout('/')}">Log out</a>
-    	#{/if}
-	    #{else}
-	    	Not logged in. <a href="@{Secure.login}">Log in</a>
-	    #{/else}
-	    
         #{doLayout /}
     </body>
 </html>

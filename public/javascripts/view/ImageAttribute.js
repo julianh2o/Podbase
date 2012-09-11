@@ -7,7 +7,9 @@ define(
 			
 			initialize: function() {
 				this.dbo = this.options.dbo;
+				this.canEdit = this.options.canEdit;
 				
+				this.model = {canEdit:this.canEdit};
 				this.render();
 				this.$attribute = $(".attribute",this.el);
 				this.$value = $(".value",this.el);
@@ -46,15 +48,18 @@ define(
 			refreshValue : function() {
 				var $el = this.$value;
 				
-				$el.unbind("click");
-				if (this.editmode) {
-					var input = $("<input class='seamless' />");
-					input.val(this.dbo.value);
-					$el.empty().append(input);
-					input.bind("blur", $.proxy(this.handleValueBlur,this));
-				} else {
-					$el.html(this.dbo.value);
-					$el.bind("click", $.proxy(this.handleValueClick,this));
+				$el.unbind("click"); 
+				
+				if (this.canEdit) {
+					if (this.editmode) {
+						var input = $("<input class='seamless' />");
+						input.val(this.dbo.value);
+						$el.empty().append(input);
+						input.bind("blur", $.proxy(this.handleValueBlur,this));
+					} else {
+						$el.html(this.dbo.value);
+						$el.bind("click", $.proxy(this.handleValueClick,this));
+					}
 				}
 			},
 
@@ -65,8 +70,11 @@ define(
 			},
 
 			handleValueBlur : function(event) {
-				if (this.value == this.value || (that.value == undefined && this.value == "")) return;
-				this.value = this.value;
+				var $el = $(event.target);
+				var value = $el.val();
+				
+				if (value == this.value || value == "") return;
+				this.value = value;
 				this.saveAttribute();
 			},
 
@@ -78,7 +86,6 @@ define(
 						that.dbo.templated = templated;
 						that.refresh();
 					}, 'json');
-					
 				} else {
 					$.post("@{ImageBrowser.updateAttribute()}", {id:this.dbo.id,value:this.value}, function(attribute) {
 					}, 'json');

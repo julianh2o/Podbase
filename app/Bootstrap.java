@@ -36,7 +36,6 @@ public class Bootstrap extends Job {
 	        
 	        User julian = users.get(0);
 	        new UserPermission(p,julian,"owner").save();
-	        new UserPermission(p,julian,"managePermissions").save();
     	} else {
 	        // Check if the database is empty
 	        if(Project.count() == 0) {

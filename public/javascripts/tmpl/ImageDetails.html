@@ -1,7 +1,16 @@
-<div class="attributes"></div>
-
-<div>
-	<a href="#" class="add">
-		Add New Attribute
-	</a>
-</div>
+<% if (file) { %>
+	<div class="attributes"></div>
+	
+	<% if (canEdit) { %>
+		<div class="row">
+			<a href="#" class="add pull-right">
+				Add New Attribute
+			</a>
+		</div>
+	<% } %>
+	
+<% } else { %>
+	<div class="no-selection">
+		No image selected.
+	</div>
+<% } %>

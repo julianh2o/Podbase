@@ -71,4 +71,9 @@ public class ProjectController extends ParentController {
     	Project project = Project.findById(projectId);
     	renderJSON(project.getPermissionsForUser(Security.getUser()));
     }
+    
+    public static void getAccess(Long projectId) {
+    	Project project = Project.findById(projectId);
+    	renderJSON(project.getUserAccess(Security.getUser()));
+    }
 }

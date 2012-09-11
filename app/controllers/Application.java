@@ -13,68 +13,24 @@ public class Application extends ParentController {
     	render();
     }
     
-	public static void script() {
-		renderTemplate("Application/script.js");
-	}
-	
-	public static void loadJavascript(String path) {
-		renderTemplate("/public/javascripts/"+path);
-	}
-    
-    public static void showUsers() {
-    	List<User> users = User.findAll();
-    	render(users);
-    }
-    
-    public static void getProjects() {
-    	User user = Security.getUser();
-    	List<Project> projects = null;
-    	if (user == null) {
-    		projects = UserPermission.getProjectList(Project.getProjectsWithGuestPermission("visible"));
-    	} else {
-	    	projects = user.getProjectsWithPermission("visible");
-    	}
-    	renderJSON(projects);
-    }
-    
-    @Deprecated
-    public static void listProjects() {
-    	User user = Security.getUser();
-    	List<Project> projects = null;
-    	if (user == null) {
-    		projects = UserPermission.getProjectList(Project.getProjectsWithGuestPermission("visible"));
-    	} else {
-	    	projects = Security.getUser().getProjectsWithPermission("visible");
-    	}
-    	render(projects);
-    }
-    
-    public static void showProject(long projectId) {
+    public static void entry(Long projectId) {
     	Project project = Project.findById(projectId);
+    	if (project == null) index();
     	render(project);
     }
     
-    public static void createProject(String name) {
-    	Project project = new Project(name);
-    	project.save();
-    	getProjects();
+    public static void paper(Long paperId) {
+    	Paper paper = Paper.findById(paperId);
+    	if (paper == null) index();
+    	render(paper);
     }
     
-    public static void deleteProject(long projectId) {
-    	Project project = Project.findById(projectId);
-    	project.delete();
-    	getProjects();
-    }
-    
-    public static void addDirectory(long projectId, String path) {
-    	Project project = Project.findById(projectId);
-    	project.addDirectory(path);
-    	showProject(project.id);
-    }
-    
-    public static void removeDirectory(long directoryId) {
-    	Directory directory = Directory.findById(directoryId);
-    	directory.delete();
-    	showProject(directory.project.id);
-    }
+	public static void loadJavascript(String path) {
+		renderTemplate("/public/javascripts/"+path);
+	}
+	
+	public static void getCurrentUser() {
+		User user = Security.getUser();
+		renderJSON(user);
+	}
 }

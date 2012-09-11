@@ -30,6 +30,7 @@ public class DatabaseImage extends TimestampModel {
 	}
 	
 	public static DatabaseImage forPath(String path) {
+		if (path == null) return null;
 		DatabaseImage image = DatabaseImage.find("path",path).first();
 		if (image == null) {
 			image = new DatabaseImage(path);

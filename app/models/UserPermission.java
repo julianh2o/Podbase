@@ -32,7 +32,7 @@ public class UserPermission extends TimestampModel {
 	
 	//NOT IMPLEMENTED YET
 	static {
-		implications.put("owner", Arrays.asList("listed","visible","managePermissions","editMetadata","setTemplate","editTemplate"));
+		implications.put("owner", Arrays.asList("listed","visible","managePermissions","editMetadata","setTemplate","editTemplates","manageProject"));
 	}
 
 	public UserPermission(Project project, User user, String permission) {

@@ -45,11 +45,6 @@ public class ImageBrowser extends ParentController {
 		render();
 	}
 	
-	public static void projectIndex(long projectId) {
-		Project project = Project.findById(projectId);
-		renderTemplate("ImageBrowser/index.html", project);
-	}
-	
 	public static String getRootImageDirectory() {
 		return Play.applicationPath.getAbsolutePath() + "/data";
 	}
@@ -120,11 +115,7 @@ public class ImageBrowser extends ParentController {
 		renderJSON(fileWrappers);
 	}
 	
-	public static void script() {
-		renderTemplate("ImageBrowser/script.js");
-	}
-	
-	public static BufferedImage getImage(String path) {
+	static BufferedImage getImage(String path) {
 		File imageFile = new File(PodbaseUtil.concatenatePaths(getRootImageDirectory(),path));
 
 		try {

@@ -3,21 +3,24 @@ Project(p1):
 
 Directory(d1):
     project: p1
-    path: /alana
+    path: /copepod
     
 Directory(d2):
     project: p1
-    path: /julian
+    path: /more copepods
     
 Directory(d3):
     project: p1
-    path: /alana/folder
+    path: /other
  
 Project(p2):
     name: My other cool project
 
 DatabaseImage(img):
-    path: /alana/1.png
+    path: /copepod/copepod.jpg
+    
+DatabaseImage(img2):
+    path: /copepod/female-a1-17.jpg
 
 ImageAttribute(attr):
     image: img
@@ -42,3 +45,18 @@ TemplateAttribute(a3):
     template: t1
     name: Species
     sort: 2
+
+ImageSet(is):
+    name: foo
+        
+Paper(paper):
+    name: Invertebrate Myelin Paper
+    imageset: is
+    
+ImageSetMembership(mem):
+    image: img
+    imageset: is
+    
+ImageSetMembership(mem):
+    image: img2
+    imageset: is

@@ -5,17 +5,12 @@ define(
 			template: _.template( tmpl ),
 			
 			initialize: function() {
-				this.project = this.options.project;
-				
 				this.templates = null;
 				this.templateCache = new Cache();
 				
 				this.render();
 				
-				this.$select = $("select",this.el);
-				this.$select.change($.proxy(this.handleTemplateChange,this));
-				
-				$("html").on("PathChanged",$.proxy(this.pathChanged,this));
+				this.$template = $(".template",this.el);
 				
 				this.setProject(this.options.project);
 			},
@@ -23,11 +18,28 @@ define(
 			setProject : function(project) {
 				this.project = project;
 				
-				Link.getInstance().templates.get({projectId:this.project.id}).asap($.proxy(this.templatesLoaded,this));
+				Link.getInstance().loadAll([
+				                          ["templates",{projectId:this.project.id}],
+				                          ["projectAccess",{projectId:this.project.id}]
+				                          ],$.proxy(this.templatesLoaded,this));
 			},
 			
 			refresh : function() {
-				this.$select.empty();
+				this.$template.empty();
+				if (this.canChooseTemplate) {
+					this.renderSelector();
+				} else {
+					this.$select = null;
+					this.$span = $("<span class='chosen-template'/>");
+					this.$template.append(this.$span);
+				}
+			},
+			
+			renderSelector : function() {
+				this.$select = $("<select class='template-select'></select>");
+				this.$template.append(this.$select);
+				
+				this.$select.change($.proxy(this.handleTemplateChange,this));
 				
 				var that = this;
 				function addOption(text,value) {
@@ -45,10 +57,14 @@ define(
 				});
 			},
 		
-			templatesLoaded : function(link) {
-				this.templates = link.getData();
+			templatesLoaded : function() {
+				this.templates = Link.getInstance().templates.get({projectId:this.project.id}).getData();
+				this.access = Link.getInstance().projectAccess.get({projectId:this.project.id}).getData();
+				this.canChooseTemplate = $.inArray("setTemplate",this.access) >= 0;
 				
 				this.refresh();
+				
+				this.updateTemplateSelection(this.selectedTemplate)
 			},
 			
 			handleTemplateChange : function(event) {
@@ -60,7 +76,7 @@ define(
 				$("html").trigger("TemplateChanged",[templateId]);
 			},
 			
-			pathChanged : function(path) {
+			setPath : function(path) {
 				this.path = path;
 				if (this.templateCache.has(path)) {
 					this.setSelectedTemplate(this.templateCache.get(path));
@@ -80,10 +96,15 @@ define(
 			},
 			
 			setSelectedTemplate : function(template) {
-				if (template == null) {
-					this.$select.val("");
+				this.selectedTemplate = template;
+				if (this.$select || this.$span) this.updateTemplateSelection(template)
+			},
+			
+			updateTemplateSelection : function(template) {
+				if (this.canChooseTemplate) {
+					this.$select.val(template == null?"":template.id);
 				} else {
-					this.$select.val(template.id);
+					this.$span.html(template == null? "[No Template]" : template.name);
 				}
 			}
 		});

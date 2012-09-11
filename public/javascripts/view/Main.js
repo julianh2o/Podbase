@@ -1,38 +1,41 @@
 define(
-	['view/RenderedView', 'view/TabModule', 'view/ProjectSelect', 'view/TemplateManager', 'view/ProjectPermissions', 'view/ProjectSettings', 'data/Link', 'util/Util', 'view/ImageBrowser', 'text!tmpl/Main.html'],
-	function (RenderedView, TabModule, ProjectSelect, TemplateManager, ProjectPermissions, ProjectSettings, Link, Util, ImageBrowser, tmpl) {
+	['view/RenderedView', 'view/TabModule', 'view/ProjectSelect', 'view/TemplateManager', 'view/ProjectPermissions', 'view/ProjectSettings', 'view/UserPanel', 'data/Link', 'util/Util', 'view/ImageBrowser', 'text!tmpl/Main.html'],
+	function (RenderedView, TabModule, ProjectSelect, TemplateManager, ProjectPermissions, ProjectSettings, UserPanel, Link, Util, ImageBrowser, tmpl) {
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
 			
-			initialize: function(){
+			initialize: function(options){
+				this.projectId = this.options.projectId;
+				
 				window.debug = true;
 				this.render();
 				
-				this.projectSelect = new ProjectSelect();
+				//this.projectSelect = new ProjectSelect();
+				//this.$projectSelect = $(".project-select",this.el);
+				//this.$projectSelect.append(this.projectSelect.el);
 				
-				this.$projectSelect = $(".project-select",this.el);
+				this.userPanel = new UserPanel();
+				this.$userPanel = $(".user-panel",this.el);
+				this.$userPanel.append(this.userPanel.el);
+				
 				this.$projectTabs = $(".project-tabs",this.el);
 				
-				this.$projectSelect.append(this.projectSelect.el);
-				
-				$("html").on("ProjectSelected",$.proxy(this.projectSelected,this));
+				Link.getInstance().loadAll([
+				                            ["project",{projectId:this.projectId}],
+				                            ["projectAccess",{projectId:this.projectId}]
+				                            ],$.proxy(this.refresh,this));
 				
 				$("html").on("PathChanged ProjectSelected TemplateSelected TemplateChanged",Util.debugEvent);
 			},
 			
-			projectSelected : function(e,projectId,project) {
-				Link.getInstance().currentPermissions.get({projectId:projectId}).asap($.proxy(this.refresh,this));
-			},
-			
-			refresh : function() {
-				var project = this.projectSelect.getSelectedProject();
+			refresh : function(projectLink,accessLink) {
+				var project = projectLink.getData();
+				var access = accessLink.getData();
 				
-				var permissions = _.pluck(Link.getInstance().currentPermissions.get({projectId:project.id}).getData(),'permission');
-				
-				this.imageBrowser = new ImageBrowser({project:project});
-				this.templateManager = new TemplateManager({project:project});
-				this.projectPermissions = new ProjectPermissions({project:project});
-				this.projectSettings = new ProjectSettings({project:project});
+				this.imageBrowser = new ImageBrowser({project:project,access:access});
+				this.templateManager = new TemplateManager({project:project,access:access});
+				this.projectPermissions = new ProjectPermissions({project:project,access:access});
+				this.projectSettings = new ProjectSettings({project:project,access:access});
 				var tabs = [];
 				
 				tabs.push({
@@ -41,7 +44,7 @@ define(
 					content: this.imageBrowser
 				});
 				
-				if (_.include(permissions,"editTemplates")) {
+				if (_.include(access,"editTemplates")) {
 					tabs.push({
 						id: "templates",
 						label: "Template Manager",
@@ -49,7 +52,7 @@ define(
 					});
 				}
 				
-				if (_.include(permissions,"managePermissions")) {
+				if (_.include(access,"managePermissions")) {
 					tabs.push({
 						id: "permissions",
 						label: "Project Permissions",
@@ -57,7 +60,7 @@ define(
 					});
 				}
 				
-				if (_.include(permissions,"manageProject")) {
+				if (_.include(access,"manageProject")) {
 					tabs.push({
 						id: "settings",
 						label: "Project Settings",

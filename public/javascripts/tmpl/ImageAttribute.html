@@ -4,7 +4,8 @@
 	<div class="span6 value">
 	</div>
 	<div class="span1">
-		<span class="delete ui-icon ui-icon-closethick">
-		</span>
+		<% if (canEdit) { %>
+			<span class="delete ui-icon ui-icon-closethick"></span>
+		<% } %>
 	</div>
 </div>

@@ -8,7 +8,7 @@ define(
 			initialize: function() {
 				this.render();
 				
-				this.$browser = $(".browser",this.el);
+				this.$browser = $(".file-select",this.el);
 				this.$path = $(".path",this.el);
 				
 				this.path = this.options.path;
@@ -30,8 +30,6 @@ define(
 				this.$path.html(this.path);
 				$(this).trigger("PathChanged",[this.path]);
 
-				HashHandler.getInstance().setHash(this.path);
-
 				if (this.directoryCache.has(path)) {
 					this.loadFiles(path, selectedFile, this.directoryCache.get(path));
 				} else {
@@ -46,6 +44,7 @@ define(
 			loadFiles : function(path, selectedFile, files) {
 				var that = this;
 				var selectedOption = null;
+				var selectedFileObject = null;
 
 				function renderOption(file) {
 					var option = new Option();
@@ -56,6 +55,7 @@ define(
 					option.title = file.path;
 					if (file.display == selectedFile) {
 						option.selected = true;
+						selectedFileObject = file;
 						selectedOption = option;
 					}
 					$(option).data("file", file)
@@ -78,8 +78,8 @@ define(
 				$.each(files, function() {
 					renderOption(this);
 				});
-				if (selectedOption != null)
-					this.optionSelected(selectedOption);
+				
+				if (selectedFileObject) this.fileSelected(selectedFileObject);
 				
 				this.$browser.scrollTop(0);
 			},
@@ -89,12 +89,15 @@ define(
 				
 				return Util.appendPaths(this.path, this.selectedFile.display);
 			},
-
+			
 			optionSelected : function(event) {
 				var $option = $(event.target);
 				var file = $option.data("file");
 				
-				if (file == this.selectedFile) return;
+				this.fileSelected(file);
+			},
+
+			fileSelected : function(file) {
 				
 				if (file.isMagic) {
 					if (this.selectedFile == null) return;

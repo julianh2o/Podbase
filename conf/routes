@@ -3,21 +3,19 @@
 # ~~~~
 
 GET     /                                       Application.index
-GET     /users   	                            Application.showUsers
+GET     /entry/{projectId}                      Application.entry
+GET     /paper/{paperId}                        Application.paper
+GET     /ajax/paper                             PaperController.getPapers
+GET     /ajax/paper/{paperId}                   PaperController.getPaper
+GET		/ajax/imageset/{imagesetId}				PaperController.getImageSet
 GET     /project                                ProjectController.getProjects
 PUT     /project                                ProjectController.newProjects
-*       /project/create/{name}                  Application.createProject
-*       /project/delete/{projectId}             Application.deleteProject
-GET     /project/{projectId}                    ProjectManager.index
+GET     /project/{projectId}                    ProjectController.getProject
 
-GET		/template/?								TemplateManager.index
 GET		/project/{projectId}/templates			TemplateController.getTemplates
 GET		/project/{projectId}/users				ProjectController.getUserPermissions
-GET		/project/{projectId}/permissions		ProjectController.getPermissionsForProject
-GET		/template/{projectId}/{templateId}		TemplateManager.showTemplate
+GET		/project/{projectId}/access				ProjectController.getAccess
 
-GET		/browser								ImageBrowser.index
-GET		/browser/{projectId}					ImageBrowser.projectIndex
 *		/data/{<.*>path}						ImageBrowser.resolveFile
 
 *		/view									ImageViewer.index

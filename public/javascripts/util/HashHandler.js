@@ -4,15 +4,9 @@ define(
 		var This = function() {
 			this.internalHash = window.location.hash;
 			
-			$(document).ready(function() {
-				$(window).hashchange(function() {
-					var newHash = window.location.hash.substring(1);
-					if (this.internalHash == newHash) return;
-	
-					this.internalHash = newHash;
-					$(window).trigger("HashUpdate", newHash);
-				});
-			});
+			this.document
+			
+			$(document).ready($.proxy(this.documentReady,this));
 	
 		};
 		
@@ -20,6 +14,18 @@ define(
 			setHash : function(hash) {
 				this.internalHash = hash;
 				window.location.hash = hash;
+			},
+			
+			documentReady : function() {
+				$(window).hashchange($.proxy(this.hashChangeHandler,this));
+			},
+			
+			hashChangeHandler : function() {
+				var newHash = window.location.hash.substring(1);
+				if (this.internalHash == newHash) return;
+
+				this.internalHash = newHash;
+				$(this).trigger("HashUpdate", newHash);
 			}
 		});
 	

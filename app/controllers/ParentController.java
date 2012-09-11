@@ -22,7 +22,7 @@ public class ParentController extends Controller {
 	    return gson.toJson(o);
 	}
 	
-	protected static void debug(Object o) {
+	public static void debug(Object o) {
 		StackTraceElement frame = new Exception().getStackTrace()[1];
 		System.out.println("["+frame.getFileName() + ":"+ frame.getLineNumber()+"] "+o);
 	}

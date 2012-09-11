@@ -1,12 +1,17 @@
 package models;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+
+import models.UserPermission;
 
 import play.db.jpa.Model;
 
@@ -23,10 +28,13 @@ public class Project extends TimestampModel {
 	
 	@OneToMany(mappedBy="project", cascade=CascadeType.ALL)
 	public List<Template> templates;
+	
+	public ImageSet imageSet;
 
 	public Project(String name) {
 		super();
 		this.name = name;
+		this.imageSet = new ImageSet(name);
 	}
 	
 	public Directory addDirectory(String path) {
@@ -45,8 +53,25 @@ public class Project extends TimestampModel {
 	
 	public List<UserPermission> getPermissionsForUser(User user) {
 		List<UserPermission> permissions = UserPermission.find("byProjectAndUser", this, user).fetch();
-		System.out.println(permissions);
 		return permissions;
+	}
+	
+	public Set<String> getUserAccess(User user) {
+		List<UserPermission> permissions = UserPermission.find("byProjectAndUser", this, user).fetch();
+		HashSet<String> access = new HashSet<String>();
+		for (UserPermission perm : permissions) {
+			access.add(perm.permission);
+		}
+		
+		for (Entry<String, List<String>> e : UserPermission.implications.entrySet()) {
+			if (access.contains(e.getKey())) {
+				for (String implied : e.getValue()) {
+					access.add(implied);
+				}
+			}
+		}
+		
+		return access;
 	}
 	
 	public List<User> getUsersWithPermission(String permission) {
@@ -61,10 +86,5 @@ public class Project extends TimestampModel {
 	
 	public List<User> getUsers() {
 		return getUsersWithPermission("listed");
-	}
-	
-	public static List<UserPermission> getProjectsWithGuestPermission(String permission) {
-		List<UserPermission> permissions = UserPermission.find("byUserAndPermission", null, permission).fetch();
-		return permissions;
 	}
 }
