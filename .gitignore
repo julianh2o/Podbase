@@ -5,6 +5,6 @@ eclipse
 .project
 .classpath
 .settings
-db.lck
 data
 test-result
+db/*
