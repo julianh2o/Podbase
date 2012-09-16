@@ -1,5 +1,7 @@
-if [ "`hostname`" -eq "ares" ]
-then
+#!/bin/bash
+
+HOSTNAME=`hostname`
+if [ "$HOSTNAME" == "ares" ]; then
     cd /home/julian/podbase
     play stop
     git pull
