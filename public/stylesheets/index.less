@@ -3,6 +3,10 @@
 	margin-bottom: 0;
 }
 
+.row-fluid [class*="span"] {
+	//margin-left: 2px;
+}
+
 .nav-pills > li > a {
 	padding: 3px 5px;
 }
@@ -55,7 +59,8 @@ select.file-select {
 
 //Preview
 .preview-image {
-	height: 9em;
+	width: 200px;
+	height: 200px;
 	overflow: hidden;
 }
 
@@ -123,4 +128,22 @@ select.file-select {
 
 .chosen-template {
 	font-weight: bold;
+}
+
+//Image Sets
+.image-set-mode {
+	display: none;
+}
+
+.image-set-mode-active .image-set-mode {
+	display: block;
+}
+
+.paper-listing .image {
+	font-size: .8em;
+	white-space: nowrap;
+}
+
+.image-set-top {
+	text-align: right;
 }

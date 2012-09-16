@@ -28,4 +28,11 @@ public class Paper extends TimestampModel {
 		this.name = name;
 		this.imageset = new ImageSet(name);
 	}
+	
+	public static Paper createPaper(String name) {
+		Paper paper = new Paper(name);
+		paper.imageset.save();
+		paper.save();
+		return paper;
+	}
 }

@@ -132,7 +132,9 @@ public class ImageBrowser extends ParentController {
 		
 		try {
 			if ("thumb".equals(mode)) {
-				image = PodbaseUtil.scaleImageToFit(image,300,300);
+				image = PodbaseUtil.scaleImageToFit(image,200,200);
+			} else if ("fit".equals(mode) && width != null && height != null) {
+				image = PodbaseUtil.scaleImageToFit(image,width,height);
 			} else if (width != null && height != null) {
 				image = PodbaseUtil.scaleImage(image,width,height);
 			} else if (width != null || height != null) {

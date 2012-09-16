@@ -5,7 +5,9 @@
 GET     /                                       Application.index
 GET     /entry/{projectId}                      Application.entry
 GET     /paper/{paperId}                        Application.paper
+GET     /renderImageset/{imagesetId}            PaperController.render
 GET     /ajax/paper                             PaperController.getPapers
+POST    /ajax/paper                             PaperController.createPaper
 GET     /ajax/paper/{paperId}                   PaperController.getPaper
 GET		/ajax/imageset/{imagesetId}				PaperController.getImageSet
 GET     /project                                ProjectController.getProjects

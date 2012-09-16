@@ -12,6 +12,12 @@ import models.User;
 import models.UserPermission;
 
 public class PaperController extends ParentController {
+	public static void render(long imagesetId, int size) {
+    	ImageSet imageset = ImageSet.findById(imagesetId);
+    	List<DatabaseImage> images = ImageSetMembership.getImages(imageset.images);
+    	render(images,size);
+	}
+	
     public static void getPapers() {
     	//TODO access control
     	List<Paper> papers = Paper.findAll();
@@ -24,8 +30,7 @@ public class PaperController extends ParentController {
     }
     
     public static void createPaper(String name) {
-    	Paper paper = new Paper(name);
-    	paper.save();
+    	Paper paper = Paper.createPaper(name);
     	ok();
     }
     

@@ -1,0 +1,23 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+#{set 'moreScripts'}
+#{/set}
+
+#{set 'moreStyles'}
+	<style type="text/css">
+	    div {
+		    display: inline-block;
+		    width: ${size+10}px;
+		    padding: 3px;
+	    	border: 1px solid black;
+	    }
+    </style>
+#{/set}
+
+#{list items:images, as:'img'}
+	<div>
+		<img src="/data${img.path}?mode=fit&width=${size}&height=${size}" />
+		<br/>
+		<a href="/data${img.path}">Full Size</a>
+	</div>
+#{/list}

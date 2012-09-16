@@ -43,4 +43,12 @@ public class ImageSetMembership extends TimestampModel {
 	public String toString() {
 		return "Imageset ["+imageset.id+"] contains image ["+image.id+"]";
 	}
+	
+	public static List<DatabaseImage> getImages(List<ImageSetMembership> memberships) {
+		LinkedList<DatabaseImage> images = new LinkedList();
+		for (ImageSetMembership mem : memberships) {
+			images.add(mem.image);
+		}
+		return images;
+	}
 }

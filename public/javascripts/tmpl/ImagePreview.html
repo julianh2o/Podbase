@@ -1,5 +1,5 @@
 <div class="row-fluid">
-	<div class="preview-image span4">
+	<div class="preview-image span5">
 		<% if (file) { %>
 			<a href='@{ImageViewer.index()}<%= file.path %>'>
 				<img src='/data<%= file.path %>?mode=thumb'>
@@ -9,7 +9,7 @@
 		<% } %>
 	</div>
 	
-	<div class="image-info span8">
+	<div class="image-info span7">
 		<% if (file) { %>
 			<%= file.display %>
 			<br/>

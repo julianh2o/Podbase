@@ -23,5 +23,20 @@
 				</li>
 			<% }); %>
 		</ul>
+		<hr/>
+		<a href="#" class="add-paper">
+			Add new paper
+		</a>
 	</div>
 </div>
+
+<script type="text/javascript">
+	$(".add-paper").click(function() {
+		var name = prompt("Enter a name for your paper.");
+		if (!name) return;
+		
+		$.post("@{PaperController.createPaper}",{name:name},function() {
+			document.location.reload(true);
+		});
+	});
+</script>

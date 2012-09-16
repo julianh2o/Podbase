@@ -52,11 +52,3 @@ ImageSet(is):
 Paper(paper):
     name: Invertebrate Myelin Paper
     imageset: is
-    
-ImageSetMembership(mem):
-    image: img
-    imageset: is
-    
-ImageSetMembership(mem):
-    image: img2
-    imageset: is

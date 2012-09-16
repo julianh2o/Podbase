@@ -3,12 +3,17 @@
 	return spl[spl.length-1];
 } %>
 
-<% _.each(imageset.images,function(mem) { %>
-	<% var image = mem.image; %>
-	<div class="image" data-path="<%= image.path %>">
-		<a href="#" class="remove"><i class="icon-remove" /></span>
-		<a href="#<%= image.path %>" title="<%= image.path %>">
-			<%= getName(image.path) %>
-		</a>
-	</div>
-<% }); %>
+<div class="image-set-top">
+	<a href="/renderImageset/<%= imageset.id %>?size=300">Render HTML</a>
+</div>
+<div class="paper-listing">
+	<% _.each(imageset.images,function(mem) { %>
+		<% var image = mem.image; %>
+		<div class="image" data-path="<%= image.path %>">
+			<a href="#" class="remove"><i class="icon-remove" /></span>
+			<a href="#<%= image.path %>" title="<%= image.path %>">
+				<%= getName(image.path) %>
+			</a>
+		</div>
+	<% }); %>
+</div>
