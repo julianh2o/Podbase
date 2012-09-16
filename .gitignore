@@ -7,3 +7,5 @@ eclipse/
 test-result/
 db/*
 data/*
+logs/*
+server.pid
