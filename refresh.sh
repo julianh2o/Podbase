@@ -1,11 +1,12 @@
 #!/bin/bash
 
+PLAY=/home/julian/play/play
 HOSTNAME=`hostname`
 if [ "$HOSTNAME" == "ares" ]; then
     cd /home/julian/podbase
-    play stop
+    $PLAY stop
     git pull
-    play start --%prod
+    $PLAY start --%prod
 else
     ssh julian@new.podbase.net /home/julian/podbase/refresh.sh
 fi
