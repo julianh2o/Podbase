@@ -10,8 +10,8 @@
 	<% _.each(imageset.images,function(mem) { %>
 		<% var image = mem.image; %>
 		<div class="image" data-path="<%= image.path %>">
-			<a href="#" class="remove"><i class="icon-remove" /></span>
-			<a href="#<%= image.path %>" title="<%= image.path %>">
+			<a href="#" class="remove"><i class="icon-remove" /></a>
+			<a href="#<%= image.path %>" title="<%= image.path %>" class="text">
 				<%= getName(image.path) %>
 			</a>
 		</div>

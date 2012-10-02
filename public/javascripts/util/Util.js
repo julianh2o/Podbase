@@ -46,6 +46,12 @@ define(
 				if (window.debug) {
 					console.log("[ "+e.type+" ]",_.rest(arguments).join(", "));
 				}
+			},
+			createView : function($el, View, args) {
+				args = $.extend({},{el:$el},args);
+				
+				var instance = new View(args);
+				return instance;
 			}
 		}
 		

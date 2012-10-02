@@ -17,6 +17,8 @@ define(
 				this.model = {imageset:this.imageset};
 				this.render();
 				
+				$('.image',this.el).lipsis({location:"middle"});
+				
 				$(".remove",this.el).click($.proxy(this.removeImageFromSet,this));
 			},
 			

@@ -1,6 +1,6 @@
 define(
-	['view/RenderedView', 'view/TabModule', 'view/ProjectSelect', 'view/TemplateManager', 'view/ProjectPermissions', 'view/ProjectSettings', 'view/UserPanel', 'data/Link', 'util/Util', 'view/ImageBrowser', 'text!tmpl/Main.html'],
-	function (RenderedView, TabModule, ProjectSelect, TemplateManager, ProjectPermissions, ProjectSettings, UserPanel, Link, Util, ImageBrowser, tmpl) {
+	['view/RenderedView', 'view/TabModule', 'view/ProjectSelect', 'view/TemplateManager', 'view/ProjectPermissions', 'view/ProjectSettings', 'view/Header', 'data/Link', 'util/Util', 'view/ImageBrowser', 'text!tmpl/Main.html'],
+	function (RenderedView, TabModule, ProjectSelect, TemplateManager, ProjectPermissions, ProjectSettings, Header, Link, Util, ImageBrowser, tmpl) {
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
 			
@@ -10,15 +10,9 @@ define(
 				window.debug = true;
 				this.render();
 				
-				//this.projectSelect = new ProjectSelect();
-				//this.$projectSelect = $(".project-select",this.el);
-				//this.$projectSelect.append(this.projectSelect.el);
+				this.header = Util.createView( $(".header",this.el), Header);
 				
-				this.userPanel = new UserPanel();
-				this.$userPanel = $(".user-panel",this.el);
-				this.$userPanel.append(this.userPanel.el);
-				
-				this.$projectTabs = $(".project-tabs",this.el);
+				this.$projectTabs = $(".content",this.el);
 				
 				Link.getInstance().loadAll([
 				                            ["project",{projectId:this.projectId}],

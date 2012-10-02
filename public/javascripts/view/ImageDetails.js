@@ -58,7 +58,7 @@ define(
 			},
 			
 			addAttribute : function(attribute) {
-				var imageAttribute = new ImageAttribute({dbo:attribute});
+				var imageAttribute = new ImageAttribute({dbo:attribute,canEdit:this.canEdit});
 				this.$body.append(imageAttribute.el);
 			}
 		});

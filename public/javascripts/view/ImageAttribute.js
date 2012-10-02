@@ -66,7 +66,9 @@ define(
 			handleValueClick : function(event) {
 				this.editmode = true;
 				
-				this.refresh();
+				this.refreshValue();
+				
+				this.$value.find("input").focus();
 			},
 
 			handleValueBlur : function(event) {

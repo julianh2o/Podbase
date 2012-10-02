@@ -1,6 +1,6 @@
 define(
-		['view/RenderedView', 'util/Util', 'data/Link', 'view/ProjectSelect', 'view/ImageBrowserPaperMode', 'text!tmpl/PaperHome.html'],
-		function (RenderedView, Util, Link, ProjectSelect, ImageBrowserPaperMode, tmpl) {
+		['view/RenderedView', 'util/Util', 'data/Link', 'view/ProjectSelect', 'view/Header', 'view/ImageBrowserPaperMode', 'text!tmpl/Main.html'],
+		function (RenderedView, Util, Link, ProjectSelect, Header, ImageBrowserPaperMode, tmpl) {
 
 			var This = RenderedView.extend({
 				template: _.template( tmpl ),
@@ -8,9 +8,7 @@ define(
 				initialize: function() {
 					this.render();
 					
-					this.projectSelect = new ProjectSelect();
-					this.$projectSelect = $(".project-select",this.el);
-					this.$projectSelect.append(this.projectSelect.el);
+					this.header = Util.createView( $(".header",this.el), Header);
 					
 					$("html").on("ProjectSelected",$.proxy(this.projectSelected,this));
 				},
@@ -30,7 +28,7 @@ define(
 					var access = accessLink.getData();
 					
 					this.imageBrowser = new ImageBrowserPaperMode({project:project,access:access,paperId:paper.id});
-					$(".image-browser",this.el).empty().append(this.imageBrowser.el);
+					$(".content",this.el).empty().append(this.imageBrowser.el);
 				}
 			});
 
