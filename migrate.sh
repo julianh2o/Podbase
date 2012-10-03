@@ -4,10 +4,10 @@ src="julian@podbase.pbrc.hawaii.edu:/export/terabyte/database/"
 dst="./data/"
 
 function main() {
-	wget -O ./migrate/data.txt "http://podbase.pbrc.hawaii.edu/exporthelper.php?mode=txt"
-	wget -O ./migrate/data.yaml "http://podbase.pbrc.hawaii.edu/exporthelper.php"
+	wget -O data.txt "http://podbase.pbrc.hawaii.edu/exporthelper.php?mode=txt"
+	wget -O data.yaml "http://podbase.pbrc.hawaii.edu/exporthelper.php"
 
-	cat $1 | doCopy
+	cat data.txt | doCopy
 }
 
 function doCopy() {
@@ -15,4 +15,4 @@ function doCopy() {
 }
 
 
-main $1
+main
