@@ -6,6 +6,7 @@
 * image viewer overhaul
 * user refresh in paperAndProjectListing is firing twicecoo
 * change password
+* add user management panel
 
 Later:
 * image annotations
