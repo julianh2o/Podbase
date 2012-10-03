@@ -12,8 +12,18 @@ define(
 				this.project = Util.createView( $(".projects",this.el), ProjectList);
 				this.paper = Util.createView( $(".papers",this.el), PaperList);
 				
-				this.userManagement = Util.createView( $(".management",this.el), UserManagement);
+				Link.getInstance().currentUser.asap($.proxy(this.refresh,this));
 			},
+			
+			refresh : function() {
+				var user = Link.getInstance().currentUser.getData();
+				
+				console.log("user",user);
+				
+				if (user.root) {
+					this.userManagement = Util.createView( $(".management",this.el), UserManagement);
+				}
+			}
 		});
 		
 		$.extend(This,{

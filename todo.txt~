@@ -1,11 +1,10 @@
-* messaging system
 * after login redirect
 * fix refresh clearing out the related panel (project permissions when list changes)
 * messaging system
 * secure controllers
 * image viewer overhaul
-* user refresh in paperAndProjectListing is firing twicecoo
-* change password
+* user refresh in paperAndProjectListing is firing twice
+
 
 Later:
 * image annotations

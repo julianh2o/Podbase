@@ -30,7 +30,7 @@ define(
 				}
 				
 				$.post("@{UserController.createUser}",{email:email},function(password) {
-					prompt("Save this temporary password: ",password);
+					alert("The user has been sent an email with instructions on how to activate their account.");
 					Link.getInstance().users.pull();
 				});
 			}

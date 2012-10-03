@@ -78,7 +78,9 @@ public class PodbaseUtil {
 				count ++;
 				cpix++;
 			}
-			tot = tot/count;
+			if (count != 0) {
+				tot = tot/count;
+			}
 			
 			
 			double percent = (double)tot/(double)stats.maxCount;

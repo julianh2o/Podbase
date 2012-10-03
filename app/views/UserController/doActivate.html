@@ -1,0 +1,11 @@
+To complete your activation, please choose a new password:
+
+<form action="@{UserController.completeActivation}" method=POST>
+	<input type="hidden" name="userId" value="${user.id}" />
+	<input type="hidden" name="activationCode" value="${activation.activationCode}" />
+	New Password: <input type="password" name="password" />
+	<br/>
+	Confirm Password: <input type="password" name="confirm" />
+	<br/>
+	<input type="submit" />
+</form>

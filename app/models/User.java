@@ -16,6 +16,9 @@ public class User extends TimestampModel {
 	
 	public String password;
 	
+	@OneToOne(optional=true,cascade=CascadeType.ALL)
+	public Activation activation;
+	
 	public boolean root;
 	public boolean guest;
 	
@@ -28,7 +31,8 @@ public class User extends TimestampModel {
 		this.root = false;
 		this.email = email;
 		this.guest = false;
-		setCleartextPassword(password);
+		this.password = null;
+		if (password != null) setCleartextPassword(password);
 	}
 	
 	public void setCleartextPassword(String password) {
