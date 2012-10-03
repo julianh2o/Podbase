@@ -1,3 +1,6 @@
+* file system datastore
+* image file hash data
+* background task to index the filesystem
 * messaging system
 * after login redirect
 * fix refresh clearing out the related panel (project permissions when list changes)

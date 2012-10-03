@@ -1,6 +1,6 @@
 define(
-	['view/RenderedView', 'util/Util', 'data/Link', 'view/UserList', 'text!tmpl/UserManagement.html'],
-	function (RenderedView, Util, Link, UserList, tmpl) {
+	['view/RenderedView', 'util/Util', 'data/Link', 'view/UserList', 'view/UserManagementPanel', 'text!tmpl/UserManagement.html'],
+	function (RenderedView, Util, Link, UserList, UserManagementPanel, tmpl) {
 		function validateEmail(email) { 
 		    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		    return re.test(email);
@@ -18,8 +18,16 @@ define(
 				
 				this.users = Link.getInstance().users.getData();
 				this.userList = Util.createView( $(".userlist",this.el), UserList, {users:this.users});
+				this.userPanel = Util.createView( $(".management",this.el), UserManagementPanel);
+				
+				$(this.userList).on("UserSelected",$.proxy(this.userSelected,this));
 				
 				$(".add",this.el).click($.proxy(this.createUserClicked,this));
+			},
+			
+			userSelected : function(e,userId,user) {
+				console.log("user",user);
+				this.userPanel.setUser(user);
 			},
 			
 			createUserClicked : function(e) {
