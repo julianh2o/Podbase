@@ -1,11 +1,12 @@
 #!/bin/bash
 
 src="julian@podbase.pbrc.hawaii.edu:/export/terabyte/database/"
-dst="/home/julian/Desktop/migrate/images"
+dst="./data/"
 
 function main() {
-	wget -O data.txt "http://podbase.pbrc.hawaii.edu/exporthelper.php?mode=txt"
-	wget -O data.yaml "http://podbase.pbrc.hawaii.edu/exporthelper.php"
+	wget -O ./migrate/data.txt "http://podbase.pbrc.hawaii.edu/exporthelper.php?mode=txt"
+	wget -O ./migrate/data.yaml "http://podbase.pbrc.hawaii.edu/exporthelper.php"
+
 	cat $1 | doCopy
 }
 
