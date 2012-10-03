@@ -10,3 +10,4 @@ db/*
 data/*
 logs/*
 server.pid
+migrate/data.*

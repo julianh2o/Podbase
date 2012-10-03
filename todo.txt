@@ -1,3 +1,5 @@
+* access control for papers
+* migration of images and metadata
 * file system datastore
 * image file hash data
 * background task to index the filesystem
@@ -10,6 +12,13 @@
 * user refresh in paperAndProjectListing is firing twicecoo
 * change password
 * add user management panel
+* write tests
 
 Later:
 * image annotations
+
+projects (data sets) for all intents and purposes are private (for the forseeable future)
+
+papers, when published provide access to only the images encompassed by the paper
+
+data mode and analysis mode for projects
