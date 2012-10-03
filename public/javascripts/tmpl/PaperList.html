@@ -1,0 +1,15 @@
+<h1>Papers</h1>
+<ul>
+	<% _.each(papers,function(paper) { %>
+		<li>
+			<a href="/paper/<%= paper.id %>">
+				<%= paper.name %><br/>
+			</a>
+		</li>
+	<% }); %>
+</ul>
+<hr/>
+
+<a href="#" class="add">
+	Add new paper
+</a>

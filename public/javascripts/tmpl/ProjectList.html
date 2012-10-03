@@ -1,0 +1,15 @@
+<h1>Projects</h1>
+<ul>
+	<% _.each(projects,function(project) { %>
+		<li>
+			<a href="/entry/<%= project.id %>">
+				<%= project.name %><br/>
+			</a>
+		</li>
+	<% }); %>
+</ul>
+<hr/>
+
+<a href="#" class="add">
+	Add new project
+</a>

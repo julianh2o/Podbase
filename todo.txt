@@ -1,0 +1,4 @@
+* after login redirect
+* fix refresh clearing out the related panel (project permissions when list changes)
+* messaging system
+

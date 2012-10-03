@@ -1,0 +1,16 @@
+require:
+    - play
+    - org.apache.commons -> commons-lang3 3.1
+    - provided -> ij 1.0
+
+repositories:
+    - maven:
+        type: iBiblio
+        root: "http://repo1.maven.org/maven2/"
+        contains:
+            - org.apache.commons -> commons-lang3
+    - provided:
+        type: local
+        artifact:   "${application.path}/lib/[module]-[revision].jar"
+        contains:
+            - provided -> *
