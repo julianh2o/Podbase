@@ -8,7 +8,7 @@ define(
 			initialize: function() {
 				this.users = this.options.users;
 				
-				if (this.users) this.setUsers(users);
+				if (this.users) this.setUsers(this.users);
 			},
 			
 			setUsers : function(users) {

@@ -1,5 +1,6 @@
 package models;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -29,12 +30,9 @@ public class Project extends TimestampModel {
 	@OneToMany(mappedBy="project", cascade=CascadeType.ALL)
 	public List<Template> templates;
 	
-	public ImageSet imageSet;
-
 	public Project(String name) {
 		super();
 		this.name = name;
-		this.imageSet = new ImageSet(name);
 	}
 	
 	public Directory addDirectory(String path) {
@@ -70,6 +68,8 @@ public class Project extends TimestampModel {
 				}
 			}
 		}
+		
+		if (user.root) access.addAll(Arrays.asList(UserPermission.permissionList));
 		
 		return access;
 	}

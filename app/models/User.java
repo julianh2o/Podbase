@@ -1,6 +1,7 @@
 package models;
 
 import java.util.*;
+
 import javax.persistence.*;
 
 import play.data.validation.Email;
@@ -55,8 +56,12 @@ public class User extends TimestampModel {
 	}
 	
 	public List<Project> getProjectsWithPermission(String permission) {
-		List<UserPermission> permissions = UserPermission.find("byUserAndPermission", this,permission).fetch();
-		List<UserPermission> everyonePermissions = UserPermission.find("byUserAndPermission", null,permission).fetch();
+		if (this.root) {
+			return Project.findAll();
+		}
+		
+		List<UserPermission> permissions = UserPermission.find("byUserAndPermission", this ,permission).fetch();
+		List<UserPermission> everyonePermissions = UserPermission.find("byUserAndPermission", User.getGuestAccount() ,permission).fetch();
 		
 		permissions.addAll(everyonePermissions);
 		return UserPermission.getProjectList(new LinkedList<UserPermission>(new HashSet<UserPermission>(permissions)));
@@ -64,5 +69,14 @@ public class User extends TimestampModel {
 	
 	public static User getGuestAccount() {
 		return User.find("guest", true).first();
+	}
+
+	public List<Project> getProjectsWithAnyOf(String... permissions) {
+		List<Project> accumulate = new LinkedList<Project>();
+		for (String permission : permissions) {
+			accumulate.addAll(getProjectsWithPermission(permission));
+		}
+		
+		return new LinkedList<Project>(new HashSet<Project>(accumulate));
 	}
 }

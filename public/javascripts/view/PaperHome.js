@@ -8,7 +8,7 @@ define(
 				initialize: function() {
 					this.render();
 					
-					this.header = Util.createView( $(".header",this.el), Header);
+					this.header = Util.createView( $(".header",this.el), Header, {projectSelect: true});
 					
 					$("html").on("ProjectSelected",$.proxy(this.projectSelected,this));
 				},

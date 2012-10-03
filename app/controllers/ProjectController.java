@@ -10,7 +10,9 @@ import models.UserPermission;
 public class ProjectController extends ParentController {
     public static void getProjects() {
     	User user = Security.getUser();
-    	List<Project> projects = user.getProjectsWithPermission("visible");
+    	
+    	List<Project> projects = user.getProjectsWithAnyOf("visible","owner");
+    	
     	renderJSON(projects);
     }
     
@@ -22,6 +24,11 @@ public class ProjectController extends ParentController {
     public static void createProject(String name) {
     	Project project = new Project(name);
     	project.save();
+    	
+    	User user = Security.getUser();
+    	setUserPermission(project.id,user.id,"owner",true);
+    	setUserPermission(project.id,user.id,"listed",true);
+    	
     	ok();
     }
     
@@ -51,6 +58,23 @@ public class ProjectController extends ParentController {
     
     public static void getAllProjectPermissions() {
     	renderJSON(UserPermission.permissionList);
+    }
+    
+    public static void addUserByEmail(Long projectId, String email) {
+    	User user = User.find("byEmail", email).first();
+    	setUserPermission(projectId,user.id,"listed",true);
+    }
+    
+    public static void removeUser(Long projectId, Long userId) {
+		Project project = Project.findById(projectId);
+    	User user = User.findById(userId);
+    	
+    	List<UserPermission> userPermission = UserPermission.find("byProjectAndUser", project, user).fetch();
+    	for(UserPermission perm : userPermission) {
+    		perm.delete();
+    	}
+    	
+    	ok();
     }
     
     public static void setUserPermission(Long projectId, Long userId, String permission, boolean value) {

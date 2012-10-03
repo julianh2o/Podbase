@@ -22,7 +22,18 @@ define(
 				$(this.userList).on("UserSelected",$.proxy(this.userSelected,this))
 					.on("UserSelected",Util.debugEvent);
 				
+				$(".add-user",this.el).click($.proxy(this.addUserClicked,this));
+				
 				this.setProject(this.options.project);
+			},
+			
+			addUserClicked : function(e) {
+				e.preventDefault();
+				var email = prompt("Enter the user's email address");
+				var self = this;
+				$.post("@{ProjectController.addUserByEmail}",{projectId:this.project.id,email:email},function() {
+					Link.getInstance().projectUsers.get({projectId:self.project.id}).pull();
+				});
 			},
 			
 			setProject : function(project) {

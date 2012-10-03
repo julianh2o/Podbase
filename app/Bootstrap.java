@@ -19,23 +19,22 @@ public class Bootstrap extends Job {
 	        guest.save();
 	        
 	        List<User> users = new LinkedList<User>();
-	        users.add((User)new User("julianh2o@gmail.com", "secret").save());
-	        users.add((User)new User("kittycasey@gmail.com", "secret").save());
-	        users.add((User)new User("boink@gmail.com", "secret").save());
-	        users.get(0).root = true;
-	        users.get(0).save();
+	        User a = new User("julianh2o@gmail.com", "secret").save();
+	        User b = new User("kittycasey@gmail.com", "secret").save();
+	        User c = new User("boink@gmail.com", "secret").save();
+	        
+	        a.root = true;
+	        a.save();
 	        
 	        Project p = (Project)Project.findAll().get(0);
-	        new UserPermission(p,guest,"visible").save();
 	        
-	        new UserPermission(p, null, "visible").save();
-	        for(User u : users) {
-		        new UserPermission(p, u, "visible").save();
-		        new UserPermission(p, u, "listed").save();
-	        }
+	        new UserPermission(p, guest,"visible").save(); //guest permission
 	        
-	        User julian = users.get(0);
-	        new UserPermission(p,julian,"owner").save();
+	        new UserPermission(p, a,"owner").save();
+	        new UserPermission(p, a, "listed").save();
+	        
+	        new UserPermission(p, b, "listed").save();
+	        
     	} else {
 	        // Check if the database is empty
 	        if(Project.count() == 0) {

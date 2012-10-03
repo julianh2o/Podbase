@@ -1,42 +1,13 @@
-<div class="row-fluid">
-	<div class="span6 projects">
-		<h1>Projects</h1>
-		<ul>
-			<% _.each(projects,function(project) { %>
-				<li>
-					<a href="/entry/<%= project.id %>">
-						<%= project.name %><br/>
-					</a>
-				</li>
-			<% }); %>
-		</ul>
-	</div>
-	
-	<div class="span6 papers">
-		<h1>Papers</h1>
-		<ul>
-			<% _.each(papers,function(paper) { %>
-				<li>
-					<a href="/paper/<%= paper.id %>">
-						<%= paper.name %><br/>
-					</a>
-				</li>
-			<% }); %>
-		</ul>
+<div class="main">
+	<div class="header"></div>
+	<div class="content">
+		<div class="row-fluid">
+			<div class="span6 projects"></div>
+			
+			<div class="span6 papers"></div>
+		</div>
+		
 		<hr/>
-		<a href="#" class="add-paper">
-			Add new paper
-		</a>
+		<div class="management"></div>
 	</div>
 </div>
-
-<script type="text/javascript">
-	$(".add-paper").click(function() {
-		var name = prompt("Enter a name for your paper.");
-		if (!name) return;
-		
-		$.post("@{PaperController.createPaper}",{name:name},function() {
-			document.location.reload(true);
-		});
-	});
-</script>

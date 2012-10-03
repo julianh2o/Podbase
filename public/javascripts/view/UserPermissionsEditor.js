@@ -22,6 +22,8 @@ define(
 			},
 			
 			loadUser : function(user) {
+				this.user = user;
+				
 				var link = Link.getInstance().projectPermissions;
 				if (!link.isDataReady()) {
 					var self = this;
@@ -38,7 +40,17 @@ define(
 				
 				this.render();
 				
+				$(".remove").click($.proxy(this.removeUserClicked,this));
+				
 				$("input",this.el).change($.proxy(this.checkboxChanged,this));
+			},
+			
+			removeUserClicked : function(e) {
+				e.preventDefault();
+				var self = this;
+				$.post("@{ProjectController.removeUser}",{projectId:this.project.id,userId:this.user.id},function() {
+					Link.getInstance().projectUsers.get({projectId:self.project.id}).pull();
+				});
 			},
 			
 			checkboxChanged : function(e) {

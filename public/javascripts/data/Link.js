@@ -133,7 +133,8 @@ define([], function() {
 				link.asap(handler);
 			});
 		}
-		
+
+		this.users = new Link("@{UserController.getAllUsers}");
 		this.projects = new Link("@{ProjectController.getProjects}");
 		this.papers = new Link("@{PaperController.getPapers}");
 		this.projectPermissions = new Link("@{ProjectController.getAllProjectPermissions}");
@@ -160,8 +161,10 @@ define([], function() {
 
 	$.extend(This, {
 		getInstance : function() {
-			if (!This.instance)
+			if (!This.instance) {
 				This.instance = new This();
+				window.link = This.instance;
+			}
 			return This.instance;
 		}
 		

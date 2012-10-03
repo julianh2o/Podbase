@@ -10,8 +10,6 @@ define(
 				window.debug = true;
 				this.render();
 				
-				this.header = Util.createView( $(".header",this.el), Header);
-				
 				this.$projectTabs = $(".content",this.el);
 				
 				Link.getInstance().loadAll([
@@ -24,6 +22,9 @@ define(
 			
 			refresh : function(projectLink,accessLink) {
 				var project = projectLink.getData();
+				
+				this.header = Util.createView( $(".header",this.el), Header, {project: project});
+				
 				var access = accessLink.getData();
 				
 				this.imageBrowser = new ImageBrowser({project:project,access:access});
