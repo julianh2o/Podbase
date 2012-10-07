@@ -20,6 +20,8 @@ import play.db.jpa.Model;
 public class Project extends TimestampModel {
 	public String name;
 	
+	public boolean dataMode;
+	
 	@OneToMany(mappedBy="project",cascade=CascadeType.ALL)
 	@GsonTransient
 	public List<UserPermission> userPermissions;
@@ -32,6 +34,7 @@ public class Project extends TimestampModel {
 	
 	public Project(String name) {
 		super();
+		this.dataMode = true;
 		this.name = name;
 	}
 	

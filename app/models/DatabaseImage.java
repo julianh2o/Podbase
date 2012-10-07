@@ -22,8 +22,8 @@ public class DatabaseImage extends TimestampModel {
 		this.attributes = new LinkedList<ImageAttribute>();
 	}
 	
-	public ImageAttribute addAttribute(String key, String value) {
-		ImageAttribute attr = new ImageAttribute(this, key, value).save();
+	public ImageAttribute addAttribute(Project project, String key, String value, boolean dataMode) {
+		ImageAttribute attr = new ImageAttribute(project, this, key, value, dataMode).save();
 		this.attributes.add(attr);
 		this.save();
 		return attr;

@@ -9,6 +9,9 @@ define(
 				this.dbo = this.options.dbo;
 				this.canEdit = this.options.canEdit;
 				
+				this.project = this.options.project;
+				this.dataMode = this.options.dataMode;
+				
 				this.model = {canEdit:this.canEdit};
 				this.render();
 				this.$attribute = $(".attribute",this.el);
@@ -28,6 +31,7 @@ define(
 			},
 				
 			handleDelete : function() {
+				if (!confirm("Really delete this?")) return;
 				if (this.dbo.id == undefined) return;
 				$.post("@{ImageBrowser.deleteAttribute()}", {id:this.dbo.id});
 				if (this.dbo.templated) {
@@ -50,16 +54,14 @@ define(
 				
 				$el.unbind("click"); 
 				
-				if (this.canEdit) {
-					if (this.editmode) {
-						var input = $("<input class='seamless' />");
-						input.val(this.dbo.value);
-						$el.empty().append(input);
-						input.bind("blur", $.proxy(this.handleValueBlur,this));
-					} else {
-						$el.html(this.dbo.value);
-						$el.bind("click", $.proxy(this.handleValueClick,this));
-					}
+				if (this.editmode) {
+					var input = $("<input class='seamless' />");
+					input.val(this.dbo.value);
+					$el.empty().append(input);
+					input.bind("blur", $.proxy(this.handleValueBlur,this));
+				} else {
+					$el.html(this.dbo.value);
+					if (this.canEdit) $el.bind("click", $.proxy(this.handleValueClick,this));
 				}
 			},
 

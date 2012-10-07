@@ -32,6 +32,12 @@ public class ProjectController extends ParentController {
     	ok();
     }
     
+    public static void setDataMode(long projectId, boolean dataMode) {
+    	Project project = Project.findById(projectId);
+    	project.dataMode = dataMode;
+    	ok();
+    }
+    
     public static void deleteProject(long projectId) {
     	Project project = Project.findById(projectId);
     	project.delete();

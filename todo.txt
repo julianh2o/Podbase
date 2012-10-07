@@ -1,15 +1,18 @@
+* slight restructuring: "data" mode and "analysis mode"
 * access control for papers
-* migration of images and metadata
+
 * file system datastore
 * image file hash data
 * background task to index the filesystem
+
+* inherited templates
 * messaging system
 * after login redirect
 * fix refresh clearing out the related panel (project permissions when list changes)
 * messaging system
 * secure controllers
 * image viewer overhaul
-* user refresh in paperAndProjectListing is firing twicecoo
+* user refresh in paperAndProjectListing is firing twice
 * change password
 * add user management panel
 * write tests

@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import models.DatabaseImage;
+import models.Project;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.CharSet;
@@ -25,6 +26,7 @@ public class PodbaseMetadataMigration extends Job {
 		File f = new File("./migrate/data.yaml");
 		
 		List<Entry> entries = parseFile(f);
+		Project project = Project.findById(new Long(1));
 		
 		int i=0;
 		for(Entry entry : entries) {
@@ -32,7 +34,7 @@ public class PodbaseMetadataMigration extends Job {
 			
 			DatabaseImage image = DatabaseImage.forPath(entry.path);
 			for(String key : entry.data.keySet()) {
-				image.addAttribute(key,entry.data.get(key));
+				image.addAttribute(project, key,entry.data.get(key), true);
 			}
 			
 			if (Play.id.equals("dev") && i++ > 5) return; //cut off after 5 in dev mode

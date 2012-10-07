@@ -12,10 +12,13 @@ public class ImageAttributeTest extends UnitTest {
     
     @Test
     public void createImage() {
+    	Project project = new Project("foo");
+    	project.save();
+    	
     	DatabaseImage image = new DatabaseImage("/alana/2.jpg");
     	image.save();
     	
-    	ImageAttribute attr = new ImageAttribute(image,"boink", "pow");
+    	ImageAttribute attr = new ImageAttribute(project, image,"boink", "pow", true);
     	attr.save();
     	
     	image.attributes.add(attr);

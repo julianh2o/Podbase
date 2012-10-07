@@ -17,7 +17,7 @@ Project(p2):
     name: My other cool project
 
 DatabaseImage(img):
-    path: /copepod/copepod.jpg
+    path: /foo.png
     
 DatabaseImage(img2):
     path: /copepod/female-a1-17.jpg
@@ -26,6 +26,13 @@ ImageAttribute(attr):
     image: img
     attribute: foo
     value: bar
+    data: false
+    
+ImageAttribute(attr1):
+    image: img
+    attribute: boink
+    value: biff
+    data: true
     
 Template(t1):
     project: p1

@@ -185,7 +185,7 @@ public class ImageBrowser extends ParentController {
 		}
 	}
 	
-	public static void fetchInfo(Long projectId, String path) {
+	public static void fetchInfo(Long projectId, String path, boolean dataMode) {
 		Project project = null;
 		if (projectId != null) project = Project.findById(projectId);
 		//TODO fix this by using inherited template assignments
@@ -195,13 +195,9 @@ public class ImageBrowser extends ParentController {
 		List<TemplateAttribute> templateAttributes = template==null?null:template.attributes;
 		
 		DatabaseImage image = DatabaseImage.find("path", path).first();
-		List<ImageAttribute> attributes;
+		List<ImageAttribute> attributes = new LinkedList<ImageAttribute>();
 		
-		// TODO fix the ordering on these things
-		if (image == null)
-			attributes = new LinkedList<ImageAttribute>();
-		else 
-			attributes = image.attributes;
+		if (image != null) attributes.addAll(image.attributes);
 		
 		//Add attributes from the template
 		if (templateAttributes != null) {
@@ -216,23 +212,27 @@ public class ImageBrowser extends ParentController {
 				}
 				if (found != null) {
 					found.templated = true;
-					templateImageAttributes.add(found);
-					attributes.remove(found);
 				} else {
-					templateImageAttributes.add(new ImageAttribute(image,templateAttribute.name,null,true));
+					attributes.add(new ImageAttribute(project, image,templateAttribute.name,null,dataMode,true));
 				}
 			}
+		}
+		
+		Iterator<ImageAttribute> it = attributes.iterator();
+		while(it.hasNext()) {
+			ImageAttribute attr = it.next();
 			
-			templateImageAttributes.addAll(attributes);
-			attributes = templateImageAttributes;
+			//only show data mode attributes in datamode
+			if (dataMode && !attr.data) it.remove();
 		}
 		
 	    renderJSON(attributes);  
 	}
 	
-	public static void createAttribute(String path, String attribute, String value) {
+	public static void createAttribute(Long projectId, String path, String attribute, String value, boolean dataMode) {
+		Project project = Project.findById(projectId);
 		DatabaseImage image = DatabaseImage.forPath(path);
-		ImageAttribute attr = image.addAttribute(attribute, value);
+		ImageAttribute attr = image.addAttribute(project, attribute, value, dataMode);
 		renderJSON(attr);
 	}
 	

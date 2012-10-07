@@ -73,7 +73,7 @@ define(
 				
 				$.post("@{TemplateController.setFolderTemplate()}", {projectId:this.project.id,templateId:templateId,path:this.path},$.proxy(this.handleTemplateForPath,this),'json');
 				
-				$("html").trigger("TemplateChanged",[templateId]);
+				$(this).trigger("TemplateChanged",[templateId]);
 			},
 			
 			setPath : function(path) {

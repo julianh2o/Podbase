@@ -150,7 +150,6 @@ define([], function() {
 		
 		
 		this.paper = new VariableLink("/ajax/paper/{paperId}");
-		
 		this.imageset = new VariableLink("/ajax/imageset/{imagesetId}");
 
 		this.project = new VariableLink("/project/{projectId}");

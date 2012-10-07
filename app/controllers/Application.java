@@ -1,9 +1,12 @@
 package controllers;
 
 import play.*;
+import play.db.jpa.JPA;
 import play.mvc.*;
 
 import java.util.*;
+
+import javax.persistence.Query;
 
 import models.*;
 
