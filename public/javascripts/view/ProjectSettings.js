@@ -6,8 +6,7 @@ define(
 			template: _.template( tmpl ),
 			
 			initialize: function() {
-				
-				//$("html").on("ProjectSelected",$.proxy(this.projectSelected,this));
+				$("html").on("ProjectSelected",$.proxy(this.projectSelected,this));
 				this.setProject(this.options.project);
 			},
 			
@@ -30,8 +29,9 @@ define(
 				var $el = $(e.target).closest(".directory");
 				
 				var id = $el.data("id");
+				var self = this;
 				$.post("@{ProjectController.removeDirectory}",{directoryId:id},function() {
-						Link.getInstance().projects.pull()
+						Link.getInstance().project.get({projectId:self.project.id}).pull();
 				},'json');
 			},
 			
@@ -41,7 +41,7 @@ define(
 				if (path) {
 					var self = this;
 					$.post("@{ProjectController.addDirectory}",{projectId:this.project.id, path:path},function() {
-						Link.getInstance().projects.pull();
+						Link.getInstance().project.get({projectId:self.project.id}).pull();
 					},'json');
 				}
 			}

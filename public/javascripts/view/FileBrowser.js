@@ -5,23 +5,18 @@ define(
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
 			
-			initialize: function() {
+			initialize: function(options) {
+				this.project = options.project;
 				this.render();
 				
 				this.$browser = $(".file-select",this.el);
 				this.$path = $(".path",this.el);
 				
-				this.path = this.options.path;
+				this.path = options.path;
 				this.directoryCache = new Cache();
 				this.selectedFile = null;
 				
 				this.loadPath(this.path);
-			},
-			
-			setProject : function(projectId) {
-				this.projectId = projectId;
-				this.directoryCache.purge();
-				this.loadPath("/");
 			},
 			
 			loadPath : function(path, selectedFile) {
@@ -34,7 +29,7 @@ define(
 					this.loadFiles(path, selectedFile, this.directoryCache.get(path));
 				} else {
 					var self = this;
-					$.post("@{ImageBrowser.fetch()}", {projectId:this.projectId,path:path}, function(files) {
+					$.post("@{ImageBrowser.fetch()}", {projectId:this.project.id,path:path}, function(files) {
 						self.directoryCache.put(path, files);
 						self.loadFiles(path, selectedFile, files);
 					}, 'json');
@@ -42,6 +37,10 @@ define(
 			},
 
 			loadFiles : function(path, selectedFile, files) {
+				if (files == null) {
+					return;
+				}
+				
 				var that = this;
 				var selectedOption = null;
 				var selectedFileObject = null;

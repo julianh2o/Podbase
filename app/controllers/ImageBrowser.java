@@ -85,7 +85,7 @@ public class ImageBrowser extends ParentController {
 		List<File> files = new LinkedList<File>();
 		for (Directory dir : project.directories) {
 			File f = new File(relativeToRoot(dir.path));
-			files.add(f);
+			if (f.exists()) files.add(f);
 		}
 		return files;
 	}

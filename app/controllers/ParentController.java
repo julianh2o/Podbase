@@ -23,7 +23,7 @@ public class ParentController extends Controller {
 	}
 	
 	public static void debug(Object o) {
-		StackTraceElement frame = new Exception().getStackTrace()[1];
+		StackTraceElement frame = new Exception().getStackTrace()[0];
 		System.out.println("["+frame.getFileName() + ":"+ frame.getLineNumber()+"] "+o);
 	}
 }

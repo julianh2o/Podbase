@@ -120,10 +120,11 @@ define([], function() {
 						return false;
 					}
 				});
-				if (allReady) {
+				if (allReady && (!called || repeat)) {
 					var links = _.map(info,function(x) {
 						return getLink(x);
 					});
+					called = true;
 					callback.apply(this,links);
 				}
 			}

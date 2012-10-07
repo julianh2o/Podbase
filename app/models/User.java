@@ -23,7 +23,6 @@ public class User extends TimestampModel {
 	public boolean guest;
 	
 	@OneToMany(mappedBy="user",cascade=CascadeType.ALL)
-	@GsonTransient
 	public List<UserPermission> userPermissions;
 	
 	public User(String email, String password) {

@@ -11,11 +11,12 @@ define(
 				this.render();
 				
 				this.$projectTabs = $(".content",this.el);
+				this.selectedTab = "browser";
 				
 				Link.getInstance().loadAll([
 				                            ["project",{projectId:this.projectId}],
 				                            ["projectAccess",{projectId:this.projectId}]
-				                            ],$.proxy(this.refresh,this));
+				                            ],$.proxy(this.refresh,this),true);
 				
 				$("html").on("PathChanged ProjectSelected TemplateSelected TemplateChanged",Util.debugEvent);
 			},
@@ -63,8 +64,13 @@ define(
 					});
 				}
 				
-				this.tabs = new TabModule({tabs: tabs});
+				this.tabs = new TabModule({tabs: tabs,selectedTab: this.selectedTab });
+				$(this.tabs).on("TabSelected",$.proxy(this.tabSelected,this));
 				this.$projectTabs.empty().append(this.tabs.el);
+			},
+			
+			tabSelected : function(e,id) {
+				this.selectedTab = id;
 			}
 		});
 		

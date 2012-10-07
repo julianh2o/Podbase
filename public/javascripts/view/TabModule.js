@@ -14,6 +14,7 @@ define(
 		
 			initialize: function(){
 				this.model = {};
+				this.selectedTab = this.options.selectedTab;
 				this.model.tabs = this.options.tabs;
 				
 				_.each(this.model.tabs,function(tab) {
@@ -27,18 +28,28 @@ define(
 					$("#"+tab.id,self.el).empty().append(tab.content.el || tab.content);
 				});
 				
-				
 				$("li a",this.el).click(function(e) {
 					e.preventDefault();
-					$(this).tab('show');
+					self.doSelectTab($(this));
 				});
 				
 				$("li a",this.el).first().tab("show");
 				$(".tab-pane",this.el).first().addClass("active");
+				
+				this.doSelectTab($("[href='#"+this.selectedTab+"']",this.el));
+			},
+			
+			doSelectTab : function($el) {
+				var id = $el.attr("href").substring(1);
+				$el.tab('show');
+				$(".tab-pane",this.el).removeClass("active");
+				$("#"+id,this.el).addClass("active");
+				this.selectedTab = id;
+				$(this).trigger("TabSelected", [id]);
 			},
 			
 			select : function(id) {
-				$("#"+id,this.el).tab("show");
+				this.doSelectTab($("#"+id,this.el));
 			}
 		});
 	}
