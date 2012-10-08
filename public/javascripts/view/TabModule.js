@@ -23,20 +23,23 @@ define(
 				
 				this.render();
 				
+				this.$tabs = $(this.el).children(".tabbable").children(".nav-tabs");
+				this.$content = $(this.el).children(".tabbable").children(".tab-content");
+				
 				var self = this;
 				_.each(this.model.tabs,function(tab) {
 					$("#"+tab.id,self.el).empty().append(tab.content.el || tab.content);
 				});
 				
-				$("li a",this.el).click(function(e) {
+				$("li a",this.$tabs).click(function(e) {
 					e.preventDefault();
 					self.doSelectTab($(this));
 				});
 				
-				$("li a",this.el).first().tab("show");
-				$(".tab-pane",this.el).first().addClass("active");
+				$("li a",this.$tabs).first().tab("show");
+				this.$content.children(".tab-pane").first().addClass("active");
 				
-				this.doSelectTab($("[href='#"+this.selectedTab+"']",this.el));
+				this.doSelectTab($("[href='#"+this.selectedTab+"']",this.$tabs));
 			},
 			
 			doSelectTab : function($el) {

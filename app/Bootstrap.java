@@ -22,6 +22,7 @@ public class Bootstrap extends Job {
 	        User a = new User("julianh2o@gmail.com", "secret").save();
 	        User b = new User("kittycasey@gmail.com", "secret").save();
 	        User c = new User("boink@gmail.com", "secret").save();
+	        User d = new User("danh@pbrc.hawaii.edu", "lucifer").save();
 	        
 	        a.root = true;
 	        a.save();

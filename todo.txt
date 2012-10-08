@@ -1,6 +1,4 @@
-* slight restructuring: "data" mode and "analysis mode"
 * access control for papers
-
 * file system datastore
 * image file hash data
 * background task to index the filesystem
