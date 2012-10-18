@@ -2,108 +2,111 @@ package controllers;
 
 import java.util.List;
 
+import access.Access;
+import access.AccessType;
+import access.ProjectAccess;
+
+import play.mvc.Util;
+import play.mvc.With;
+import services.PermissionService;
+
 import models.Directory;
+import models.Permission;
 import models.Project;
 import models.User;
-import models.UserPermission;
 
+@With(Security.class)
 public class ProjectController extends ParentController {
     public static void getProjects() {
     	User user = Security.getUser();
     	
-    	List<Project> projects = user.getProjectsWithAnyOf("visible","owner");
+    	if (user.root)renderJSON(Project.findAll());
+    	List<Project> projects = PermissionService.filter(PermissionService.getModelsForUser(user, AccessType.PROJECT_VISIBLE), Project.class);
     	
     	renderJSON(projects);
     }
     
-    public static void getProject(long projectId) {
-    	Project project = Project.findById(projectId);
+    @ProjectAccess(AccessType.PROJECT_VISIBLE)
+    public static void getProject(Project project) {
     	renderJSON(project);
     }
     
+    @Access(AccessType.CREATE_PROJECT)
     public static void createProject(String name) {
+    	User user = Security.getUser();
+    	
     	Project project = new Project(name);
     	project.save();
     	
-    	User user = Security.getUser();
-    	setUserPermission(project.id,user.id,"owner",true);
-    	setUserPermission(project.id,user.id,"listed",true);
+    	PermissionService.togglePermission(user,project,AccessType.PROJECT_OWNER,true);
+    	PermissionService.togglePermission(user,project,AccessType.PROJECT_LISTED,true);
     	
     	ok();
     }
     
-    public static void setDataMode(long projectId, boolean dataMode) {
-    	Project project = Project.findById(projectId);
+    @ProjectAccess(AccessType.PROJECT_EDIT_METADATA)
+    public static void setDataMode(Project project, boolean dataMode) {
     	project.dataMode = dataMode;
     	ok();
     }
     
-    public static void deleteProject(long projectId) {
-    	Project project = Project.findById(projectId);
+    @Access(AccessType.DELETE_PROJECT)
+    public static void deleteProject(Project project) {
     	project.delete();
     	ok();
     }
     
-    public static void addDirectory(long projectId, String path) {
-    	Project project = Project.findById(projectId);
+    @ProjectAccess(AccessType.PROJECT_MANAGE_DIRECTORIES)
+    public static void addDirectory(Project project, String path) {
     	project.addDirectory(path);
     	ok();
     }
     
-    public static void removeDirectory(long directoryId) {
-    	Directory directory = Directory.findById(directoryId);
+    @ProjectAccess(AccessType.PROJECT_MANAGE_DIRECTORIES)
+    public static void removeDirectory(Directory directory) {
     	directory.delete();
     	ok();
     }
     
-    public static void getUserPermissions(Long projectId) {
-    	Project project = Project.findById(projectId);
-    	List<User> users = project.getUsersWithPermission("listed");
+    public static void getListedUsers(Project project) {
+    	List<User> users = PermissionService.getUsersForModel(project,AccessType.PROJECT_LISTED);
     	renderJSON(users);
     }
     
-    public static void getAllProjectPermissions() {
-    	renderJSON(UserPermission.permissionList);
+    public static void getUserProjectAccess(Project project) {
+    	User user = Security.getUser();
+    	List<Permission> permissions = PermissionService.getPermissions(user, project);
+    	renderJSON(permissions);
     }
     
-    public static void addUserByEmail(Long projectId, String email) {
+    public static void getAccess(Project project) {
+    	User user = Security.getUser();
+    	List<Permission> permissions = PermissionService.getPermissions(user, project);
+    	renderJSON(PermissionService.getAccessFromPermissions(permissions));
+    }
+    
+    public static void addUserByEmail(Project project, String email) {
     	User user = User.find("byEmail", email).first();
-    	setUserPermission(projectId,user.id,"listed",true);
+    	
+    	PermissionService.togglePermission(user,project,AccessType.PROJECT_LISTED,true);
+    	
+    	ok();
     }
     
-    public static void removeUser(Long projectId, Long userId) {
-		Project project = Project.findById(projectId);
-    	User user = User.findById(userId);
-    	
-    	List<UserPermission> userPermission = UserPermission.find("byProjectAndUser", project, user).fetch();
-    	for(UserPermission perm : userPermission) {
+    public static void removeUser(Project project, User user) {
+    	List<Permission> permissions = PermissionService.getPermissions(user, project);
+    	for(Permission perm : permissions) {
     		perm.delete();
     	}
     	
     	ok();
     }
     
-    public static void setUserPermission(Long projectId, Long userId, String permission, boolean value) {
-		Project project = Project.findById(projectId);
-    	User user = User.findById(userId);
+    public static void setPermission(Project project, User user, String permission, boolean value) {
+    	AccessType access = AccessType.valueOf(permission);
     	
-    	UserPermission userPermission = UserPermission.find("byProjectAndUserAndPermission", project, user, permission).first();
-    	if (userPermission == null && value) {
-	    	UserPermission newPermission = new UserPermission(project,user,permission);
-	    	newPermission.save();
-    	} else if (userPermission != null && !value) {
-    		userPermission.delete();
-    	}
+    	PermissionService.togglePermission(user,project,access,value);
+    	
     	ok();
-    }
-    
-    public static void getPermissionsForProject(Long projectId) {
-    	Project project = Project.findById(projectId);
-    	renderJSON(project.getPermissionsForUser(Security.getUser()));
-    }
-    
-    public static void getAccess(Long projectId) {
-    	Project project = Project.findById(projectId);
-    	renderJSON(project.getUserAccess(Security.getUser()));
     }
 }

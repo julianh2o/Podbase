@@ -1,104 +1,117 @@
-define([], function() {
-	var Link = function(url, ajaxOptions) {
-		this.busy = false;
-		this.data = null;
-		this.resourceUrl = url;
-		this.transformers = {};
-		this.transformedData = null;
+/* GENERATED SOURCE, DO NOT EDIT */
 
-		this.opts = $.extend({}, {
-			dataType : "json",
-			context : this,
-			success : this.onSuccess,
-			cache : false
-		}, ajaxOptions);
-	};
 
-	$.extend(Link.prototype, {
-		pull : function() {
-			var options = $.extend({}, this.opts, {
-				type : "GET",
-				url : this.resourceUrl
-			});
-			$.ajax(options);
-		},
-		save : function() {
-			// var options = $.extend({},this.ajaxOptions,{
-			// type: "PUT",
-			// });
-			// $.ajax(options);
-		},
-		dataReady : function(callback) {
-			var self = this;
-			$(this).bind("Data", function() {
-				callback(self);
-			});
-		},
-		asap : function(callback) {
-			this.dataReady(callback);
-
-			if (this.data) {
-				callback(this);
-				return;
-			}
-
-			if (!this.busy) {
-				this.pull();
-			}
-		},
-		getData : function(type) {
-			if (type)
-				return this.transformedData[type];
-			return this.data;
-		},
-		isDataReady : function() {
-			return this.data && !this.busy;
-		},
-		onSuccess : function(data) {
-			this.data = data;
-			this.runTransformers();
-			$(this).trigger("Data");
-		},
-		addTransformer : function(key, transformer) {
-			this.transformers[key] = transformer;
-		},
-		runTransformers : function() {
-			var self = this;
-			var transformedData = {};
-			_.each(this.transformers, function(transformer, key) {
-				transformedData[key] = transformer(self.data);
-			});
-			this.transformedData = transformedData;
-		}
-	});
-
-	var VariableLink = function(url, ajaxOptions) {
-		this.links = {};
-		this.url = url;
-		this.opts = ajaxOptions;
-	}
-
-	$.extend(VariableLink.prototype, {
-		get : function(params) {
-			var key = $.param(params);
-
-			if (!this.links[key]) {
-				var url = this.url;
-				_.each(params, function(v, k) {
-					url = url.replace("{" + k + "}", v);
-				});
-				console.log("(linkgen url) ", url);
-
-				this.links[key] = new Link(url, this.opts);
-			}
-
-			return this.links[key];
-		}
-	});
-
+define(['data/Loader'],function(Loader) {
 	var This = function() {
-		this.loadAll = function(info,callback,repeat) {
-			// data = ["str",[a,{params}]
+		// ############################################
+		// PaperController.java
+		// ############################################
+		this.render = new Loader("@{PaperController.render}?imagesetId={imagesetId}&size={size}");
+		this.getPapers = new Loader("@{PaperController.getPapers}");
+		this.getPaper = new Loader("@{PaperController.getPaper}?paper.id={paperId}");
+		this.createPaper = new Loader("@{PaperController.createPaper}?name={name}");
+		this.deletePaper = new Loader("@{PaperController.deletePaper}?paper.id={paperId}");
+		this.getImageSet = new Loader("@{PaperController.getImageSet}?imageset.id={imagesetId}");
+		this.addImageToSet = new Loader("@{PaperController.addImageToSet}?imageset.id={imagesetId}&path={path}");
+		this.removeImageFromSet = new Loader("@{PaperController.removeImageFromSet}?imageset.id={imagesetId}&path={path}");
+		
+		
+		// ############################################
+		// Security.java
+		// ############################################
+		this.checkPermission = new Loader("@{Security.checkPermission}");
+		
+		
+		// ############################################
+		// ParentController.java
+		// ############################################
+		this.debug = new Loader("@{ParentController.debug}?o={o}");
+		
+		
+		// ############################################
+		// ImageBrowser.java
+		// ############################################
+		this.index = new Loader("@{ImageBrowser.index}");
+		this.fetch = new Loader("@{ImageBrowser.fetch}?projectId={projectId}&path={path}");
+		this.resolveFile = new Loader("@{ImageBrowser.resolveFile}?path={path}&mode={mode}&projectId={projectId}&scale={scale}&width={width}&height={height}&brightness={brightness}&contrast={contrast}&histogram={histogram}");
+		this.fetchInfo = new Loader("@{ImageBrowser.fetchInfo}?projectId={projectId}&path={path}&dataMode={dataMode}");
+		this.createAttribute = new Loader("@{ImageBrowser.createAttribute}?projectId={projectId}&path={path}&attribute={attribute}&value={value}&dataMode={dataMode}");
+		this.updateAttribute = new Loader("@{ImageBrowser.updateAttribute}?id={id}&value={value}");
+		this.deleteAttribute = new Loader("@{ImageBrowser.deleteAttribute}?id={id}");
+		
+		
+		// ############################################
+		// UserController.java
+		// ############################################
+		this.getAllUsers = new Loader("@{UserController.getAllUsers}");
+		this.createUser = new Loader("@{UserController.createUser}?email={email}");
+		this.doActivate = new Loader("@{UserController.doActivate}?activationCode={activationCode}");
+		this.completeActivation = new Loader("@{UserController.completeActivation}?user.id={userId}&activationCode={activationCode}&password={password}&confirm={confirm}");
+		
+		
+		// ############################################
+		// ProjectController.java
+		// ############################################
+		this.getProjects = new Loader("@{ProjectController.getProjects}");
+		this.getProject = new Loader("@{ProjectController.getProject}?project.id={projectId}");
+		this.createProject = new Loader("@{ProjectController.createProject}?name={name}");
+		this.setDataMode = new Loader("@{ProjectController.setDataMode}?project.id={projectId}&dataMode={dataMode}");
+		this.deleteProject = new Loader("@{ProjectController.deleteProject}?project.id={projectId}");
+		this.addDirectory = new Loader("@{ProjectController.addDirectory}?project.id={projectId}&path={path}");
+		this.removeDirectory = new Loader("@{ProjectController.removeDirectory}?directory.id={directoryId}");
+		this.getListedUsers = new Loader("@{ProjectController.getListedUsers}?project.id={projectId}");
+		this.getUserProjectAccess = new Loader("@{ProjectController.getUserProjectAccess}?project.id={projectId}");
+		this.getAccess = new Loader("@{ProjectController.getAccess}?project.id={projectId}");
+		this.addUserByEmail = new Loader("@{ProjectController.addUserByEmail}?project.id={projectId}&email={email}");
+		this.removeUser = new Loader("@{ProjectController.removeUser}?project.id={projectId}&user.id={userId}");
+		this.setPermission = new Loader("@{ProjectController.setPermission}?project.id={projectId}&user.id={userId}&permission={permission}&value={value}");
+		
+		
+		// ############################################
+		// ImageViewer.java
+		// ############################################
+		this.index = new Loader("@{ImageViewer.index}?path={path}");
+		this.script = new Loader("@{ImageViewer.script}");
+		
+		
+		// ############################################
+		// Application.java
+		// ############################################
+		this.index = new Loader("@{Application.index}");
+		this.entry = new Loader("@{Application.entry}?projectId={projectId}");
+		this.paper = new Loader("@{Application.paper}?paperId={paperId}");
+		this.loadJavascript = new Loader("@{Application.loadJavascript}?path={path}");
+		this.getCurrentUser = new Loader("@{Application.getCurrentUser}");
+		this.getAccessTypes = new Loader("@{Application.getAccessTypes}");
+		
+		
+		// ############################################
+		// TemplateController.java
+		// ############################################
+		this.getTemplates = new Loader("@{TemplateController.getTemplates}?project.id={projectId}");
+		this.addTemplate = new Loader("@{TemplateController.addTemplate}?project.id={projectId}&templateName={templateName}");
+		this.setFolderTemplate = new Loader("@{TemplateController.setFolderTemplate}?project.id={projectId}&template.id={templateId}&path={path}");
+		this.getTemplateForPath = new Loader("@{TemplateController.getTemplateForPath}?project.id={projectId}&path={path}");
+		this.getTemplate = new Loader("@{TemplateController.getTemplate}?template.id={templateId}");
+		this.addAttribute = new Loader("@{TemplateController.addAttribute}?template.id={templateId}&name={name}");
+		this.updateAttribute = new Loader("@{TemplateController.updateAttribute}?attribute.id={attributeId}&name={name}");
+		this.removeAttribute = new Loader("@{TemplateController.removeAttribute}?attribute.id={attributeId}");
+		this.updateAttributeOrder = new Loader("@{TemplateController.updateAttributeOrder}?template.id={templateId}&ids={ids}");
+		
+		
+		
+		/*this.getProjects.addTransformer("byId", function(data) {
+			var map = {};
+			_.each(data, function(item) {
+				map[item.id] = item;
+			});
+			return map;
+		});*/
+	};
+	
+	$.extend(This,{
+		loadAll : function(info,callback,repeat) {
+			// data = ["str", [a,{params}] ]
 			var self = this;
 			var called = false;
 			
@@ -134,41 +147,11 @@ define([], function() {
 				link.asap(handler);
 			});
 		}
-
-		this.users = new Link("@{UserController.getAllUsers}");
-		this.projects = new Link("@{ProjectController.getProjects}");
-		this.papers = new Link("@{PaperController.getPapers}");
-		this.projectPermissions = new Link("@{ProjectController.getAllProjectPermissions}");
-		this.currentUser = new Link("@{Application.getCurrentUser}");
-		
-		this.projects.addTransformer("byId", function(data) {
-			var map = {};
-			_.each(data, function(item) {
-				map[item.id] = item;
-			});
-			return map;
-		});
-		
-		
-		this.paper = new VariableLink("/ajax/paper/{paperId}");
-		this.imageset = new VariableLink("/ajax/imageset/{imagesetId}");
-
-		this.project = new VariableLink("/project/{projectId}");
-		this.projectAccess = new VariableLink("/project/{projectId}/access");
-		this.templates = new VariableLink("/project/{projectId}/templates");
-		this.projectUsers = new VariableLink("/project/{projectId}/users");
-	};
-
-	$.extend(This, {
-		getInstance : function() {
-			if (!This.instance) {
-				This.instance = new This();
-				window.link = This.instance;
-			}
-			return This.instance;
-		}
-		
 	});
+	
+	var instance = new This();
+	window.link = instance;
+	return instance;
+	
+});
 
-	return This;
-})

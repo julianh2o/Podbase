@@ -39,7 +39,7 @@ define(
 			},
 			
 			addAttribute : function() {
-				$.post("@{TemplateController.addAttribute()}",{templateId:this.editTemplate.id,name:""},$.proxy(this.handleNewAttribute,this),'json');
+				Link.getInstance().addAttribute({templateId:this.editTemplate.id,name:""},$.proxy(this.handleNewAttribute,this));
 			},
 			
 			handleNewAttribute : function(attribute) {
@@ -57,7 +57,7 @@ define(
 				
 				attr.name = $el.val();
 				
-				$.post("@{TemplateController.updateAttribute()}",{id:attr.id,name:attr.name},$.proxy(this.returnStatus,this),'json');
+				Link.getInstance().updateAttribute({attributeId:attr.id,name:attr.name},$.proxy(this.returnStatus,this));
 			},
 			
 			onSortStop : function(event,ui) {
@@ -68,7 +68,7 @@ define(
 					var attr = self.getAttributeForElement($(entry));
 					ids[ids.length] = attr.id;
 				});
-				$.post("@{TemplateController.updateAttributeOrder()}",{templateId:this.editTemplate.id,ids:ids},$.proxy(this.returnStatus,this),'json');
+				Link.getInstance().updateAttributeOrder({templateId:this.editTemplate.id,ids:ids},$.proxy(this.returnStatus,this));
 			},
 			
 			onDeleteClicked : function(event) {
@@ -76,10 +76,10 @@ define(
 				var attribute = this.getAttributeForElement($el);
 				
 				var self = this;
-				$.post("@{TemplateController.removeAttribute()}",{id:attribute.id},function() {
+				Link.getInstance().removeAttribute({attributeId:attribute.id},function() {
 					self.editTemplate.attributes.splice($el.data("index"),1);
 					self.refresh();
-				},'json');
+				});
 			},
 			
 			renderTemplate : function(template) {

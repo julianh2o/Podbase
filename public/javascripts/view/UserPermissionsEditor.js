@@ -24,7 +24,7 @@ define(
 			loadUser : function(user) {
 				this.user = user;
 				
-				var link = Link.getInstance().projectPermissions;
+				var link = Link.getInstance().getAccessTypes;
 				if (!link.isDataReady()) {
 					var self = this;
 					link.asap(function() {
@@ -36,7 +36,7 @@ define(
 				
 				var permissionMap = permissionsAsMap(user.userPermissions);
 				
-				this.model = {user:user, userPermissionMap:permissionMap, permissions:Link.getInstance().projectPermissions.getData()};
+				this.model = {user:user, userPermissionMap:permissionMap, permissions:Link.getInstance().getAccessTypes.getData()};
 				
 				this.render();
 				
@@ -48,8 +48,8 @@ define(
 			removeUserClicked : function(e) {
 				e.preventDefault();
 				var self = this;
-				$.post("@{ProjectController.removeUser}",{projectId:this.project.id,userId:this.user.id},function() {
-					Link.getInstance().projectUsers.get({projectId:self.project.id}).pull();
+				Link.getInstance().removeUser({projectId:this.project.id,userId:this.user.id},function() {
+					Link.getInstance().getProjectUsers.get({projectId:self.project.id}).pull();
 				});
 			},
 			
@@ -58,7 +58,7 @@ define(
 				var perm = $el.val();
 				var value = $el.is(":checked");
 				
-				$.post("@{ProjectController.setUserPermission}",{projectId:this.project.id, userId:this.model.user.id, permission:perm, value:value},$.proxy(this.permissionSaveSuccess,this),'json');
+				Link.getInstance().setPermission({projectId:this.project.id, userId:this.model.user.id, permission:perm, value:value},$.proxy(this.permissionSaveSuccess,this));
 			},
 			
 			permissionSaveSuccess : function() {

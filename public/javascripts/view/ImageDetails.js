@@ -38,7 +38,7 @@ define(
 					return;
 				}
 				
-				$.post("@{ImageBrowser.fetchInfo()}", {projectId:this.project.id,path:this.file.path,dataMode:this.dataMode}, $.proxy(this.imageDetailsLoaded,this),'json');
+				Link.getInstance().fetchInfo({projectId:this.project.id,path:this.file.path,dataMode:this.dataMode}, $.proxy(this.imageDetailsLoaded,this));
 			},
 			
 			setFile : function(file) {

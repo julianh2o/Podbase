@@ -19,9 +19,9 @@ define(
 				this.project = project;
 				
 				Link.getInstance().loadAll([
-				                          ["templates",{projectId:this.project.id}],
-				                          ["projectAccess",{projectId:this.project.id}]
-				                          ],$.proxy(this.templatesLoaded,this));
+				                          ["getTemplates",{projectId:this.project.id}],
+				                          ["getUserProjectAccess",{projectId:this.project.id}]
+				                          ],$.proxy(this.templatesLoaded,this),true);
 			},
 			
 			refresh : function() {
@@ -58,7 +58,7 @@ define(
 			},
 		
 			templatesLoaded : function() {
-				this.templates = Link.getInstance().templates.get({projectId:this.project.id}).getData();
+				this.templates = Link.getInstance().getTemplates.get({projectId:this.project.id}).getData();
 				this.access = Link.getInstance().projectAccess.get({projectId:this.project.id}).getData();
 				this.canChooseTemplate = $.inArray("setTemplate",this.access) >= 0;
 				
@@ -71,7 +71,7 @@ define(
 				var templateId = event.currentTarget.value;
 				var templateAssignment = this.templateCache.get(this.path);
 				
-				$.post("@{TemplateController.setFolderTemplate()}", {projectId:this.project.id,templateId:templateId,path:this.path},$.proxy(this.handleTemplateForPath,this),'json');
+				Link.getInstance().setFolderTemplate({projectId:this.project.id,templateId:templateId,path:this.path},$.proxy(this.handleTemplateForPath,this));
 				
 				$(this).trigger("TemplateChanged",[templateId]);
 			},
@@ -82,7 +82,7 @@ define(
 					this.setSelectedTemplate(this.templateCache.get(path));
 				} else {
 					this.templateCache.put(path,null);
-					$.post("@{TemplateController.getTemplateForPath()}", {projectId:this.project.id,path:path},$.proxy(this.handleTemplateForPath,this), 'json');
+					Link.getInstance().getTemplateForPath({projectId:this.project.id,path:path},$.proxy(this.handleTemplateForPath,this));
 				}
 			},
 			

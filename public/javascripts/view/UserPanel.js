@@ -6,11 +6,11 @@ define(
 			template: _.template( tmpl ),
 			
 			initialize: function() {
-				Link.getInstance().currentUser.asap($.proxy(this.refresh,this));
+				Link.getInstance().getCurrentUser.asap($.proxy(this.refresh,this));
 			},
 			
 			refresh : function() {
-				var user = Link.getInstance().currentUser.getData();
+				var user = Link.getInstance().getCurrentUser.getData();
 				this.model = {user:user};
 				
 				this.render();

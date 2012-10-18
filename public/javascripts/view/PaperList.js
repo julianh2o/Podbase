@@ -6,19 +6,19 @@ define(
 			template: _.template( tmpl ),
 			
 			initialize: function() {
-				Link.getInstance().loadAll(["papers"],$.proxy(this.refresh,this));
+				Link.getInstance().loadAll(["getPapers"],$.proxy(this.refresh,this),true);
 			},
 			
 			refresh : function() {
-				this.model = {papers:Link.getInstance().papers.getData()};
+				this.model = {papers:Link.getInstance().getPapers.getData()};
 				this.render();
 				
 				$(".add",this.el).click(function() {
 					var name = prompt("Enter a name for your paper.");
 					if (!name) return;
 					
-					$.post("@{PaperController.createPaper}",{name:name},function() {
-						Link.getInstance().papers.pull();
+					Link.getInstance().createPaper({name:name},function() {
+						Link.getInstance().getPapers.pull();
 					});
 				});
 			},

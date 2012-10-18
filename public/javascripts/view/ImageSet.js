@@ -6,7 +6,7 @@ define(
 			template: _.template( tmpl ),
 			
 			initialize: function(options) {
-				Link.getInstance().imageset.get({imagesetId:options.imagesetId}).asap($.proxy(this.imagesetLoaded,this));
+				Link.getInstance().getImageSet.get({imagesetId:options.imagesetId}).asap($.proxy(this.imagesetLoaded,this));
 				
 				$("html").on("AddImageToCurrentSet",$.proxy(this.addImageToSet,this));
 			},
@@ -23,7 +23,7 @@ define(
 			},
 			
 			addImageToSet : function(e,file) {
-				$.post("@{PaperController.addImageToSet}",{imagesetId:this.imageset.id, path:file.path},$.proxy(this.doUpdate,this));
+				Link.getInstance().addImageToSet({imagesetId:this.imageset.id, path:file.path},$.proxy(this.doUpdate,this));
 			},
 			
 			removeImageFromSet : function(e) {
@@ -31,11 +31,11 @@ define(
 				var path = $el.data("path");
 				e.preventDefault();
 				
-				$.post("@{PaperController.removeImageFromSet}",{imagesetId:this.imageset.id, path:path},$.proxy(this.doUpdate,this));
+				Link.getInstance().removeImageFromSet({imagesetId:this.imageset.id, path:path},$.proxy(this.doUpdate,this));
 			},
 			
 			doUpdate : function() {
-				Link.getInstance().imageset.get({imagesetId:this.imageset.id}).pull();
+				Link.getInstance().getImageSet.get({imagesetId:this.imageset.id}).pull();
 			}
 		});
 		

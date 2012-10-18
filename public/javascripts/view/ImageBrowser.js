@@ -53,7 +53,7 @@ define(
 			dataModeChanged : function(e,mode) {
 				this.dataMode = mode;
 				this.imageDetails.setDataMode(mode);
-				$.post("@{ProjectController.setDataMode}",{projectId:this.project.id, dataMode: mode});
+				Link.getInstance().setDataMode({projectId:this.project.id, dataMode: mode});
 			},
 			
 			loadHashPath : function(hash) {

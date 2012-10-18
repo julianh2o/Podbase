@@ -30,9 +30,9 @@ define(
 				
 				var id = $el.data("id");
 				var self = this;
-				$.post("@{ProjectController.removeDirectory}",{directoryId:id},function() {
-						Link.getInstance().project.get({projectId:self.project.id}).pull();
-				},'json');
+				Link.getInstance().removeDirectory({directoryId:id},function() {
+						Link.getInstance().getProject.get({projectId:self.project.id}).pull();
+				});
 			},
 			
 			handleAddClicked : function(e) {
@@ -40,9 +40,9 @@ define(
 				
 				if (path) {
 					var self = this;
-					$.post("@{ProjectController.addDirectory}",{projectId:this.project.id, path:path},function() {
-						Link.getInstance().project.get({projectId:self.project.id}).pull();
-					},'json');
+					Link.getInstance().addDirectory({projectId:this.project.id, path:path},function() {
+						Link.getInstance().getProject.get({projectId:self.project.id}).pull();
+					});
 				}
 			}
 		});

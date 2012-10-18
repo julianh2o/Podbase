@@ -33,7 +33,7 @@ define(
 			handleDelete : function() {
 				if (!confirm("Really delete this?")) return;
 				if (this.dbo.id == undefined) return;
-				$.post("@{ImageBrowser.deleteAttribute()}", {id:this.dbo.id});
+				Link.getInstance().deleteAttribute({attributeId:this.dbo.id});
 				if (this.dbo.templated) {
 					this.dbo.id = undefined;
 					this.dbo.value = undefined;
@@ -84,15 +84,14 @@ define(
 
 			saveAttribute : function(event) {
 				if (this.dbo.id == undefined) {
-					$.post("@{ImageBrowser.createAttribute()}", {path:browser.selectedFile.path,attribute:this.dbo.attribute,value:this.value},function(attribute) {
+					Link.getInstance().createAttribute({path:browser.selectedFile.path,attribute:this.dbo.attribute,value:this.value},function(attribute) {
 						var templated = that.dbo.templated;
 						that.dbo = attribute;
 						that.dbo.templated = templated;
 						that.refresh();
-					}, 'json');
+					});
 				} else {
-					$.post("@{ImageBrowser.updateAttribute()}", {id:this.dbo.id,value:this.value}, function(attribute) {
-					}, 'json');
+					Link.getInstance().updateAttribute({attributeId:this.dbo.id,value:this.value});
 				}
 			}
 		});

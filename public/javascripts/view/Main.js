@@ -14,8 +14,8 @@ define(
 				this.selectedTab = "browser";
 				
 				Link.getInstance().loadAll([
-				                            ["project",{projectId:this.projectId}],
-				                            ["projectAccess",{projectId:this.projectId}]
+				                            ["getProject",{projectId:this.projectId}],
+				                            ["getUserProjectAccess",{projectId:this.projectId}]
 				                            ],$.proxy(this.refresh,this),true);
 				
 				$("html").on("PathChanged ProjectSelected TemplateSelected TemplateChanged",Util.debugEvent);

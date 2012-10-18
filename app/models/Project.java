@@ -12,19 +12,13 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
-import models.UserPermission;
-
 import play.db.jpa.Model;
 
 @Entity
-public class Project extends TimestampModel {
+public class Project extends PermissionedModel {
 	public String name;
 	
 	public boolean dataMode;
-	
-	@OneToMany(mappedBy="project",cascade=CascadeType.ALL)
-	@GsonTransient
-	public List<UserPermission> userPermissions;
 	
 	@OneToMany(mappedBy="project",cascade=CascadeType.ALL)
 	public List<Directory> directories;
@@ -50,44 +44,5 @@ public class Project extends TimestampModel {
 		this.templates.add(template);
 		this.save();
 		return template;
-	}
-	
-	public List<UserPermission> getPermissionsForUser(User user) {
-		List<UserPermission> permissions = UserPermission.find("byProjectAndUser", this, user).fetch();
-		return permissions;
-	}
-	
-	public Set<String> getUserAccess(User user) {
-		List<UserPermission> permissions = UserPermission.find("byProjectAndUser", this, user).fetch();
-		HashSet<String> access = new HashSet<String>();
-		for (UserPermission perm : permissions) {
-			access.add(perm.permission);
-		}
-		
-		for (Entry<String, List<String>> e : UserPermission.implications.entrySet()) {
-			if (access.contains(e.getKey())) {
-				for (String implied : e.getValue()) {
-					access.add(implied);
-				}
-			}
-		}
-		
-		if (user.root) access.addAll(Arrays.asList(UserPermission.permissionList));
-		
-		return access;
-	}
-	
-	public List<User> getUsersWithPermission(String permission) {
-		List<UserPermission> permissions = getUserPermissionsForPermission(permission);
-		return UserPermission.getUserList(permissions);
-	}
-	
-	public List<UserPermission> getUserPermissionsForPermission(String permission) {
-		List<UserPermission> permissions = UserPermission.find("byProjectAndPermission", this, permission).fetch();
-		return permissions;
-	}
-	
-	public List<User> getUsers() {
-		return getUsersWithPermission("listed");
 	}
 }

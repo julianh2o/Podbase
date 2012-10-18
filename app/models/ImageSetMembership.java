@@ -14,8 +14,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import models.UserPermission;
-
 import play.db.jpa.Model;
 
 @Entity

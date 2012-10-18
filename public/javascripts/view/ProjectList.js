@@ -6,19 +6,20 @@ define(
 			template: _.template( tmpl ),
 			
 			initialize: function() {
-				Link.getInstance().loadAll(["projects"],$.proxy(this.refresh,this));
+				Link.getInstance().loadAll(["getProjects"],$.proxy(this.refresh,this),true);
 			},
 			
 			refresh : function() {
-				this.model = {projects:Link.getInstance().projects.getData()};
+				this.model = {projects:Link.getInstance().getProjects.getData()};
 				this.render();
 				
 				$(".add",this.el).click(function() {
 					var name = prompt("Enter a name for your project.");
 					if (!name) return;
 					
-					$.post("@{ProjectController.createProject}",{name:name},function() {
-						Link.getInstance().projects.pull();
+					Link.getInstance().createProject(name,function() {
+						console.log("callback called");
+						Link.getInstance().getProjects.pull();
 					});
 				});
 			},

@@ -6,17 +6,8 @@ GET     /                                       Application.index
 GET     /entry/{projectId}                      Application.entry
 GET     /paper/{paperId}                        Application.paper
 GET     /renderImageset/{imagesetId}            PaperController.render
-GET     /ajax/paper                             PaperController.getPapers
-POST    /ajax/paper                             PaperController.createPaper
-GET     /ajax/paper/{paperId}                   PaperController.getPaper
-GET		/ajax/imageset/{imagesetId}				PaperController.getImageSet
 GET     /project                                ProjectController.getProjects
 PUT     /project                                ProjectController.newProjects
-GET     /project/{projectId}                    ProjectController.getProject
-
-GET		/project/{projectId}/templates			TemplateController.getTemplates
-GET		/project/{projectId}/users				ProjectController.getUserPermissions
-GET		/project/{projectId}/access				ProjectController.getAccess
 
 *		/data/{<.*>path}						ImageBrowser.resolveFile
 

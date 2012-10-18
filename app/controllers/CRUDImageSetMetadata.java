@@ -5,6 +5,6 @@ import play.*;
 import play.mvc.*;
 
 @CRUD.For(ImageSetMembership.class)
-public class ISM extends CRUD {
+public class CRUDImageSetMetadata extends CRUD {
 
 }

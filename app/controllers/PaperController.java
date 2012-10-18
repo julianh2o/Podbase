@@ -9,7 +9,6 @@ import models.ImageSetMembership;
 import models.Paper;
 import models.Project;
 import models.User;
-import models.UserPermission;
 
 public class PaperController extends ParentController {
 	public static void render(long imagesetId, int size) {
@@ -24,8 +23,7 @@ public class PaperController extends ParentController {
     	renderJSON(papers);
     }
     
-    public static void getPaper(long paperId) {
-    	Paper paper = Paper.findById(paperId);
+    public static void getPaper(Paper paper) {
     	renderJSON(paper);
     }
     
@@ -34,23 +32,19 @@ public class PaperController extends ParentController {
     	ok();
     }
     
-    public static void deletePaper(long paperId) {
-    	Paper paper = Paper.findById(paperId);
+    public static void deletePaper(Paper paper) {
     	paper.delete();
     	ok();
     }
     
     //Image Sets
-    public static void getImageSet(long imagesetId) {
-    	ImageSet set = ImageSet.findById(imagesetId);
-    	renderJSON(set);
+    public static void getImageSet(ImageSet imageset) {
+    	renderJSON(imageset);
     }
     
     //TODO access control
-    public static void addImageToSet(long imagesetId, String path) {
-    	ImageSet set = ImageSet.findById(imagesetId);
-    	
-    	for (ImageSetMembership mem : set.images) {
+    public static void addImageToSet(ImageSet imageset, String path) {
+    	for (ImageSetMembership mem : imageset.images) {
     		DatabaseImage img = mem.image;
     		if (img.path.equals(path)) {
     			error("Image already in set");
@@ -59,15 +53,14 @@ public class PaperController extends ParentController {
     	}
     	
     	DatabaseImage image = DatabaseImage.forPath(path);
-    	ImageSetMembership.addImageToSet(set, image);
+    	ImageSetMembership.addImageToSet(imageset, image);
     	ok();
     }
     
-    public static void removeImageFromSet(long imagesetId, String path) {
+    public static void removeImageFromSet(ImageSet imageset, String path) {
     	DatabaseImage image = DatabaseImage.forPath(path);
-    	ImageSet set = ImageSet.findById(imagesetId);
     	
-    	ImageSetMembership mem = ImageSetMembership.find("byImageAndImageset", image,set).first();
+    	ImageSetMembership mem = ImageSetMembership.find("byImageAndImageset", image, imageset).first();
     	
     	mem.delete();
     	ok();

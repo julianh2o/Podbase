@@ -10,13 +10,13 @@ define(
 			template: _.template( tmpl ),
 
 			initialize: function() {
-				Link.getInstance().users.asap($.proxy(this.refresh,this));
+				Link.getInstance().getUsers.asap($.proxy(this.refresh,this));
 			},
 			
 			refresh : function() {
 				this.render();
 				
-				this.users = Link.getInstance().users.getData();
+				this.users = Link.getInstance().getUsers.getData();
 				this.userList = Util.createView( $(".userlist",this.el), UserList, {users:this.users});
 				this.userPanel = Util.createView( $(".management",this.el), UserManagementPanel);
 				
@@ -26,7 +26,6 @@ define(
 			},
 			
 			userSelected : function(e,userId,user) {
-				console.log("user",user);
 				this.userPanel.setUser(user);
 			},
 			
@@ -37,9 +36,9 @@ define(
 					return;
 				}
 				
-				$.post("@{UserController.createUser}",{email:email},function(password) {
+				Link.getInstance().createUser({email:email},function(password) {
 					alert("The user has been sent an email with instructions on how to activate their account.");
-					Link.getInstance().users.pull();
+					Link.getInstance().getUsers.pull();
 				});
 			}
 		});

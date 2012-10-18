@@ -37,11 +37,11 @@ define(
 			addTemplateClicked : function(event) {
 				var templateName = prompt("Template Name");
 				if (!templateNme) return;
-				$.post("@{TemplateController.addTemplate}",{projectId:this.project.id, templateName:templateName},$.proxy(this.templateAdded,this),'json');
+				Link.getInstance().addTemplate({projectId:this.project.id, templateName:templateName},$.proxy(this.templateAdded,this));
 			},
 			
 			templateAdded : function() {
-				Link.getInstance().projects.pull();
+				Link.getInstance().getProjects.pull();
 			},
 			
 			templateClicked : function(event) {

@@ -8,7 +8,7 @@ define(
 				
 				this.selectedProject = null;
 				
-				Link.getInstance().projects.asap($.proxy(this.refresh,this));
+				Link.getInstance().getProjects.asap($.proxy(this.refresh,this));
 			},
 			
 			refresh : function(link) {
@@ -18,7 +18,7 @@ define(
 				
 				var p = localStorage.getItem("selectedProject");
 				
-				var selectedProject = Link.getInstance().projects.getData("byId")[p];
+				var selectedProject = Link.getInstance().getProjects.getData("byId")[p];
 				if (!selectedProject) p = null;
 				
 				if (!p) p = this.model.projects[0].id;
@@ -29,7 +29,7 @@ define(
 			},
 			
 			getSelectedProject : function() {
-				return Link.getInstance().projects.getData("byId")[this.selectedProject];
+				return Link.getInstance().getProjects.getData("byId")[this.selectedProject];
 			},
 			
 			projectClicked : function(event) {
@@ -48,7 +48,7 @@ define(
 				var $el = $("a[data-project-id='"+id+"']",this.el)
 				$el.parent().addClass("active");
 				
-				var project = Link.getInstance().projects.getData("byId")[id];
+				var project = Link.getInstance().getProjects.getData("byId")[id];
 				$("html").trigger("ProjectSelected", [id,project]);
 			}
 		});

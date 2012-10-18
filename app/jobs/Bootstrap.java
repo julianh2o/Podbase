@@ -1,5 +1,8 @@
+package jobs;
 import java.util.LinkedList;
 import java.util.List;
+
+import access.AccessType;
 
 import play.*;
 import play.jobs.*;
@@ -14,9 +17,11 @@ public class Bootstrap extends Job {
 	        Fixtures.deleteDatabase();
 	        Fixtures.loadModels("initial.yml");
 	        
-	        User guest = new User("guest","guest");
-	        guest.guest = true;
+	        User guest = new User("guest",null);
 	        guest.save();
+	        
+	        User authenticated = new User("authenticated",null);
+	        authenticated.save();
 	        
 	        List<User> users = new LinkedList<User>();
 	        User a = new User("julianh2o@gmail.com", "secret").save();
@@ -28,14 +33,11 @@ public class Bootstrap extends Job {
 	        a.save();
 	        
 	        Project p = (Project)Project.findAll().get(0);
+	        Paper pa = (Paper)Paper.findAll().get(0);
 	        
-	        new UserPermission(p, guest,"visible").save(); //guest permission
-	        
-	        new UserPermission(p, a,"owner").save();
-	        new UserPermission(p, a, "listed").save();
-	        
-	        new UserPermission(p, b, "listed").save();
-	        
+	        Permission perm = new Permission(a,p,AccessType.PROJECT_VISIBLE).save();
+	        Permission perm1 = new Permission(a,pa,AccessType.PROJECT_OWNER).save();
+	        Permission perm2 = new Permission(a,null,AccessType.CREATE_PROJECT).save();
     	} else {
 	        // Check if the database is empty
 	        if(Project.count() == 0) {

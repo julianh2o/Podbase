@@ -9,12 +9,11 @@ import models.TemplateAttribute;
 
 public class TemplateController extends ParentController {
 	
-	public static void getTemplates(Long projectId) {
+	public static void getTemplates(Project project) {
 		//TODO access check template/project
 		List<Template> templates;
 		
-		if (projectId != null) {
-			Project project = Project.findById(projectId);
+		if (project != null) {
 			templates = project.templates;
 		} else {
 			templates = Template.findAll();
@@ -23,20 +22,13 @@ public class TemplateController extends ParentController {
 		renderJSON(templates);
 	}
 	
-	public static void addTemplate(Long projectId, String templateName) {
-		Project project = Project.findById(projectId);
-		
+	public static void addTemplate(Project project, String templateName) {
 		Template template = new Template(project,templateName);
 		project.templates.add(template);
 		template.save();
 	}
 	
-	public static void setFolderTemplate(Long projectId, long templateId, String path) {
-		Project project = null;
-		if (projectId != null) project = Project.findById(projectId);
-		
-		Template template = Template.findById(templateId);
-		
+	public static void setFolderTemplate(Project project, Template template, String path) {
 		TemplateAssignment assignment = TemplateAssignment.find("project = ? AND path = ?", project, path).first();
 		if (assignment == null) {
 			assignment = new TemplateAssignment(path, project, template);
@@ -48,8 +40,7 @@ public class TemplateController extends ParentController {
 		renderJSON(assignment);
 	}
 	
-	public static void getTemplateForPath(Long projectId, String path) {
-		Project project = Project.findById(projectId);
+	public static void getTemplateForPath(Project project, String path) {
 		TemplateAssignment assignment = TemplateAssignment.forPath(project, path);
 		if (assignment == null) {
 			ok();
@@ -58,36 +49,28 @@ public class TemplateController extends ParentController {
 		renderJSON(assignment);
 	}
 	
-	public static void getTemplate(long templateId) {
-		//TODO access check template/project
-		Template template = Template.findById(templateId);
+	//TODO access check template/project
+	public static void getTemplate(Template template) {
 		renderJSON(template);
 	}
 	
-	public static void addAttribute(long templateId, String name) {
-		//TODO access check template/project
-		Template templateObject = Template.findById(templateId);
-		TemplateAttribute attr = templateObject.addAttribute(name);
+	public static void addAttribute(Template template, String name) {
+		TemplateAttribute attr = template.addAttribute(name);
 		renderJSON(attr);
 	}
 
-	public static void updateAttribute(long id, String name) {
-		//TODO access check template/project
-		TemplateAttribute attribute = TemplateAttribute.findById(id);
+	public static void updateAttribute(TemplateAttribute attribute, String name) {
 		attribute.name = name;
 		attribute.save();
 		renderJSON(attribute);
 	}
 
-	public static void removeAttribute(long id) {
-		//TODO access check template/project
-		TemplateAttribute attribute = TemplateAttribute.findById(id);
+	public static void removeAttribute(TemplateAttribute attribute) {
 		attribute.delete();
 		ok();
 	}
 	
-	public static void updateAttributeOrder(long templateId, long[] ids) {
-		Template template = Template.findById(templateId);
+	public static void updateAttributeOrder(Template template, long[] ids) {
 		int i = 0;
 		for (long id : ids) {
 			TemplateAttribute attribute = TemplateAttribute.findById(id);

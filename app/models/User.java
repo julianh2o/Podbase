@@ -22,14 +22,10 @@ public class User extends TimestampModel {
 	public boolean root;
 	public boolean guest;
 	
-	@OneToMany(mappedBy="user",cascade=CascadeType.ALL)
-	public List<UserPermission> userPermissions;
-	
 	public User(String email, String password) {
 		super();
 		this.root = false;
 		this.email = email;
-		this.guest = false;
 		this.password = null;
 		if (password != null) setCleartextPassword(password);
 	}
@@ -54,32 +50,15 @@ public class User extends TimestampModel {
 		return email + " ["+created+"]";
 	}
 	
-	public List<UserPermission> getPermissionsForProject(Project project) {
-		return project.getPermissionsForUser(this);
-	}
-	
-	public List<Project> getProjectsWithPermission(String permission) {
-		if (this.root) {
-			return Project.findAll();
-		}
-		
-		List<UserPermission> permissions = UserPermission.find("byUserAndPermission", this ,permission).fetch();
-		List<UserPermission> everyonePermissions = UserPermission.find("byUserAndPermission", User.getGuestAccount() ,permission).fetch();
-		
-		permissions.addAll(everyonePermissions);
-		return UserPermission.getProjectList(new LinkedList<UserPermission>(new HashSet<UserPermission>(permissions)));
+	public boolean isGuest() {
+		return this.equals(getGuestAccount());
 	}
 	
 	public static User getGuestAccount() {
-		return User.find("guest", true).first();
+		return User.find("email", "guest").first();
 	}
 
-	public List<Project> getProjectsWithAnyOf(String... permissions) {
-		List<Project> accumulate = new LinkedList<Project>();
-		for (String permission : permissions) {
-			accumulate.addAll(getProjectsWithPermission(permission));
-		}
-		
-		return new LinkedList<Project>(new HashSet<Project>(accumulate));
+	public static User getAuthenticatedAccount() {
+		return User.find("authenticated", true).first();
 	}
 }

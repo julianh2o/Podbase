@@ -16,10 +16,10 @@ define(
 			
 				projectSelected : function(e,projectId,project) {
 					Link.getInstance().loadAll([
-				                            ["paper",{paperId:paperId}],
-				                            ["project",{projectId:projectId}],
-				                            ["projectAccess",{projectId:projectId}]
-				                            ],$.proxy(this.refresh,this));
+				                            ["getPaper",{paperId:paperId}],
+				                            ["getProject",{projectId:projectId}],
+				                            ["getUserProjectAccess",{projectId:projectId}]
+				                            ],$.proxy(this.refresh,this),true);
 				},
 				
 				refresh : function(paperLink, projectLink,accessLink) {

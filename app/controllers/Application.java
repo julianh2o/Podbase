@@ -5,6 +5,7 @@ import play.db.jpa.JPA;
 import play.mvc.*;
 
 import java.util.*;
+import access.AccessType;
 
 import javax.persistence.Query;
 
@@ -36,4 +37,8 @@ public class Application extends ParentController {
 		User user = Security.getUser();
 		renderJSON(user);
 	}
+	
+    public static void getAccessTypes() {
+    	renderJSON(AccessType.values());
+    }
 }

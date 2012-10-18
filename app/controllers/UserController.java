@@ -11,7 +11,6 @@ import models.Activation;
 import models.Directory;
 import models.Project;
 import models.User;
-import models.UserPermission;
 
 public class UserController extends ParentController {
 	private static String generateTemporaryPassword() {
@@ -55,13 +54,12 @@ public class UserController extends ParentController {
 		render(user,activation);
 	}
 	
-	public static void completeActivation(Long userId, String activationCode, String password, String confirm) {
+	public static void completeActivation(User user, String activationCode, String password, String confirm) {
 		Activation activation = validateActivationCode(activationCode);
 		if (activation == null) return;
 		
 		validatePassword(password,confirm);
 		
-		User user = User.findById(userId);
 		user.setCleartextPassword(password);
 		
 		user.activation = null;

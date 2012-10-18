@@ -12,12 +12,10 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import models.UserPermission;
-
 import play.db.jpa.Model;
 
 @Entity
-public class Paper extends TimestampModel {
+public class Paper extends PermissionedModel {
 	public String name;
 	
 	@OneToOne
