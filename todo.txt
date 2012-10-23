@@ -1,6 +1,7 @@
 * sort items in link by their controller.. eg.. ProjectController.getProjects
 * make it so that bin folder is accessible from project root
 * fix path selection in generateSources.sh
+* write refactorization tool
 
 * access control for papers
 * finish revised access control scheme
