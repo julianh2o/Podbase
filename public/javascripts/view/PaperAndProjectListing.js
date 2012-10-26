@@ -12,11 +12,11 @@ define(
 				this.project = Util.createView( $(".projects",this.el), ProjectList);
 				this.paper = Util.createView( $(".papers",this.el), PaperList);
 				
-				Link.getInstance().getCurrentUser.asap($.proxy(this.refresh,this));
+				Link.getCurrentUser().asap($.proxy(this.refresh,this));
 			},
 			
 			refresh : function() {
-				var user = Link.getInstance().getCurrentUser.getData();
+				var user = Link.getCurrentUser().getData();
 				
 				if (user.root) {
 					this.userManagement = Util.createView( $(".management",this.el), UserManagement);

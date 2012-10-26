@@ -1,6 +1,6 @@
 define(
-	['view/RenderedView', 'util/HashHandler', 'util/Util', 'util/Cache', 'view/TemplateChooser', 'text!tmpl/FileBrowser.html'],
-	function (RenderedView, HashHandler, Util, Cache, TemplateChooser, tmpl) {
+	['view/RenderedView', 'util/HashHandler', 'data/Link', 'util/Util', 'util/Cache', 'view/TemplateChooser', 'text!tmpl/FileBrowser.html'],
+	function (RenderedView, HashHandler, Link, Util, Cache, TemplateChooser, tmpl) {
 		
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
@@ -29,7 +29,7 @@ define(
 					this.loadFiles(path, selectedFile, this.directoryCache.get(path));
 				} else {
 					var self = this;
-					Link.getInstance().fetch({projectId:this.project.id,path:path}, function(files) {
+					Link.fetch({projectId:this.project.id,path:path}).post(function(files) {
 						self.directoryCache.put(path, files);
 						self.loadFiles(path, selectedFile, files);
 					});

@@ -10,13 +10,13 @@ define(
 			template: _.template( tmpl ),
 
 			initialize: function() {
-				Link.getInstance().getUsers.asap($.proxy(this.refresh,this));
+				Link.getAllUsers().asap($.proxy(this.refresh,this));
 			},
 			
 			refresh : function() {
 				this.render();
 				
-				this.users = Link.getInstance().getUsers.getData();
+				this.users = Link.getAllUsers().getData();
 				this.userList = Util.createView( $(".userlist",this.el), UserList, {users:this.users});
 				this.userPanel = Util.createView( $(".management",this.el), UserManagementPanel);
 				
@@ -36,9 +36,9 @@ define(
 					return;
 				}
 				
-				Link.getInstance().createUser({email:email},function(password) {
+				Link.createUser({email:email}).post(function(password) {
 					alert("The user has been sent an email with instructions on how to activate their account.");
-					Link.getInstance().getUsers.pull();
+					Link.getUsers().pull();
 				});
 			}
 		});

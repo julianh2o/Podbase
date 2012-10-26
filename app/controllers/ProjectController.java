@@ -1,5 +1,6 @@
 package controllers;
 
+import java.util.Arrays;
 import java.util.List;
 
 import access.Access;
@@ -39,6 +40,7 @@ public class ProjectController extends ParentController {
     	project.save();
     	
     	PermissionService.togglePermission(user,project,AccessType.PROJECT_OWNER,true);
+    	PermissionService.togglePermission(user,project,AccessType.PROJECT_VISIBLE,true);
     	PermissionService.togglePermission(user,project,AccessType.PROJECT_LISTED,true);
     	
     	ok();
@@ -73,22 +75,31 @@ public class ProjectController extends ParentController {
     	renderJSON(users);
     }
     
-    public static void getUserProjectAccess(Project project) {
-    	User user = Security.getUser();
-    	List<Permission> permissions = PermissionService.getPermissions(user, project);
-    	renderJSON(permissions);
+    @Util
+    public static List<AccessType> getAccessForUser(Project project, User user) {
+    	if (user == null) user = Security.getUser();
+    	if (user.root) {
+    		return Arrays.asList(AccessType.values());
+    	}
+    	List<AccessType> access = PermissionService.getStringPermissions(user, project);
+    	return access;
+    }
+    
+    public static void getUserAccess(Project project, User user) {
+    	renderJSON(getAccessForUser(project,user));
     }
     
     public static void getAccess(Project project) {
     	User user = Security.getUser();
-    	List<Permission> permissions = PermissionService.getPermissions(user, project);
-    	renderJSON(PermissionService.getAccessFromPermissions(permissions));
+    	renderJSON(getAccessForUser(project,user));
     }
     
     public static void addUserByEmail(Project project, String email) {
     	User user = User.find("byEmail", email).first();
+    	if (user == null) error("User not found");
     	
     	PermissionService.togglePermission(user,project,AccessType.PROJECT_LISTED,true);
+    	PermissionService.togglePermission(user,project,AccessType.PROJECT_VISIBLE,true);
     	
     	ok();
     }

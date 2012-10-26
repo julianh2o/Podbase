@@ -7,6 +7,11 @@ import notifiers.Email;
 
 import org.apache.commons.lang.RandomStringUtils;
 
+import access.Access;
+import access.AccessType;
+
+import play.mvc.Util;
+
 import models.Activation;
 import models.Directory;
 import models.Project;
@@ -72,7 +77,14 @@ public class UserController extends ParentController {
 		
 		Application.index();
 	}
+	
+	@Access(AccessType.ROOT)
+	public static void mimicUser(User user) {
+		session.put("username", user.email);
+		ok();
+	}
 
+	@Util
 	private static void validatePassword(String password, String confirm) {
 		if (!password.equals(confirm)) {
 			error("Passwords do not match.");

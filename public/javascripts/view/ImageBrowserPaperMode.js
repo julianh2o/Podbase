@@ -8,7 +8,7 @@ define(
 			initialize : function(options) {
 				This.__super__.initialize.apply(this, arguments)
 				
-				Link.getInstance().getPaper.get({paperId:options.paperId}).asap($.proxy(this.paperLoaded,this));
+				Link.getPaper({paperId:options.paperId}).asap($.proxy(this.paperLoaded,this));
 			},
 			
 			paperLoaded : function(paperLink) {

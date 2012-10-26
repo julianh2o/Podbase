@@ -1,6 +1,6 @@
 define(
-	['view/RenderedView', 'util/HashHandler', 'util/Util', 'util/Cache', 'view/TemplateChooser', 'view/ImageBrowserActionBar', 'view/ImageDetails', 'view/FileBrowser', 'view/ImagePreview', 'text!tmpl/ImageBrowser.html'],
-	function (RenderedView, HashHandler, Util, Cache, TemplateChooser, ImageBrowserActionBar, ImageDetails, FileBrowser, ImagePreview, tmpl) {
+	['view/RenderedView', 'util/HashHandler', 'util/Util', 'data/Link', 'util/Cache', 'view/TemplateChooser', 'view/ImageBrowserActionBar', 'view/ImageDetails', 'view/FileBrowser', 'view/ImagePreview', 'text!tmpl/ImageBrowser.html'],
+	function (RenderedView, HashHandler, Util, Link, Cache, TemplateChooser, ImageBrowserActionBar, ImageDetails, FileBrowser, ImagePreview, tmpl) {
 		
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
@@ -53,7 +53,7 @@ define(
 			dataModeChanged : function(e,mode) {
 				this.dataMode = mode;
 				this.imageDetails.setDataMode(mode);
-				Link.getInstance().setDataMode({projectId:this.project.id, dataMode: mode});
+				Link.setDataMode({projectId:this.project.id, dataMode: mode}).post();
 			},
 			
 			loadHashPath : function(hash) {

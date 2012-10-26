@@ -8,17 +8,22 @@ define(
 				
 				this.selectedProject = null;
 				
-				Link.getInstance().getProjects.asap($.proxy(this.refresh,this));
+				Link.getProjects().asap($.proxy(this.refresh,this));
 			},
 			
 			refresh : function(link) {
 				this.model.projects = link.getData();
+				if (this.model.projects.length == 0) return;
 				
 				this.render();
 				
 				var p = localStorage.getItem("selectedProject");
 				
-				var selectedProject = Link.getInstance().getProjects.getData("byId")[p];
+				var selectedProject = null;
+				
+				var byId = Link.getProjects().getData("byId");
+				if (byId[p]) selectedProject = byId[p];
+				
 				if (!selectedProject) p = null;
 				
 				if (!p) p = this.model.projects[0].id;
@@ -29,7 +34,7 @@ define(
 			},
 			
 			getSelectedProject : function() {
-				return Link.getInstance().getProjects.getData("byId")[this.selectedProject];
+				return Link.getProjectsData("byId")[this.selectedProject];
 			},
 			
 			projectClicked : function(event) {
@@ -48,7 +53,7 @@ define(
 				var $el = $("a[data-project-id='"+id+"']",this.el)
 				$el.parent().addClass("active");
 				
-				var project = Link.getInstance().getProjects.getData("byId")[id];
+				var project = Link.getProjectsData("byId")[id];
 				$("html").trigger("ProjectSelected", [id,project]);
 			}
 		});

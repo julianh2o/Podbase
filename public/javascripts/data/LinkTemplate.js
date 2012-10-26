@@ -2,16 +2,16 @@ define(['data/Loader'],function(Loader) {
 	var This = function() {
 		/*MARKER*/
 		
-		/*this.getProjects.addTransformer("byId", function(data) {
+		this.getProjects.addTransformer("byId", function(data) {
 			var map = {};
 			_.each(data, function(item) {
 				map[item.id] = item;
 			});
 			return map;
-		});*/
+		});
 	};
 	
-	$.extend(This,{
+	$.extend(This.prototype,{
 		loadAll : function(info,callback,repeat) {
 			// data = ["str", [a,{params}] ]
 			var self = this;
@@ -19,9 +19,9 @@ define(['data/Loader'],function(Loader) {
 			
 			function getLink(x) {
 				if (typeof x == "string") {
-					return self[x];
+					return self[x]();
 				} else if (x.length > 1){
-					return self[x[0]].get(x[1]);
+					return self[x[0]](x[1]);
 				}
 				return null;
 			}

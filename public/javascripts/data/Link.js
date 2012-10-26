@@ -25,7 +25,7 @@ define(['data/Loader'],function(Loader) {
 		// ############################################
 		// ParentController.java
 		// ############################################
-		this.debug = new Loader("@{ParentController.debug}?o={o}");
+		this.debug = new Loader("@{ParentController.debug}?objects={objects}");
 		
 		
 		// ############################################
@@ -47,6 +47,7 @@ define(['data/Loader'],function(Loader) {
 		this.createUser = new Loader("@{UserController.createUser}?email={email}");
 		this.doActivate = new Loader("@{UserController.doActivate}?activationCode={activationCode}");
 		this.completeActivation = new Loader("@{UserController.completeActivation}?user.id={userId}&activationCode={activationCode}&password={password}&confirm={confirm}");
+		this.mimicUser = new Loader("@{UserController.mimicUser}?user.id={userId}");
 		
 		
 		// ############################################
@@ -60,7 +61,7 @@ define(['data/Loader'],function(Loader) {
 		this.addDirectory = new Loader("@{ProjectController.addDirectory}?project.id={projectId}&path={path}");
 		this.removeDirectory = new Loader("@{ProjectController.removeDirectory}?directory.id={directoryId}");
 		this.getListedUsers = new Loader("@{ProjectController.getListedUsers}?project.id={projectId}");
-		this.getUserProjectAccess = new Loader("@{ProjectController.getUserProjectAccess}?project.id={projectId}");
+		this.getUserAccess = new Loader("@{ProjectController.getUserAccess}?project.id={projectId}&user.id={userId}");
 		this.getAccess = new Loader("@{ProjectController.getAccess}?project.id={projectId}");
 		this.addUserByEmail = new Loader("@{ProjectController.addUserByEmail}?project.id={projectId}&email={email}");
 		this.removeUser = new Loader("@{ProjectController.removeUser}?project.id={projectId}&user.id={userId}");
@@ -100,16 +101,16 @@ define(['data/Loader'],function(Loader) {
 		
 		
 		
-		/*this.getProjects.addTransformer("byId", function(data) {
+		this.getProjects.addTransformer("byId", function(data) {
 			var map = {};
 			_.each(data, function(item) {
 				map[item.id] = item;
 			});
 			return map;
-		});*/
+		});
 	};
 	
-	$.extend(This,{
+	$.extend(This.prototype,{
 		loadAll : function(info,callback,repeat) {
 			// data = ["str", [a,{params}] ]
 			var self = this;
@@ -117,9 +118,9 @@ define(['data/Loader'],function(Loader) {
 			
 			function getLink(x) {
 				if (typeof x == "string") {
-					return self[x];
+					return self[x]();
 				} else if (x.length > 1){
-					return self[x[0]].get(x[1]);
+					return self[x[0]](x[1]);
 				}
 				return null;
 			}

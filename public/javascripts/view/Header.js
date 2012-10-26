@@ -1,11 +1,13 @@
 define(
-	['view/RenderedView', 'view/ProjectSelect', 'view/UserPanel', 'data/Link', 'util/Util', 'text!tmpl/Header.html'],
-	function (RenderedView, ProjectSelect, UserPanel, Link, Util, tmpl) {
+	['view/RenderedView', 'view/UserPicker', 'view/ProjectSelect', 'view/UserPanel', 'data/Link', 'util/Util', 'text!tmpl/Header.html'],
+	function (RenderedView, UserPicker, ProjectSelect, UserPanel, Link, Util, tmpl) {
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
 			
 			initialize: function(options){
 				this.render();
+				
+				this.userPicker = Util.createView( $(".userpicker",this.el), UserPicker);
 				
 				if (options.projectSelect) {
 					this.projectSelect = Util.createView( $(".project-select",this.el), ProjectSelect);

@@ -25,6 +25,7 @@ public class PermissionService {
 	// Editing permissions
 	public static Permission addPermission(User user, PermissionedModel model, AccessType access) {
 		Permission permission = new Permission(user,model,access);
+		ParentController.debug(user,model,access);
 		permission.save();
 		return permission;
 	}

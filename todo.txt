@@ -1,11 +1,11 @@
-* sort items in link by their controller.. eg.. ProjectController.getProjects
-* make it so that bin folder is accessible from project root
-* fix path selection in generateSources.sh
-* write refactorization tool
-
 * access control for papers
 * finish revised access control scheme
 * refactor controllers to use automatic type conversion
+* implied permissions, hidden permissions, permission descriptions
+
+* fix path selection in generateSources.sh
+DEFER * sort items in link by their controller.. eg.. ProjectController.getProjects
+* make it so that bin folder is accessible from project root
 
 * find out why email isnt working
 * file system datastore

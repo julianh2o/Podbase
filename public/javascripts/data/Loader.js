@@ -18,8 +18,8 @@ define([], function() {
 			}
 			
 			var value = null;
-			if ($.isPlainObject(args[1])) {
-				value = args[1][v];
+			if (typeof args[0] == "object") {
+				value = args[0][v];
 			} else {
 				value = arg;
 			}
@@ -56,7 +56,7 @@ define([], function() {
 			var options = $.extend({}, this.opts, {
 				type : "POST",
 				url : this.url,
-				callback: cb
+				success: cb
 			});
 			$.ajax(options);
 		},
@@ -126,6 +126,7 @@ define([], function() {
 			var instance = instances[key];
 			if (!instance) {
 				instance = new Loader(resourceUrl,arguments,opts,transformers);
+				instances[key] = instance;
 			}
 			
 			return instance;

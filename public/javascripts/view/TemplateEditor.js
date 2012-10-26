@@ -39,7 +39,7 @@ define(
 			},
 			
 			addAttribute : function() {
-				Link.getInstance().addAttribute({templateId:this.editTemplate.id,name:""},$.proxy(this.handleNewAttribute,this));
+				Link.addAttribute({templateId:this.editTemplate.id,name:""}).post($.proxy(this.handleNewAttribute,this));
 			},
 			
 			handleNewAttribute : function(attribute) {
@@ -57,7 +57,7 @@ define(
 				
 				attr.name = $el.val();
 				
-				Link.getInstance().updateAttribute({attributeId:attr.id,name:attr.name},$.proxy(this.returnStatus,this));
+				Link.updateAttribute({attributeId:attr.id,name:attr.name}).post($.proxy(this.returnStatus,this));
 			},
 			
 			onSortStop : function(event,ui) {
@@ -68,7 +68,7 @@ define(
 					var attr = self.getAttributeForElement($(entry));
 					ids[ids.length] = attr.id;
 				});
-				Link.getInstance().updateAttributeOrder({templateId:this.editTemplate.id,ids:ids},$.proxy(this.returnStatus,this));
+				Link.updateAttributeOrder({templateId:this.editTemplate.id,ids:ids}).post($.proxy(this.returnStatus,this));
 			},
 			
 			onDeleteClicked : function(event) {
@@ -76,7 +76,7 @@ define(
 				var attribute = this.getAttributeForElement($el);
 				
 				var self = this;
-				Link.getInstance().removeAttribute({attributeId:attribute.id},function() {
+				Link.removeAttribute({attributeId:attribute.id}).post(function() {
 					self.editTemplate.attributes.splice($el.data("index"),1);
 					self.refresh();
 				});

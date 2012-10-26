@@ -1,6 +1,6 @@
 define(
-	['view/RenderedView', 'view/TabModule', 'view/ProjectSelect', 'view/TemplateManager', 'view/ProjectPermissions', 'view/ProjectSettings', 'view/Header', 'data/Link', 'util/Util', 'view/ImageBrowser', 'text!tmpl/Main.html'],
-	function (RenderedView, TabModule, ProjectSelect, TemplateManager, ProjectPermissions, ProjectSettings, Header, Link, Util, ImageBrowser, tmpl) {
+	['view/RenderedView', 'data/Access', 'view/TabModule', 'view/ProjectSelect', 'view/TemplateManager', 'view/ProjectPermissions', 'view/ProjectSettings', 'view/Header', 'data/Link', 'util/Util', 'view/ImageBrowser', 'text!tmpl/Main.html'],
+	function (RenderedView, Access, TabModule, ProjectSelect, TemplateManager, ProjectPermissions, ProjectSettings, Header, Link, Util, ImageBrowser, tmpl) {
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
 			
@@ -13,9 +13,9 @@ define(
 				this.$projectTabs = $(".content",this.el);
 				this.selectedTab = "browser";
 				
-				Link.getInstance().loadAll([
+				Link.loadAll([
 				                            ["getProject",{projectId:this.projectId}],
-				                            ["getUserProjectAccess",{projectId:this.projectId}]
+				                            ["getAccess",{projectId:this.projectId}]
 				                            ],$.proxy(this.refresh,this),true);
 				
 				$("html").on("PathChanged ProjectSelected TemplateSelected TemplateChanged",Util.debugEvent);
@@ -40,7 +40,7 @@ define(
 					content: this.imageBrowser
 				});
 				
-				if (_.include(access,"editTemplates")) {
+				if (_.include(access,Access.PROJECT_MANAGE_TEMPLATES)) {
 					tabs.push({
 						id: "templates",
 						label: "Template Manager",
@@ -48,7 +48,7 @@ define(
 					});
 				}
 				
-				if (_.include(access,"managePermissions")) {
+				if (_.include(access,Access.PROJECT_MANAGE_PERMISSIONS)) {
 					tabs.push({
 						id: "permissions",
 						label: "Project Permissions",
@@ -56,7 +56,7 @@ define(
 					});
 				}
 				
-				if (_.include(access,"manageProject")) {
+				if (_.include(access,Access.PROJECT_MANAGE_DIRECTORIES)) {
 					tabs.push({
 						id: "settings",
 						label: "Project Settings",

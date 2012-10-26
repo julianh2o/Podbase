@@ -9,6 +9,7 @@ import play.db.jpa.*;
 import play.libs.Codec;
 
 public enum AccessType {
+	ROOT,
 	CREATE_PROJECT,
 	DELETE_PROJECT,
 	

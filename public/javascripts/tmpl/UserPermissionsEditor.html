@@ -1,3 +1,7 @@
+<% if (!user) { %>
+	No user selected.
+<% } else { %>
+
 <%= user.email %> <span class="created">created <%= user.created %></span>
 <br/>
 <a href="#" class="remove">Remove user from project</a>
@@ -7,14 +11,17 @@
 	<% _.each(permissions,function(perm) { %>
 		<tr>
 			<td>
-				<input type="checkbox" name="permission" value="<%= perm %>" <%= userPermissionMap[perm]?"checked":"" %> >
+				<input id="<%= user.email+perm %>" type="checkbox" <%= user.root ? 'disabled' : '' %> name="permission" value="<%= perm %>" <%= userPermissionMap[perm]?"checked":"" %> >
 				</input>
 			</td>
 			<td>
-				<label>
+				<label for="<%= user.email+perm %>">
 					<%= perm %>
 				</label>
 			</td>
 		</tr>
 	<% }); %>
 </table>
+
+
+<% } %>

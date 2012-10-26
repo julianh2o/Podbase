@@ -44,7 +44,7 @@ define(
 			},
 			debugEvent : function(e) {
 				if (window.debug) {
-					console.log("[ "+e.type+" ]",_.rest(arguments).join(", "));
+					console.log("[ "+e.type+" ]",_.rest(arguments)); //.join(", "));
 				}
 			},
 			createView : function($el, View, args) {

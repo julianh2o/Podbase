@@ -31,8 +31,8 @@ define(
 				e.preventDefault();
 				var email = prompt("Enter the user's email address");
 				var self = this;
-				Link.getInstance().addUserByEmail({projectId:this.project.id,email:email},function() {
-					Link.getInstance().getListedUsers.get({projectId:self.project.id}).pull();
+				Link.addUserByEmail({projectId:this.project.id,email:email}).post(function() {
+					Link.getListedUsers({projectId:self.project.id}).pull();
 				});
 			},
 			
@@ -40,12 +40,13 @@ define(
 				this.project = project;
 				this.userPermissionsEditor.setProject(project);
 				
-				Link.getInstance().getListedUsers.get({projectId:this.project.id}).asap($.proxy(this.usersLoaded,this));
+				Link.getListedUsers({projectId:this.project.id}).asap($.proxy(this.usersLoaded,this));
 			},
 			
 			usersLoaded : function(link) {
 				var users = link.getData();
 				this.userList.setUsers(users);
+				this.userPermissionsEditor.loadUser(null);
 			},
 			
 			userSelected : function(event,userId,user) {

@@ -5,7 +5,7 @@ define(
 		function permissionsAsMap(permissions) {
 			var map = {}
 			_.each(permissions,function(perm) {
-				map[perm.permission] = true;
+				map[perm] = true;
 			});
 			return map;
 		}
@@ -24,7 +24,14 @@ define(
 			loadUser : function(user) {
 				this.user = user;
 				
-				var link = Link.getInstance().getAccessTypes;
+				if (this.user == null) {
+					this.model = {user:null};
+					this.render();
+					return;
+				}
+				
+				//TODO this is all just to make sure this static resource is ready, this can be done better.
+				var link = Link.getAccessTypes();
 				if (!link.isDataReady()) {
 					var self = this;
 					link.asap(function() {
@@ -32,11 +39,15 @@ define(
 					});
 					return;
 				}
-				if (user == null) return; //TODO load empty state
 				
-				var permissionMap = permissionsAsMap(user.userPermissions);
+				Link.getUserAccess(this.project.id, this.user.id).asap($.proxy(this.refresh,this));
+			},
+			
+			refresh : function() {
+				var access = Link.getUserAccess(this.project.id,this.user.id).getData();
+				var permissionMap = permissionsAsMap(access);
 				
-				this.model = {user:user, userPermissionMap:permissionMap, permissions:Link.getInstance().getAccessTypes.getData()};
+				this.model = {user:this.user, userPermissionMap:permissionMap, permissions:Link.getAccessTypes().getData()};
 				
 				this.render();
 				
@@ -48,8 +59,8 @@ define(
 			removeUserClicked : function(e) {
 				e.preventDefault();
 				var self = this;
-				Link.getInstance().removeUser({projectId:this.project.id,userId:this.user.id},function() {
-					Link.getInstance().getProjectUsers.get({projectId:self.project.id}).pull();
+				Link.removeUser({projectId:this.project.id,userId:this.user.id}).post(function() {
+					Link.getListedUsers({projectId:self.project.id}).pull();
 				});
 			},
 			
@@ -58,7 +69,7 @@ define(
 				var perm = $el.val();
 				var value = $el.is(":checked");
 				
-				Link.getInstance().setPermission({projectId:this.project.id, userId:this.model.user.id, permission:perm, value:value},$.proxy(this.permissionSaveSuccess,this));
+				Link.setPermission({projectId:this.project.id, userId:this.model.user.id, permission:perm, value:value}).post($.proxy(this.permissionSaveSuccess,this));
 			},
 			
 			permissionSaveSuccess : function() {

@@ -38,7 +38,7 @@ define(
 					return;
 				}
 				
-				Link.getInstance().fetchInfo({projectId:this.project.id,path:this.file.path,dataMode:this.dataMode}, $.proxy(this.imageDetailsLoaded,this));
+				Link.fetchInfo({projectId:this.project.id,path:this.file.path,dataMode:this.dataMode}).post( $.proxy(this.imageDetailsLoaded,this));
 			},
 			
 			setFile : function(file) {

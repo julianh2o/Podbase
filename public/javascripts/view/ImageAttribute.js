@@ -33,7 +33,7 @@ define(
 			handleDelete : function() {
 				if (!confirm("Really delete this?")) return;
 				if (this.dbo.id == undefined) return;
-				Link.getInstance().deleteAttribute({attributeId:this.dbo.id});
+				Link.deleteAttribute({attributeId:this.dbo.id}).post();
 				if (this.dbo.templated) {
 					this.dbo.id = undefined;
 					this.dbo.value = undefined;
@@ -84,14 +84,14 @@ define(
 
 			saveAttribute : function(event) {
 				if (this.dbo.id == undefined) {
-					Link.getInstance().createAttribute({path:browser.selectedFile.path,attribute:this.dbo.attribute,value:this.value},function(attribute) {
+					Link.createAttribute({path:browser.selectedFile.path,attribute:this.dbo.attribute,value:this.value}).post(function(attribute) {
 						var templated = that.dbo.templated;
 						that.dbo = attribute;
 						that.dbo.templated = templated;
 						that.refresh();
 					});
 				} else {
-					Link.getInstance().updateAttribute({attributeId:this.dbo.id,value:this.value});
+					Link.updateAttribute({attributeId:this.dbo.id,value:this.value}).post();
 				}
 			}
 		});

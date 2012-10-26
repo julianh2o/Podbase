@@ -1,4 +1,4 @@
-<% if (!user.guest) { %>
+<% if (user.email != "guest") { %>
 	Logged in as <%= user.email %> <a href="@{Secure.logout('/')}">Log out</a>
 <% } else { %>
 	Viewing as a guest <a href="@{Secure.login}">Log in</a>

@@ -6,7 +6,7 @@ define(
 			template: _.template( tmpl ),
 			
 			initialize: function(options) {
-				Link.getInstance().getImageSet.get({imagesetId:options.imagesetId}).asap($.proxy(this.imagesetLoaded,this));
+				Link.getImageSet({imagesetId:options.imagesetId}).asap($.proxy(this.imagesetLoaded,this));
 				
 				$("html").on("AddImageToCurrentSet",$.proxy(this.addImageToSet,this));
 			},
@@ -23,7 +23,7 @@ define(
 			},
 			
 			addImageToSet : function(e,file) {
-				Link.getInstance().addImageToSet({imagesetId:this.imageset.id, path:file.path},$.proxy(this.doUpdate,this));
+				Link.addImageToSet({imagesetId:this.imageset.id, path:file.path}).post($.proxy(this.doUpdate,this));
 			},
 			
 			removeImageFromSet : function(e) {
@@ -31,11 +31,11 @@ define(
 				var path = $el.data("path");
 				e.preventDefault();
 				
-				Link.getInstance().removeImageFromSet({imagesetId:this.imageset.id, path:path},$.proxy(this.doUpdate,this));
+				Link.removeImageFromSet({imagesetId:this.imageset.id, path:path}).post($.proxy(this.doUpdate,this));
 			},
 			
 			doUpdate : function() {
-				Link.getInstance().getImageSet.get({imagesetId:this.imageset.id}).pull();
+				Link.getImageSet({imagesetId:this.imageset.id}).pull();
 			}
 		});
 		
