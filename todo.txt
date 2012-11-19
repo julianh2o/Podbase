@@ -1,37 +1,43 @@
-* image access control
+REQUIRED:
 * add/remove user privs
-* access levels "user groups"
+* file system datastore
+* inherited templates
+* change password
+
+FIX:
+* fix logging (on server)
+* find out why email isnt working
+* image file hash data
+* after login redirect
+* fix refresh clearing out the related panel (project permissions when list changes)
+
+NICE TO HAVE:
+* image viewer overhaul
 * data mode, analysis mode, paper specific metadata
 * image groups within papers
+* access levels "user groups"
 * implied permissions, hidden permissions, permission descriptions
-* filter permissions when listing them to the user "project" permissions, "paper" permissions, "misc" permissions
+* messaging system
 
-Later
+OTHER:
+* background task to index the filesystem
+* multiple image sets per paper (and management UI)
+
+V2:
+* image annotations
+
+CCU:
+* redo serialization
 * fix path selection in generateSources.sh
 * sort items in link by their controller.. eg.. ProjectController.getProjects
 * make it so that bin folder is accessible from project root
-* multiple image sets per paper (and management UI)
-
-* find out why email isnt working
-* file system datastore
-* image file hash data
-* background task to index the filesystem
-
-* inherited templates
-* messaging system
-* after login redirect
-* fix refresh clearing out the related panel (project permissions when list changes)
-* messaging system
-* secure controllers
-* image viewer overhaul
-* user refresh in paperAndProjectListing is firing twice
-* change password
 * write tests
-* redo serialization
+* user refresh in paperAndProjectListing is firing twice
 
-* image annotations
-
-
+################################################################################
 DONE
+* secure controllers
 * access control for papers
 * finish revised access control scheme
+* image access control
+* filter permissions when listing them to the user "project" permissions, "paper" permissions, "misc" permissions

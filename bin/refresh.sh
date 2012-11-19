@@ -8,5 +8,5 @@ if [ "$HOSTNAME" == "ares" ]; then
     git pull
     $PLAY start --%prod
 else
-    ssh root@new.podbase.net /home/julian/podbase/refresh.sh
+    ssh root@new.podbase.net /home/julian/podbase/bin/refresh.sh
 fi
