@@ -11,6 +11,7 @@ import javax.persistence.Query;
 
 import models.*;
 
+@With(Security.class)
 public class Application extends ParentController {
 
     public static void index() {

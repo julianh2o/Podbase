@@ -2,11 +2,14 @@ package controllers;
 
 import java.util.List;
 
+import play.mvc.With;
+
 import models.Project;
 import models.Template;
 import models.TemplateAssignment;
 import models.TemplateAttribute;
 
+@With(Security.class)
 public class TemplateController extends ParentController {
 	
 	public static void getTemplates(Project project) {

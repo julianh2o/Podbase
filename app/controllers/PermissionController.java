@@ -17,6 +17,7 @@ import controllers.ParentController;
 import access.AccessType;
 
 import play.mvc.Util;
+import play.mvc.With;
 import services.PermissionService;
 
 import models.Activation;
@@ -26,6 +27,7 @@ import models.Permission;
 import models.PermissionedModel;
 import models.User;
 
+@With(Security.class)
 public class PermissionController extends ParentController {
     public static void setPermission(PermissionedModel model, User user, String permission, boolean value) {
     	AccessType access = AccessType.valueOf(permission);

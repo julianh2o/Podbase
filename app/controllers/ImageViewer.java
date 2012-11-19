@@ -2,6 +2,9 @@ package controllers;
 
 import java.awt.image.BufferedImage;
 
+import play.mvc.With;
+
+@With(Security.class)
 public class ImageViewer extends ParentController {
 	public static void index(String path) {
 		BufferedImage image = ImageBrowser.getImage(path);

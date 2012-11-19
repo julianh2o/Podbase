@@ -2,6 +2,8 @@ package controllers;
 
 import java.util.List;
 
+import play.mvc.With;
+
 import services.PermissionService;
 
 import access.Access;
@@ -16,6 +18,7 @@ import models.Paper;
 import models.Project;
 import models.User;
 
+@With(Security.class)
 public class PaperController extends ParentController {
 	@PaperAccess(AccessType.VISIBLE)
 	public static void render(long imagesetid, int size) {
