@@ -9,6 +9,7 @@ define(
 			template: _.template( tmpl ),
 			
 			initialize: function(options) {
+				if (frameworkId != "dev") return;
 				Link.getAllUsers().asap($.proxy(this.refresh,this));
 			},
 			
@@ -23,7 +24,6 @@ define(
 			userSelected : function(e) {
 				var $el = $(e.target);
 				var userId = $el.val();
-				console.log("user selected",userId);
 				Link.mimicUser(userId).post(function() {
 					window.location.reload(true);
 				});

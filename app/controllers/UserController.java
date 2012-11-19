@@ -11,12 +11,14 @@ import access.Access;
 import access.AccessType;
 
 import play.mvc.Util;
+import play.mvc.With;
 
 import models.Activation;
 import models.Directory;
 import models.Project;
 import models.User;
 
+@With(Security.class)
 public class UserController extends ParentController {
 	private static String generateTemporaryPassword() {
 		return RandomStringUtils.randomAlphanumeric(8);

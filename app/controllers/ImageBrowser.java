@@ -44,6 +44,7 @@ import models.*;
 import services.PermissionService;
 import util.*;
 
+@With(Security.class)
 public class ImageBrowser extends ParentController {
 	
 	public static void index() {
