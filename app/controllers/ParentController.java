@@ -29,7 +29,7 @@ public class ParentController extends Controller {
 	
 	@Util
 	public static void debug(Object... objects) {
-		StackTraceElement frame = new Exception().getStackTrace()[0];
+		StackTraceElement frame = new Exception().getStackTrace()[1];
 		StringBuffer sb = new StringBuffer();
 		for (Object o : objects) {
 			if (sb.length() > 0) sb.append(" ");

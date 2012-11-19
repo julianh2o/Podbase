@@ -39,7 +39,11 @@ define(
 				$("li a",this.$tabs).first().tab("show");
 				this.$content.children(".tab-pane").first().addClass("active");
 				
-				this.doSelectTab($("[href='#"+this.selectedTab+"']",this.$tabs));
+				var $select = $("[href='#"+this.selectedTab+"']",this.$tabs);
+				if (!$select.length) {
+					$select = $("a",this.$tabs).first();
+				}
+				this.doSelectTab($select);
 			},
 			
 			doSelectTab : function($el) {

@@ -21,10 +21,10 @@ public class Project extends PermissionedModel {
 	public boolean dataMode;
 	
 	@OneToMany(mappedBy="project",cascade=CascadeType.ALL)
-	public List<Directory> directories;
+	public List<Directory> directories = new LinkedList<Directory>();
 	
 	@OneToMany(mappedBy="project", cascade=CascadeType.ALL)
-	public List<Template> templates;
+	public List<Template> templates = new LinkedList<Template>();
 	
 	public Project(String name) {
 		super();

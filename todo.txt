@@ -1,11 +1,16 @@
-* access control for papers
-* finish revised access control scheme
-* refactor controllers to use automatic type conversion
+* image access control
+* add/remove user privs
+* access levels "user groups"
+* data mode, analysis mode, paper specific metadata
+* image groups within papers
 * implied permissions, hidden permissions, permission descriptions
+* filter permissions when listing them to the user "project" permissions, "paper" permissions, "misc" permissions
 
+Later
 * fix path selection in generateSources.sh
-DEFER * sort items in link by their controller.. eg.. ProjectController.getProjects
+* sort items in link by their controller.. eg.. ProjectController.getProjects
 * make it so that bin folder is accessible from project root
+* multiple image sets per paper (and management UI)
 
 * find out why email isnt working
 * file system datastore
@@ -21,15 +26,12 @@ DEFER * sort items in link by their controller.. eg.. ProjectController.getProje
 * image viewer overhaul
 * user refresh in paperAndProjectListing is firing twice
 * change password
-* add user management panel
 * write tests
 * redo serialization
 
-Later:
 * image annotations
 
-projects (data sets) for all intents and purposes are private (for the forseeable future)
 
-papers, when published provide access to only the images encompassed by the paper
-
-data mode and analysis mode for projects
+DONE
+* access control for papers
+* finish revised access control scheme

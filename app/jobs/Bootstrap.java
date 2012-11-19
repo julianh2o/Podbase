@@ -1,6 +1,9 @@
 package jobs;
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+
+import controllers.ImageBrowser;
 
 import access.AccessType;
 
@@ -15,7 +18,7 @@ public class Bootstrap extends Job {
     public void doJob() {
     	if (true) {
 	        Fixtures.deleteDatabase();
-	        Fixtures.loadModels("initial.yml");
+	        //Fixtures.loadModels("initial.yml");
 	        
 	        User guest = new User("guest",null);
 	        guest.save();
@@ -23,21 +26,33 @@ public class Bootstrap extends Job {
 	        User authenticated = new User("authenticated",null);
 	        authenticated.save();
 	        
-	        List<User> users = new LinkedList<User>();
 	        User a = new User("julianh2o@gmail.com", "secret").save();
 	        User b = new User("kittycasey@gmail.com", "secret").save();
-	        User c = new User("boink@gmail.com", "secret").save();
-	        User d = new User("danh@pbrc.hawaii.edu", "lucifer").save();
+	        User c = new User("danh@pbrc.hawaii.edu", "lucifer").save();
 	        
 	        a.root = true;
 	        a.save();
 	        
-	        Project p = (Project)Project.findAll().get(0);
-	        Paper pa = (Paper)Paper.findAll().get(0);
+	        c.root = true;
+	        c.save();
 	        
-	        Permission perm = new Permission(a,p,AccessType.PROJECT_VISIBLE).save();
-	        Permission perm1 = new Permission(a,pa,AccessType.PROJECT_OWNER).save();
-	        Permission perm2 = new Permission(a,null,AccessType.CREATE_PROJECT).save();
+	        //Guest user permissions
+	        new Permission(a,null,AccessType.CREATE_PROJECT).save();
+	        new Permission(a,null,AccessType.CREATE_PAPER).save();
+	        
+	        //Default project
+	        Project project = new Project("Default Project").save();
+	        new Permission(c,project,AccessType.OWNER).save();
+	        
+	        List<User> users = User.findAll();
+	        for (User u : users) {
+		        new Permission(u,project,AccessType.VISIBLE).save();
+		        new Permission(u,project,AccessType.LISTED).save();
+	        }
+	        
+	        for (File f : ImageBrowser.getRootImageDirectoryFile().listFiles()) {
+	        	project.addDirectory("/"+f.getName());
+	        }
     	} else {
 	        // Check if the database is empty
 	        if(Project.count() == 0) {

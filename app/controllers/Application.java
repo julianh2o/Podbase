@@ -37,8 +37,4 @@ public class Application extends ParentController {
 		User user = Security.getUser();
 		renderJSON(user);
 	}
-	
-    public static void getAccessTypes() {
-    	renderJSON(AccessType.values());
-    }
 }

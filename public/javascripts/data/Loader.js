@@ -66,6 +66,10 @@ define([], function() {
 				callback(self);
 			});
 		},
+		invalidate : function() {
+			this.data = null;
+			return this;
+		},
 		asap : function(callback) {
 			this.dataReady(callback);
 
@@ -77,6 +81,24 @@ define([], function() {
 			if (!this.busy) {
 				this.pull();
 			}
+		},
+		loadOnce : function(callback) {
+			this.one(callback);
+			
+			if (this.data) {
+				callback(this);
+				return;
+			}
+
+			if (!this.busy) {
+				this.pull();
+			}
+		},
+		one : function(callback) {
+			var self = this;
+			$(this).one("Data", function() {
+				callback(self);
+			});
 		},
 		getData : function(type) {
 			if (type)
@@ -121,7 +143,7 @@ define([], function() {
 		}
 		
 		var Fun = function() {
-			var key = generateKey(arguments);
+			var key = JSON.stringify(arguments);
 			
 			var instance = instances[key];
 			if (!instance) {

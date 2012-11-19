@@ -9,7 +9,7 @@ GET     /renderImageset/{imagesetId}            PaperController.render
 GET     /project                                ProjectController.getProjects
 PUT     /project                                ProjectController.newProjects
 
-*		/data/{<.*>path}						ImageBrowser.resolveFile
+*		/data{<.*>path}						ImageBrowser.resolveFile
 
 *		/view									ImageViewer.index
 *		/view/{<.*>path}						ImageViewer.index

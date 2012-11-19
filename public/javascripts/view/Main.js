@@ -1,6 +1,6 @@
 define(
-	['view/RenderedView', 'data/Access', 'view/TabModule', 'view/ProjectSelect', 'view/TemplateManager', 'view/ProjectPermissions', 'view/ProjectSettings', 'view/Header', 'data/Link', 'util/Util', 'view/ImageBrowser', 'text!tmpl/Main.html'],
-	function (RenderedView, Access, TabModule, ProjectSelect, TemplateManager, ProjectPermissions, ProjectSettings, Header, Link, Util, ImageBrowser, tmpl) {
+	['view/RenderedView', 'view/TabModule', 'view/ProjectSelect', 'view/TemplateManager', 'view/Permissions', 'view/ProjectSettings', 'view/Header', 'data/Link', 'util/Util', 'view/ImageBrowser', 'text!tmpl/Main.html'],
+	function (RenderedView, TabModule, ProjectSelect, TemplateManager, Permissions, ProjectSettings, Header, Link, Util, ImageBrowser, tmpl) {
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
 			
@@ -15,7 +15,7 @@ define(
 				
 				Link.loadAll([
 				                            ["getProject",{projectId:this.projectId}],
-				                            ["getAccess",{projectId:this.projectId}]
+				                            ["getAccess",{modelId:this.projectId}]
 				                            ],$.proxy(this.refresh,this),true);
 				
 				$("html").on("PathChanged ProjectSelected TemplateSelected TemplateChanged",Util.debugEvent);
@@ -30,7 +30,7 @@ define(
 				
 				this.imageBrowser = new ImageBrowser({project:project,access:access});
 				this.templateManager = new TemplateManager({project:project,access:access});
-				this.projectPermissions = new ProjectPermissions({project:project,access:access});
+				this.projectPermissions = new Permissions({model:project,access:access,type:"project"});
 				this.projectSettings = new ProjectSettings({project:project,access:access});
 				var tabs = [];
 				
@@ -40,7 +40,7 @@ define(
 					content: this.imageBrowser
 				});
 				
-				if (_.include(access,Access.PROJECT_MANAGE_TEMPLATES)) {
+				if (_.include(access,"PROJECT_MANAGE_TEMPLATES")) {
 					tabs.push({
 						id: "templates",
 						label: "Template Manager",
@@ -48,7 +48,7 @@ define(
 					});
 				}
 				
-				if (_.include(access,Access.PROJECT_MANAGE_PERMISSIONS)) {
+				if (_.include(access,"MANAGE_PERMISSIONS")) {
 					tabs.push({
 						id: "permissions",
 						label: "Project Permissions",
@@ -56,7 +56,7 @@ define(
 					});
 				}
 				
-				if (_.include(access,Access.PROJECT_MANAGE_DIRECTORIES)) {
+				if (_.include(access,"PROJECT_MANAGE_DIRECTORIES")) {
 					tabs.push({
 						id: "settings",
 						label: "Project Settings",

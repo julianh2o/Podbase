@@ -31,12 +31,17 @@ import javax.imageio.stream.ImageInputStream;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
+import access.Access;
+import access.AccessType;
+import access.ProjectAccess;
+
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import models.*;
+import services.PermissionService;
 import util.*;
 
 public class ImageBrowser extends ParentController {
@@ -67,6 +72,8 @@ public class ImageBrowser extends ParentController {
 	// If this is passed a path like.. "/foo/bar/baz.png"
 	// It'll return the file for "/foo/bar"
 	public static File getDirectory(Project project, String path) {
+		PodbaseUtil.assertPath(path);
+		
 		File f = new File(PodbaseUtil.concatenatePaths(getRootImageDirectory(),path));
 		while(!f.isDirectory()) f = f.getParentFile();
 		
@@ -90,21 +97,30 @@ public class ImageBrowser extends ParentController {
 		return files;
 	}
 	
-	public static void fetch(Long projectId, String path) {
-		Project project = null;
-		if (projectId != null) project = Project.findById(projectId);
+	@ProjectAccess(AccessType.VISIBLE)
+	public static void fetchProjectPath(Project project, String path) {
+		PodbaseUtil.assertPath(path);
 		
-		List<File> projectFiles = project==null?null:getProjectFiles(project);
+		List<File> projectFiles = getProjectFiles(project);
 		File directory = getDirectory(project, path);
 		final boolean isRoot = directory.equals(getRootImageDirectoryFile());
-		
-		List<File> files = null;
-		if (project != null && isRoot) {
-			files = projectFiles;
+		if (isRoot) {
+			renderJSON(wrapFiles(projectFiles));
 		} else {
-			files = Arrays.asList(directory.listFiles());
+			renderJSON(wrapFiles(Arrays.asList(directory.listFiles())));
 		}
+	}
+	
+	@Access(AccessType.ROOT)
+	public static void fetchPath(String path) {
+		PodbaseUtil.assertPath(path);
 		
+		File directory = getDirectory(null, path);
+		renderJSON(wrapFiles(Arrays.asList(directory.listFiles())));
+	}
+	
+	@Util
+	public static List<FileWrapper> wrapFiles(List<File> files) {
 		Collections.sort(files);
 		
 		List<FileWrapper> fileWrappers = new LinkedList<FileWrapper>();
@@ -112,11 +128,18 @@ public class ImageBrowser extends ParentController {
 			fileWrappers.add(new FileWrapper(getRootImageDirectory(),f));
 		}
 		
-		renderJSON(fileWrappers);
+		return fileWrappers;
 	}
 	
 	static BufferedImage getImage(String path) {
+		PodbaseUtil.assertPath(path);
+		
+		User user = Security.getUser();
 		File imageFile = new File(PodbaseUtil.concatenatePaths(getRootImageDirectory(),path));
+		
+		boolean hasAccess = PermissionService.userCanAccessImage(user,path);
+		System.out.println("Access: "+hasAccess);
+		if (!hasAccess) forbidden();
 
 		try {
 			return ImageIO.read(imageFile);
@@ -126,7 +149,9 @@ public class ImageBrowser extends ParentController {
 			
 	}
 	
-	public static void resolveFile(String path, String mode, Long projectId, Float scale, Integer width, Integer height, Float brightness, Float contrast, Boolean histogram) {
+	public static void resolveFile(String path, String mode, Project project, Float scale, Integer width, Integer height, Float brightness, Float contrast, Boolean histogram) {
+		PodbaseUtil.assertPath(path);
+		
 		BufferedImage image = getImage(path);
 		if (image == null) error("Image not found");
 		
@@ -185,9 +210,9 @@ public class ImageBrowser extends ParentController {
 		}
 	}
 	
-	public static void fetchInfo(Long projectId, String path, boolean dataMode) {
-		Project project = null;
-		if (projectId != null) project = Project.findById(projectId);
+	public static void fetchInfo(Project project, String path, boolean dataMode) {
+		PodbaseUtil.assertPath(path);
+		
 		//TODO fix this by using inherited template assignments
 		String usePath =  path.substring(0,path.lastIndexOf("/")+1);
 		TemplateAssignment assignment = TemplateAssignment.forPath(project,usePath);
@@ -229,23 +254,11 @@ public class ImageBrowser extends ParentController {
 	    renderJSON(attributes);  
 	}
 	
-	public static void createAttribute(Long projectId, String path, String attribute, String value, boolean dataMode) {
-		Project project = Project.findById(projectId);
+	public static void createAttribute(Project project, String path, String attribute, String value, boolean dataMode) {
+		PodbaseUtil.assertPath(path);
+		
 		DatabaseImage image = DatabaseImage.forPath(path);
 		ImageAttribute attr = image.addAttribute(project, attribute, value, dataMode);
 		renderJSON(attr);
-	}
-	
-	public static void updateAttribute(long id, String value) {
-		ImageAttribute attribute = ImageAttribute.findById(id);
-		attribute.value = value;
-		attribute.save();
-		renderJSON(attribute);
-	}
-	
-	public static void deleteAttribute(long id) {
-		ImageAttribute attribute = ImageAttribute.findById(id);
-		attribute.delete();
-		ok();
 	}
 }

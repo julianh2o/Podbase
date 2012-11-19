@@ -15,7 +15,10 @@ import access.AccessType;
 import play.mvc.Util;
 
 import models.Activation;
+import models.DatabaseImage;
 import models.Directory;
+import models.ImageSetMembership;
+import models.Paper;
 import models.Permission;
 import models.PermissionedModel;
 import models.Project;
@@ -25,7 +28,6 @@ public class PermissionService {
 	// Editing permissions
 	public static Permission addPermission(User user, PermissionedModel model, AccessType access) {
 		Permission permission = new Permission(user,model,access);
-		ParentController.debug(user,model,access);
 		permission.save();
 		return permission;
 	}
@@ -38,10 +40,10 @@ public class PermissionService {
 		return true;
 	}
 	
-	public static void togglePermission(User user, Project project, AccessType access, boolean value) {
-    	Permission perm = getPermission(user,project,access);
+	public static void togglePermission(User user, PermissionedModel model, AccessType access, boolean value) {
+    	Permission perm = getPermission(user,model,access);
     	if (perm == null && value) {
-    		addPermission(user, project, access);
+    		addPermission(user, model, access);
     	} else if (perm != null && !value) {
     		perm.delete();
     	}
@@ -123,5 +125,34 @@ public class PermissionService {
 			names.add(p.access);
 		}
 		return names;
+	}
+	
+	//TODO make this more efficient? (caching?)
+    @Util
+	public static boolean userCanAccessImage(User user, String imagePath) {
+    	if (user.root) return true;
+    	
+    	DatabaseImage image = DatabaseImage.forPath(imagePath);
+    	
+    	List<PermissionedModel> models = getModelsForUser(user,AccessType.VISIBLE);
+    	for(PermissionedModel model : models) {
+    		if (model instanceof Paper) {
+    			Paper p = (Paper)model;
+    			for (ImageSetMembership entry : p.imageset.images) {
+    				if (entry.image.equals(image)) {
+    					return true;
+    				}
+    			}
+    		} else if (model instanceof Project){
+    			Project p = (Project)model;
+    			for (Directory dir : p.directories) {
+    				if (("/"+image.path).startsWith(dir.path)) {
+    					return true;
+    				}
+    			}
+    		}
+    	}
+    	
+    	return false;
 	}
 }

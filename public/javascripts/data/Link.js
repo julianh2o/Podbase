@@ -6,7 +6,7 @@ define(['data/Loader'],function(Loader) {
 		// ############################################
 		// PaperController.java
 		// ############################################
-		this.render = new Loader("@{PaperController.render}?imagesetId={imagesetId}&size={size}");
+		this.render = new Loader("@{PaperController.render}?imagesetid={imagesetid}&size={size}");
 		this.getPapers = new Loader("@{PaperController.getPapers}");
 		this.getPaper = new Loader("@{PaperController.getPaper}?paper.id={paperId}");
 		this.createPaper = new Loader("@{PaperController.createPaper}?name={name}");
@@ -32,12 +32,23 @@ define(['data/Loader'],function(Loader) {
 		// ImageBrowser.java
 		// ############################################
 		this.index = new Loader("@{ImageBrowser.index}");
-		this.fetch = new Loader("@{ImageBrowser.fetch}?projectId={projectId}&path={path}");
-		this.resolveFile = new Loader("@{ImageBrowser.resolveFile}?path={path}&mode={mode}&projectId={projectId}&scale={scale}&width={width}&height={height}&brightness={brightness}&contrast={contrast}&histogram={histogram}");
-		this.fetchInfo = new Loader("@{ImageBrowser.fetchInfo}?projectId={projectId}&path={path}&dataMode={dataMode}");
-		this.createAttribute = new Loader("@{ImageBrowser.createAttribute}?projectId={projectId}&path={path}&attribute={attribute}&value={value}&dataMode={dataMode}");
-		this.updateAttribute = new Loader("@{ImageBrowser.updateAttribute}?id={id}&value={value}");
-		this.deleteAttribute = new Loader("@{ImageBrowser.deleteAttribute}?id={id}");
+		this.fetchProjectPath = new Loader("@{ImageBrowser.fetchProjectPath}?project.id={projectId}&path={path}");
+		this.fetchPath = new Loader("@{ImageBrowser.fetchPath}?path={path}");
+		this.resolveFile = new Loader("@{ImageBrowser.resolveFile}?path={path}&mode={mode}&project.id={projectId}&scale={scale}&width={width}&height={height}&brightness={brightness}&contrast={contrast}&histogram={histogram}");
+		this.fetchInfo = new Loader("@{ImageBrowser.fetchInfo}?project.id={projectId}&path={path}&dataMode={dataMode}");
+		this.createAttribute = new Loader("@{ImageBrowser.createAttribute}?project.id={projectId}&path={path}&attribute={attribute}&value={value}&dataMode={dataMode}");
+		
+		
+		// ############################################
+		// PermissionController.java
+		// ############################################
+		this.setPermission = new Loader("@{PermissionController.setPermission}?model.id={modelId}&user.id={userId}&permission={permission}&value={value}");
+		this.getListedUsers = new Loader("@{PermissionController.getListedUsers}?model.id={modelId}");
+		this.getUserAccess = new Loader("@{PermissionController.getUserAccess}?model.id={modelId}&user.id={userId}");
+		this.getAccess = new Loader("@{PermissionController.getAccess}?model.id={modelId}");
+		this.addUserByEmail = new Loader("@{PermissionController.addUserByEmail}?model.id={modelId}&email={email}");
+		this.removeUser = new Loader("@{PermissionController.removeUser}?model.id={modelId}&user.id={userId}");
+		this.getAccessTypes = new Loader("@{PermissionController.getAccessTypes}");
 		
 		
 		// ############################################
@@ -60,12 +71,6 @@ define(['data/Loader'],function(Loader) {
 		this.deleteProject = new Loader("@{ProjectController.deleteProject}?project.id={projectId}");
 		this.addDirectory = new Loader("@{ProjectController.addDirectory}?project.id={projectId}&path={path}");
 		this.removeDirectory = new Loader("@{ProjectController.removeDirectory}?directory.id={directoryId}");
-		this.getListedUsers = new Loader("@{ProjectController.getListedUsers}?project.id={projectId}");
-		this.getUserAccess = new Loader("@{ProjectController.getUserAccess}?project.id={projectId}&user.id={userId}");
-		this.getAccess = new Loader("@{ProjectController.getAccess}?project.id={projectId}");
-		this.addUserByEmail = new Loader("@{ProjectController.addUserByEmail}?project.id={projectId}&email={email}");
-		this.removeUser = new Loader("@{ProjectController.removeUser}?project.id={projectId}&user.id={userId}");
-		this.setPermission = new Loader("@{ProjectController.setPermission}?project.id={projectId}&user.id={userId}&permission={permission}&value={value}");
 		
 		
 		// ############################################
@@ -83,7 +88,6 @@ define(['data/Loader'],function(Loader) {
 		this.paper = new Loader("@{Application.paper}?paperId={paperId}");
 		this.loadJavascript = new Loader("@{Application.loadJavascript}?path={path}");
 		this.getCurrentUser = new Loader("@{Application.getCurrentUser}");
-		this.getAccessTypes = new Loader("@{Application.getAccessTypes}");
 		
 		
 		// ############################################

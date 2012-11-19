@@ -1,3 +1,4 @@
+<% if (projects.length) { %>
 <ul class="nav nav-pills">
 	<% _.each(projects,function(project) { %>
 		<li>
@@ -7,3 +8,7 @@
 		</li>
 	<% }); %>
 </div>
+
+<% } else { %>
+	No visible projects.
+<% } %>

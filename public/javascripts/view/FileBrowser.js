@@ -19,6 +19,11 @@ define(
 				this.loadPath(this.path);
 			},
 			
+			reload : function() {
+				this.directoryCache.purge();
+				this.loadPath(this.path,this.selectedFile);
+			},
+			
 			loadPath : function(path, selectedFile) {
 				path = path || "/";
 				this.path = path.chopEnd("/") + "/";
@@ -29,7 +34,14 @@ define(
 					this.loadFiles(path, selectedFile, this.directoryCache.get(path));
 				} else {
 					var self = this;
-					Link.fetch({projectId:this.project.id,path:path}).post(function(files) {
+					var link = null;
+					if (this.project) {
+						link = Link.fetchProjectPath({projectId:this.project.id,path:path});
+					} else {
+						link = Link.fetchPath({path:path});
+					}
+					link.invalidate().loadOnce(function(link) {
+						files = link.getData();
 						self.directoryCache.put(path, files);
 						self.loadFiles(path, selectedFile, files);
 					});
@@ -97,7 +109,6 @@ define(
 			},
 
 			fileSelected : function(file) {
-				
 				if (file.isMagic) {
 					if (this.selectedFile == null) return;
 					

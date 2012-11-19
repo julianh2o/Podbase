@@ -3,6 +3,21 @@
 	margin-bottom: 0;
 }
 
+.nav-pills .disabled {
+	a,a:hover {
+		cursor: default;
+		color: #999;
+		background: none;
+	}
+	
+	+.active {
+		a,a:hover {
+			background: #aaf;
+			color:whitesmoke;
+		}
+	}
+}
+
 .row-fluid [class*="span"] {
 	//margin-left: 2px;
 }

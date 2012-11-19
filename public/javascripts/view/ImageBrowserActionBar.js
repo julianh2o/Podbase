@@ -5,13 +5,22 @@ define(
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
 			
-			initialize: function() {
+			initialize: function(options) {
+				this.access = options.access;
+				
+				this.model = {access:this.access};
 				this.render();
 				
 				this.dataMode = true;
 				if (this.options.dataMode != undefined) this.dataMode = this.options.dataMode
+				
+				
 				this.doDataModeSelection();
-				$(".data-mode a",this.el).click($.proxy(this.dataModeClicked,this));
+				if (!_.contains(this.access,"PROJECT_EDIT_METADATA")) {
+					$(".data-mode li",this.el).addClass("disabled");
+				} else {
+					$(".data-mode a",this.el).click($.proxy(this.dataModeClicked,this));
+				}
 			},
 			
 			dataModeClicked : function(e) {

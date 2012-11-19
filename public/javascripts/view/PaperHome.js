@@ -1,6 +1,6 @@
 define(
-		['view/RenderedView', 'util/Util', 'data/Link', 'view/ProjectSelect', 'view/Header', 'view/ImageBrowserPaperMode', 'text!tmpl/Main.html'],
-		function (RenderedView, Util, Link, ProjectSelect, Header, ImageBrowserPaperMode, tmpl) {
+		['view/RenderedView', 'util/Util', 'data/Link', 'view/ProjectSelect', 'view/TabModule', 'view/Permissions', 'view/Header', 'view/ImageBrowserPaperMode', 'text!tmpl/Main.html'],
+		function (RenderedView, Util, Link, ProjectSelect, TabModule, Permissions, Header, ImageBrowserPaperMode, tmpl) {
 
 			var This = RenderedView.extend({
 				template: _.template( tmpl ),
@@ -10,6 +10,8 @@ define(
 					
 					this.header = Util.createView( $(".header",this.el), Header, {projectSelect: true});
 					
+					this.$tabs = $(".content",this.el);
+					
 					$("html").on("ProjectSelected",$.proxy(this.projectSelected,this));
 				},
 				
@@ -18,7 +20,7 @@ define(
 					Link.loadAll([
 				                            ["getPaper",{paperId:paperId}],
 				                            ["getProject",{projectId:projectId}],
-				                            ["getAccess",{projectId:projectId}]
+				                            ["getAccess",{modelId:paperId}]
 				                            ],$.proxy(this.refresh,this),true);
 				},
 				
@@ -27,8 +29,28 @@ define(
 					var project = projectLink.getData();
 					var access = accessLink.getData();
 					
+					var tabs = [];
+					
 					this.imageBrowser = new ImageBrowserPaperMode({project:project,access:access,paperId:paper.id});
-					$(".content",this.el).empty().append(this.imageBrowser.el);
+					this.permissions = new Permissions({model:paper,access:access,type:"paper"});
+					
+					tabs.push({
+						id: "browser",
+						label: "Image Browser",
+						content: this.imageBrowser
+					});
+					
+					if (_.contains(access,"MANAGE_PERMISSIONS")) {
+						tabs.push({
+							id: "permissions",
+							label: "Permissions Manager",
+							content: this.permissions
+						});
+					}
+					
+					this.tabs = new TabModule({tabs: tabs,selectedTab: this.selectedTab });
+					$(this.tabs).on("TabSelected",$.proxy(this.tabSelected,this));
+					this.$tabs.empty().append(this.tabs.el);
 				}
 			});
 

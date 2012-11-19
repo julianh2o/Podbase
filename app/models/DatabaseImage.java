@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.UniqueConstraint;
 
+import util.PodbaseUtil;
+
 @Entity
 public class DatabaseImage extends TimestampModel {
 	public String path;
@@ -18,6 +20,9 @@ public class DatabaseImage extends TimestampModel {
 
 	public DatabaseImage(String path) {
 		super();
+		
+		PodbaseUtil.assertPath(path);
+		
 		this.path = path;
 		this.attributes = new LinkedList<ImageAttribute>();
 	}
@@ -30,6 +35,8 @@ public class DatabaseImage extends TimestampModel {
 	}
 	
 	public static DatabaseImage forPath(String path) {
+		PodbaseUtil.assertPath(path);
+		
 		if (path == null) return null;
 		DatabaseImage image = DatabaseImage.find("path",path).first();
 		if (image == null) {
@@ -37,5 +44,11 @@ public class DatabaseImage extends TimestampModel {
 			image.save();
 		}
 		return image;
+	}
+	
+	public boolean equals(Object o) {
+		if (!(o instanceof DatabaseImage)) return false;
+		DatabaseImage img = (DatabaseImage)o;
+		return img.path.equals(this.path);
 	}
 }

@@ -20,7 +20,7 @@ define(
 				
 				Link.loadAll([
 				                          ["getTemplates",{projectId:this.project.id}],
-				                          ["getAccess",{projectId:this.project.id}]
+				                          ["getAccess",{modelId:this.project.id}]
 				                          ],$.proxy(this.templatesLoaded,this),true);
 			},
 			
@@ -59,7 +59,7 @@ define(
 		
 			templatesLoaded : function() {
 				this.templates = Link.getTemplates({projectId:this.project.id}).getData();
-				this.access = Link.getAccess({projectId:this.project.id}).getData();
+				this.access = Link.getAccess({modelId:this.project.id}).getData();
 				this.canChooseTemplate = $.inArray("PROJECT_SET_TEMPLATE",this.access) >= 0;
 				
 				this.refresh();

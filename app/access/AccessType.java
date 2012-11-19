@@ -9,20 +9,28 @@ import play.db.jpa.*;
 import play.libs.Codec;
 
 public enum AccessType {
-	ROOT,
-	CREATE_PROJECT,
-	DELETE_PROJECT,
+	ROOT("user"),
+	CREATE_PROJECT("user"),
+	DELETE_PROJECT("user"),
+	CREATE_PAPER("user"),
 	
-	PROJECT_LISTED,
-	PROJECT_VISIBLE,
-	PROJECT_OWNER,
-	PROJECT_EDIT_METADATA,
-	PROJECT_SET_TEMPLATE,
-	PROJECT_MANAGE_PERMISSIONS,
-	PROJECT_MANAGE_TEMPLATES,
-	PROJECT_MANAGE_DIRECTORIES,
+	LISTED("paper","project"),
+	VISIBLE("paper","project"),
+	OWNER("paper","project"),
+	MANAGE_PERMISSIONS("paper","project"),
+	EDITOR("paper","project"),
 	
-	PAPER_LISTED,
-	PAPER_VISIBLE,
-	PAPER_OWNER,
+	PROJECT_SET_TEMPLATE("project"),
+	PROJECT_MANAGE_TEMPLATES("project"),
+	PROJECT_MANAGE_DIRECTORIES("project");
+	
+	private String[] types;
+	
+	private AccessType(String... types) {
+		this.types = types;
+	}
+	
+	public String[] getTypes() {
+		return types;
+	}
 }

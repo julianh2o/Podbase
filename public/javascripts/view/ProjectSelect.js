@@ -13,9 +13,9 @@ define(
 			
 			refresh : function(link) {
 				this.model.projects = link.getData();
-				if (this.model.projects.length == 0) return;
 				
 				this.render();
+				if (this.model.projects.length == 0) return;
 				
 				var p = localStorage.getItem("selectedProject");
 				
@@ -53,7 +53,7 @@ define(
 				var $el = $("a[data-project-id='"+id+"']",this.el)
 				$el.parent().addClass("active");
 				
-				var project = Link.getProjectsData("byId")[id];
+				var project = Link.getProjects().getData("byId")[id];
 				$("html").trigger("ProjectSelected", [id,project]);
 			}
 		});

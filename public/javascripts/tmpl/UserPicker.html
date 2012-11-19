@@ -1,5 +1,5 @@
 <select>
 	<% _.each(users,function(user) { %>
-		<option value="<%= user.id %>" <%= user.id == currentUser ? 'selected' : '' %>><%= user.email %></option>
+		<option value="<%= user.id %>" <%= user.id == currentUser ? 'selected' : '' %>><%= user.id %> : <%= user.email %></option>
 	<% }); %>
 </select>

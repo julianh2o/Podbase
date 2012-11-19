@@ -19,7 +19,7 @@ import play.db.jpa.Model;
 @Entity
 public class ImageSet extends TimestampModel {
 	@OneToOne
-	public Project project;
+	public Paper paper;
 
 	public String name;
 

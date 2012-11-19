@@ -22,7 +22,19 @@ public class PodbaseUtil {
 		if (path.endsWith("/") || rel.startsWith("/")) sep = "";
 		return path + sep + rel;
 	}
-
+	
+	public static boolean isValidPath(String path) {
+		if (!path.startsWith("/")) return false;
+		if (path.length() == 1) return true;
+		if (path.endsWith("/")) return false;
+		
+		return true;
+	}
+	
+	public static void assertPath(String path) {
+		if (!isValidPath(path)) throw new RuntimeException("Invalid path: "+path);
+	}
+	
 	// Scales the given buffered image to fit within the box given
 	public static BufferedImage scaleImageToFit(BufferedImage image, Integer targetWidth, Integer targetHeight) {
 		if (targetWidth == null && targetHeight == null) return image;

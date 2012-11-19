@@ -14,11 +14,12 @@ define(
 			template: _.template( tmpl ),
 			
 			initialize : function() {
+				this.type = this.options.type;
 				this.loadUser(this.options.user);
 			},
 			
-			setProject : function(project) {
-				this.project = project;
+			setModel : function(modelObject) {
+				this.modelObject = modelObject;
 			},
 			
 			loadUser : function(user) {
@@ -40,14 +41,22 @@ define(
 					return;
 				}
 				
-				Link.getUserAccess(this.project.id, this.user.id).asap($.proxy(this.refresh,this));
+				Link.getUserAccess(this.modelObject.id, this.user.id).asap($.proxy(this.refresh,this));
 			},
 			
 			refresh : function() {
-				var access = Link.getUserAccess(this.project.id,this.user.id).getData();
+				var access = Link.getUserAccess(this.modelObject.id,this.user.id).getData();
 				var permissionMap = permissionsAsMap(access);
 				
-				this.model = {user:this.user, userPermissionMap:permissionMap, permissions:Link.getAccessTypes().getData()};
+				var permOfType = _.reduce(Link.getAccessTypes().getData(),function(memo,types,perm) {
+					_.each(types,function(type) {
+						if (!memo[type]) memo[type] = [];
+						memo[type].unshift(perm);
+					});
+					return memo;
+				},{});
+				
+				this.model = {user:this.user, userPermissionMap:permissionMap, permissions:permOfType[this.type]};
 				
 				this.render();
 				
@@ -59,8 +68,8 @@ define(
 			removeUserClicked : function(e) {
 				e.preventDefault();
 				var self = this;
-				Link.removeUser({projectId:this.project.id,userId:this.user.id}).post(function() {
-					Link.getListedUsers({projectId:self.project.id}).pull();
+				Link.removeUser({modelId:this.modelObject.id,userId:this.user.id}).post(function() {
+					Link.getListedUsers({modelId:self.modelObject.id}).pull();
 				});
 			},
 			
@@ -69,7 +78,7 @@ define(
 				var perm = $el.val();
 				var value = $el.is(":checked");
 				
-				Link.setPermission({projectId:this.project.id, userId:this.model.user.id, permission:perm, value:value}).post($.proxy(this.permissionSaveSuccess,this));
+				Link.setPermission({modelId:this.modelObject.id, userId:this.user.id, permission:perm, value:value}).post($.proxy(this.permissionSaveSuccess,this));
 			},
 			
 			permissionSaveSuccess : function() {

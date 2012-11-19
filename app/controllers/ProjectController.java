@@ -22,12 +22,12 @@ public class ProjectController extends ParentController {
     	User user = Security.getUser();
     	
     	if (user.root)renderJSON(Project.findAll());
-    	List<Project> projects = PermissionService.filter(PermissionService.getModelsForUser(user, AccessType.PROJECT_VISIBLE), Project.class);
+    	List<Project> projects = PermissionService.filter(PermissionService.getModelsForUser(user, AccessType.VISIBLE), Project.class);
     	
     	renderJSON(projects);
     }
     
-    @ProjectAccess(AccessType.PROJECT_VISIBLE)
+    @ProjectAccess(AccessType.VISIBLE)
     public static void getProject(Project project) {
     	renderJSON(project);
     }
@@ -39,14 +39,14 @@ public class ProjectController extends ParentController {
     	Project project = new Project(name);
     	project.save();
     	
-    	PermissionService.togglePermission(user,project,AccessType.PROJECT_OWNER,true);
-    	PermissionService.togglePermission(user,project,AccessType.PROJECT_VISIBLE,true);
-    	PermissionService.togglePermission(user,project,AccessType.PROJECT_LISTED,true);
+    	PermissionService.togglePermission(user,project,AccessType.OWNER,true);
+    	PermissionService.togglePermission(user,project,AccessType.VISIBLE,true);
+    	PermissionService.togglePermission(user,project,AccessType.LISTED,true);
     	
     	ok();
     }
     
-    @ProjectAccess(AccessType.PROJECT_EDIT_METADATA)
+    @ProjectAccess(AccessType.EDITOR)
     public static void setDataMode(Project project, boolean dataMode) {
     	project.dataMode = dataMode;
     	ok();
@@ -70,54 +70,4 @@ public class ProjectController extends ParentController {
     	ok();
     }
     
-    public static void getListedUsers(Project project) {
-    	List<User> users = PermissionService.getUsersForModel(project,AccessType.PROJECT_LISTED);
-    	renderJSON(users);
-    }
-    
-    @Util
-    public static List<AccessType> getAccessForUser(Project project, User user) {
-    	if (user == null) user = Security.getUser();
-    	if (user.root) {
-    		return Arrays.asList(AccessType.values());
-    	}
-    	List<AccessType> access = PermissionService.getStringPermissions(user, project);
-    	return access;
-    }
-    
-    public static void getUserAccess(Project project, User user) {
-    	renderJSON(getAccessForUser(project,user));
-    }
-    
-    public static void getAccess(Project project) {
-    	User user = Security.getUser();
-    	renderJSON(getAccessForUser(project,user));
-    }
-    
-    public static void addUserByEmail(Project project, String email) {
-    	User user = User.find("byEmail", email).first();
-    	if (user == null) error("User not found");
-    	
-    	PermissionService.togglePermission(user,project,AccessType.PROJECT_LISTED,true);
-    	PermissionService.togglePermission(user,project,AccessType.PROJECT_VISIBLE,true);
-    	
-    	ok();
-    }
-    
-    public static void removeUser(Project project, User user) {
-    	List<Permission> permissions = PermissionService.getPermissions(user, project);
-    	for(Permission perm : permissions) {
-    		perm.delete();
-    	}
-    	
-    	ok();
-    }
-    
-    public static void setPermission(Project project, User user, String permission, boolean value) {
-    	AccessType access = AccessType.valueOf(permission);
-    	
-    	PermissionService.togglePermission(user,project,access,value);
-    	
-    	ok();
-    }
 }

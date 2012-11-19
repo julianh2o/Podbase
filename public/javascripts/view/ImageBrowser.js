@@ -12,7 +12,7 @@ define(
 				
 				this.render();
 				
-				this.actionBar = Util.createView( $(".actions",this.el), ImageBrowserActionBar, {dataMode: this.dataMode});
+				this.actionBar = Util.createView( $(".actions",this.el), ImageBrowserActionBar, {dataMode: this.dataMode, access:this.access});
 				$(this.actionBar).on("DataModeChanged",Util.debugEvent);
 				$(this.actionBar).on("DataModeChanged",$.proxy(this.dataModeChanged,this));
 				
@@ -47,7 +47,13 @@ define(
 				
 				$(this.templateChooser).on("TemplateChanged",$.proxy(this.imageDetails.reload,this.imageDetails))
 				
+				Link.getProject({projectId:this.project.id}).dataReady($.proxy(this.projectReloaded,this));
+				
 				this.loadHashPath();
+			},
+			
+			projectReloaded : function() {
+				this.fileBrowser.reload();
 			},
 			
 			dataModeChanged : function(e,mode) {

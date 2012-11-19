@@ -1,17 +1,48 @@
-<table class="table table-condensed">
-	<% _.each(project.directories,function(dir) { %>
-		<tr class="directory" data-id="<%= dir.id %>">
-			<td class="iconColumn">
-				<a href="#" class="remove">
-					<i class="icon-remove" />
-				</a>
-			</td>
-			
-			<td>
-				<%= dir.path %>
-			</td>
-		</tr>
-	<% }); %>
-</table>
-
-<a href="#" class="add">Add Directory</a>
+<div class="row-fluid">
+	<div class="span5">
+		All Directories
+		<div class="filebrowser"></div>
+	</div>
+	<div class="span1">
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		
+		<span class="add">
+			<i class="icon-forward" />
+		</span>
+		
+		<br/>
+	</div>
+	<div class="span5">
+		Project Directories
+		<br/>
+		&nbsp;
+		<div>
+			<table class="table table-condensed">
+		        <% _.each(project.directories,function(dir) { %>
+					<tr class="directory" data-id="<%= dir.id %>">
+						<td class="iconColumn">
+							<a href="#" class="remove">
+								<i class="icon-remove" />
+							</a>
+						</td>
+						                         
+						<td>
+							<%= dir.path %>
+						</td>
+					</tr>
+		        <% }); %>
+			</table>
+		</div>
+	</div>
+	<div class="span1">
+	</div>
+</div>

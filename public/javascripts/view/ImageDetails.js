@@ -1,6 +1,6 @@
 define(
-	['view/RenderedView', 'util/Util', 'view/ImageAttribute', 'text!tmpl/ImageDetails.html'],
-	function (RenderedView, Util, ImageAttribute, tmpl) {
+	['view/RenderedView', 'util/Util', 'data/Link', 'view/ImageAttribute', 'text!tmpl/ImageDetails.html'],
+	function (RenderedView, Util, Link, ImageAttribute, tmpl) {
 		
 		function clearSelection() {
 		    if(document.selection && document.selection.empty) {

@@ -11,6 +11,7 @@ import play.mvc.Before;
 import play.mvc.Util;
 import services.PermissionService;
 
+import models.ImageSet;
 import models.Paper;
 import models.Project;
 import models.User;
@@ -25,7 +26,6 @@ public class Security extends Secure.Security {
         Access access = getActionAnnotation(Access.class);
         if (access != null) {
 	        for (AccessType a : access.value()) {
-	        	System.out.println("Security checking: "+a);
 	        	boolean hasPermission = PermissionService.hasPermission(u, null, a);
 	        	if (!hasPermission) forbidden();
 	        }
@@ -33,13 +33,10 @@ public class Security extends Secure.Security {
         
         ProjectAccess projectAccess = getActionAnnotation(ProjectAccess.class);
         if (projectAccess != null) {
-        	Long projectId = params.get("projectId", Long.class);
-        	Project project = null;
-        	if (projectId != null) project = Project.findById(projectId);
+        	Project project = params.get("project",Project.class);
         	if (project == null) forbidden();
         	
 	        for (AccessType a : projectAccess.value()) {
-	        	System.out.println("Project Security checking: "+a);
 	        	boolean hasPermission = PermissionService.hasPermission(u, project, a);
 	        	if (!hasPermission) forbidden();
 	        }
@@ -47,13 +44,18 @@ public class Security extends Secure.Security {
         
         PaperAccess paperAccess = getActionAnnotation(PaperAccess.class);
         if (paperAccess != null) {
-        	Long paperId = params.get("paperId", Long.class);
-        	Paper paper = null;
-        	if (paperId != null) paper = Paper.findById(paperId);
+        	Paper paper = params.get("paper",Paper.class);
+        	
+        	if (paper == null) {
+        		ImageSet set = params.get("imageset",ImageSet.class);
+        		if (set != null) paper = set.paper;
+        	}
+        	
         	if (paper == null) forbidden();
         	
+        	if (paper == null) forbidden();
 	        for (AccessType a : paperAccess.value()) {
-	        	System.out.println("Paper Security checking: "+a);
+	        	System.out.println("Checking access: "+a);
 	        	boolean hasPermission = PermissionService.hasPermission(u, paper, a);
 	        	if (!hasPermission) forbidden();
 	        }

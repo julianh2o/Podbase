@@ -58,7 +58,7 @@ public class TemplateController extends ParentController {
 		TemplateAttribute attr = template.addAttribute(name);
 		renderJSON(attr);
 	}
-
+	
 	public static void updateAttribute(TemplateAttribute attribute, String name) {
 		attribute.name = name;
 		attribute.save();
