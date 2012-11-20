@@ -20,21 +20,21 @@ public class Bootstrap extends Job {
 	        Fixtures.deleteDatabase();
 	        //Fixtures.loadModels("initial.yml");
 	        
+	        User root = new User("root",null);
+	        root.special = true;
+	        root.save();
+	        
 	        User guest = new User("guest",null);
+	        guest.special = true;
 	        guest.save();
 	        
 	        User authenticated = new User("authenticated",null);
+	        authenticated.special = true;
 	        authenticated.save();
 	        
 	        User a = new User("julianh2o@gmail.com", "secret").save();
 	        User b = new User("kittycasey@gmail.com", "secret").save();
 	        User c = new User("danh@pbrc.hawaii.edu", "lucifer").save();
-	        
-	        a.root = true;
-	        a.save();
-	        
-	        c.root = true;
-	        c.save();
 	        
 	        //Guest user permissions
 	        new Permission(a,null,AccessType.CREATE_PROJECT).save();
@@ -46,6 +46,7 @@ public class Bootstrap extends Job {
 	        
 	        List<User> users = User.findAll();
 	        for (User u : users) {
+	        	if (u.special) continue;
 		        new Permission(u,project,AccessType.VISIBLE).save();
 		        new Permission(u,project,AccessType.LISTED).save();
 	        }

@@ -10,6 +10,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import access.Access;
 import access.AccessType;
 
+import play.Play;
 import play.mvc.Util;
 import play.mvc.With;
 
@@ -80,10 +81,13 @@ public class UserController extends ParentController {
 		Application.index();
 	}
 	
-	@Access(AccessType.ROOT)
 	public static void mimicUser(User user) {
-		session.put("username", user.email);
-		ok();
+		if (Security.getUser().isRoot() || Play.id.equals("dev")) {
+			session.put("username", user.email);
+			ok();
+		} else {
+			forbidden();
+		}
 	}
 
 	@Util

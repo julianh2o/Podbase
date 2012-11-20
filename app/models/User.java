@@ -19,13 +19,12 @@ public class User extends TimestampModel {
 	@OneToOne(optional=true,cascade=CascadeType.ALL)
 	public Activation activation;
 	
-	public boolean root;
-	public boolean guest;
+	public boolean special;
 	
 	public User(String email, String password) {
 		super();
-		this.root = false;
 		this.email = email;
+		this.special = false;
 		this.password = null;
 		if (password != null) setCleartextPassword(password);
 	}
@@ -51,7 +50,15 @@ public class User extends TimestampModel {
 	}
 	
 	public boolean isGuest() {
-		return this.equals(getGuestAccount());
+		return this.email == "guest";
+	}
+	
+	public boolean isAuthenticated() {
+		return this.email == "authenticated";
+	}
+	
+	public boolean isRoot() {
+		return this.email == "root";
 	}
 	
 	public static User getGuestAccount() {
@@ -60,5 +67,9 @@ public class User extends TimestampModel {
 
 	public static User getAuthenticatedAccount() {
 		return User.find("authenticated", true).first();
+	}
+	
+	public static User getRootAccount() {
+		return User.find("root", true).first();
 	}
 }

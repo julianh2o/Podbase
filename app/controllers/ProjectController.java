@@ -21,7 +21,7 @@ public class ProjectController extends ParentController {
     public static void getProjects() {
     	User user = Security.getUser();
     	
-    	if (user.root)renderJSON(Project.findAll());
+    	if (user.isRoot())renderJSON(Project.findAll());
     	List<Project> projects = PermissionService.filter(PermissionService.getModelsForUser(user, AccessType.VISIBLE), Project.class);
     	
     	renderJSON(projects);

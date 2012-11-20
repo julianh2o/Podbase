@@ -130,7 +130,7 @@ public class PermissionService {
 	//TODO make this more efficient? (caching?)
     @Util
 	public static boolean userCanAccessImage(User user, String imagePath) {
-    	if (user.root) return true;
+    	if (user.isRoot()) return true;
     	
     	DatabaseImage image = DatabaseImage.forPath(imagePath);
     	
@@ -146,7 +146,7 @@ public class PermissionService {
     		} else if (model instanceof Project){
     			Project p = (Project)model;
     			for (Directory dir : p.directories) {
-    				if (("/"+image.path).startsWith(dir.path)) {
+    				if (image.path.startsWith(dir.path)) {
     					return true;
     				}
     			}

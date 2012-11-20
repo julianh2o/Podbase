@@ -21,7 +21,7 @@ public class Security extends Secure.Security {
     static void checkAccess() throws Throwable {
         User u = getUser();
         
-        if (u.root) return;
+        if (u.isRoot()) return;
         
         Access access = getActionAnnotation(Access.class);
         if (access != null) {

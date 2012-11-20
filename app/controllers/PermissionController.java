@@ -73,7 +73,7 @@ public class PermissionController extends ParentController {
     @Util
     public static List<AccessType> getAccessForUser(PermissionedModel model, User user) {
     	if (user == null) user = Security.getUser();
-    	if (user.root) {
+    	if (user.isRoot()) {
     		return Arrays.asList(AccessType.values());
     	}
     	List<AccessType> access = PermissionService.getStringPermissions(user, model);

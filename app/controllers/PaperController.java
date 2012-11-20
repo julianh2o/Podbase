@@ -30,7 +30,7 @@ public class PaperController extends ParentController {
     public static void getPapers() {
     	User user = Security.getUser();
     	
-    	if (user.root) renderJSON(Paper.findAll());
+    	if (user.isRoot()) renderJSON(Paper.findAll());
     	
     	List<Paper> papers = PermissionService.filter(PermissionService.getModelsForUser(user, AccessType.VISIBLE), Paper.class);
     	
