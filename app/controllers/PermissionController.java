@@ -25,6 +25,7 @@ import models.DatabaseImage;
 import models.Directory;
 import models.Permission;
 import models.PermissionedModel;
+import models.Podbase;
 import models.User;
 
 @With(Security.class)
@@ -33,13 +34,27 @@ public class PermissionController extends ParentController {
     	AccessType access = AccessType.valueOf(permission);
     	
     	PermissionService.togglePermission(user,model,access,value);
+    	ok();
+    }
+    
+    public static void setUserPermission(User user, String permission, boolean value) {
+    	AccessType access = AccessType.valueOf(permission);
     	
+    	PermissionService.togglePermission(user,null,access,value);
     	ok();
     }
     
     public static void getListedUsers(PermissionedModel model) {
     	List<User> users = PermissionService.getUsersForModel(model,AccessType.LISTED);
     	renderJSON(users);
+    }
+    
+    public static void getCurrentUserPermissions() {
+    	renderJSON(getAccessForUser(Podbase.getInstance(),Security.getUser()));
+    }
+    
+    public static void getCurrentPodbase() {
+    	renderJSON(Podbase.getInstance());
     }
     
     public static void getUserAccess(PermissionedModel model, User user) {

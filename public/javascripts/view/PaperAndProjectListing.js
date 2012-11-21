@@ -12,13 +12,13 @@ define(
 				this.project = Util.createView( $(".projects",this.el), ProjectList);
 				this.paper = Util.createView( $(".papers",this.el), PaperList);
 				
-				Link.getCurrentUser().asap($.proxy(this.refresh,this));
+				Link.getCurrentUserPermissions().asap($.proxy(this.refresh,this));
 			},
 			
 			refresh : function() {
-				var user = Link.getCurrentUser().getData();
+				var access = Link.getCurrentUserPermissions().getData();
 				
-				if (user.root) {
+				if (_.contains(access,"MANAGE_USERS")) {
 					this.userManagement = Util.createView( $(".management",this.el), UserManagement);
 				}
 			}

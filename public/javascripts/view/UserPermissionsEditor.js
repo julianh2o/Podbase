@@ -15,6 +15,7 @@ define(
 			
 			initialize : function() {
 				this.type = this.options.type;
+				this.modelObject = this.options.modelObject;
 				this.loadUser(this.options.user);
 			},
 			
@@ -41,7 +42,7 @@ define(
 					return;
 				}
 				
-				Link.getUserAccess(this.modelObject.id, this.user.id).asap($.proxy(this.refresh,this));
+				Link.getUserAccess(this.modelObject.id,this.user.id).invalidate().loadOnce($.proxy(this.refresh,this));
 			},
 			
 			refresh : function() {
@@ -56,7 +57,7 @@ define(
 					return memo;
 				},{});
 				
-				this.model = {user:this.user, userPermissionMap:permissionMap, permissions:permOfType[this.type]};
+				this.model = {user:this.user, userPermissionMap:permissionMap, permissions:permOfType[this.type], showRemove:this.model != null};
 				
 				this.render();
 				
@@ -78,7 +79,11 @@ define(
 				var perm = $el.val();
 				var value = $el.is(":checked");
 				
-				Link.setPermission({modelId:this.modelObject.id, userId:this.user.id, permission:perm, value:value}).post($.proxy(this.permissionSaveSuccess,this));
+				if (this.modelObject) {
+					Link.setPermission({modelId:this.modelObject.id, userId:this.user.id, permission:perm, value:value}).post($.proxy(this.permissionSaveSuccess,this));
+				} else {
+					Link.setUserPermission({userId:this.user.id, permission:perm, value:value}).post($.proxy(this.permissionSaveSuccess,this));
+				}
 			},
 			
 			permissionSaveSuccess : function() {

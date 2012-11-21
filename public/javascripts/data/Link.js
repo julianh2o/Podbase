@@ -43,7 +43,10 @@ define(['data/Loader'],function(Loader) {
 		// PermissionController.java
 		// ############################################
 		this.setPermission = new Loader("@{PermissionController.setPermission}?model.id={modelId}&user.id={userId}&permission={permission}&value={value}");
+		this.setUserPermission = new Loader("@{PermissionController.setUserPermission}?user.id={userId}&permission={permission}&value={value}");
 		this.getListedUsers = new Loader("@{PermissionController.getListedUsers}?model.id={modelId}");
+		this.getCurrentUserPermissions = new Loader("@{PermissionController.getCurrentUserPermissions}");
+		this.getCurrentPodbase = new Loader("@{PermissionController.getCurrentPodbase}");
 		this.getUserAccess = new Loader("@{PermissionController.getUserAccess}?model.id={modelId}&user.id={userId}");
 		this.getAccess = new Loader("@{PermissionController.getAccess}?model.id={modelId}");
 		this.addUserByEmail = new Loader("@{PermissionController.addUserByEmail}?model.id={modelId}&email={email}");

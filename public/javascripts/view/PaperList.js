@@ -6,11 +6,12 @@ define(
 			template: _.template( tmpl ),
 			
 			initialize: function() {
-				Link.loadAll(["getPapers"],$.proxy(this.refresh,this),true);
+				Link.loadAll(["getPapers","getCurrentUserPermissions"],$.proxy(this.refresh,this),true);
 			},
 			
 			refresh : function() {
-				this.model = {papers:Link.getPapers().getData()};
+				var showAdd = _.contains(Link.getCurrentUserPermissions().getData(),"CREATE_PROJECT");
+				this.model = {papers:Link.getPapers().getData(), showAdd:showAdd};
 				this.render();
 				
 				$(".add",this.el).click(function() {

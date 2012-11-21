@@ -1,5 +1,4 @@
 REQUIRED:
-* add/remove user privs
 * file system datastore
 * inherited templates
 * change password
@@ -10,6 +9,7 @@ FIX:
 * image file hash data
 * after login redirect
 * fix refresh clearing out the related panel (project permissions when list changes)
+* fix link so that null values can be sent for objects
 
 NICE TO HAVE:
 * image viewer overhaul
@@ -36,6 +36,7 @@ CCU:
 
 ################################################################################
 DONE
+* add/remove user privs
 * secure controllers
 * access control for papers
 * finish revised access control scheme

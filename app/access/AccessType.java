@@ -13,6 +13,7 @@ public enum AccessType {
 	CREATE_PROJECT("user"),
 	DELETE_PROJECT("user"),
 	CREATE_PAPER("user"),
+	MANAGE_USERS("user"),
 	
 	LISTED("paper","project"),
 	VISIBLE("paper","project"),

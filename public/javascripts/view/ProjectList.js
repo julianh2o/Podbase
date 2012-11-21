@@ -6,18 +6,19 @@ define(
 			template: _.template( tmpl ),
 			
 			initialize: function() {
-				Link.loadAll(["getProjects"],$.proxy(this.refresh,this),true);
+				Link.loadAll(["getProjects","getCurrentUserPermissions"],$.proxy(this.refresh,this),true);
 			},
 			
 			refresh : function() {
-				this.model = {projects:Link.getProjects().getData()};
+				var showAdd = _.contains(Link.getCurrentUserPermissions().getData(),"CREATE_PROJECT");
+				this.model = {projects:Link.getProjects().getData(), showAdd:showAdd};
 				this.render();
 				
 				$(".add",this.el).click(function() {
 					var name = prompt("Enter a name for your project.");
 					if (!name) return;
 					
-					Link.createProject(name,function() {
+					Link.createProject(name).post(function() {
 						Link.getProjects().pull();
 					});
 				});

@@ -20,7 +20,9 @@ public class Bootstrap extends Job {
 	        Fixtures.deleteDatabase();
 	        //Fixtures.loadModels("initial.yml");
 	        
-	        User root = new User("root",null);
+	        new Podbase().save();
+	        
+	        User root = new User("root","lucifer");
 	        root.special = true;
 	        root.save();
 	        

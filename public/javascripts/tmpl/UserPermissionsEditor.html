@@ -4,7 +4,11 @@
 
 <%= user.email %> <span class="created">created <%= user.created %></span>
 <br/>
-<a href="#" class="remove">Remove user from project</a>
+
+<% if (showRemove) { %>
+	<a href="#" class="remove">Remove user</a>
+<% } %>
+
 <hr/>
 
 <table>
