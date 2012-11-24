@@ -139,7 +139,6 @@ public class ImageBrowser extends ParentController {
 		File imageFile = new File(PodbaseUtil.concatenatePaths(getRootImageDirectory(),path));
 		
 		boolean hasAccess = PermissionService.userCanAccessImage(user,path);
-		System.out.println("Access: "+hasAccess);
 		if (!hasAccess) forbidden();
 
 		try {
@@ -253,6 +252,12 @@ public class ImageBrowser extends ParentController {
 		}
 		
 	    renderJSON(attributes);  
+	}
+	
+	public static void updateImageAttribute(ImageAttribute attribute, String value) {
+		attribute.value = value;
+		attribute.save();
+		renderJSON(attribute);
 	}
 	
 	public static void createAttribute(Project project, String path, String attribute, String value, boolean dataMode) {

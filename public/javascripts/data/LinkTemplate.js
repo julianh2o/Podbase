@@ -9,6 +9,10 @@ define(['data/Loader'],function(Loader) {
 			});
 			return map;
 		});
+		
+		this.fetchInfo.addTransformer("byAttribute", function(data) {
+			return _.groupBy(data,"attribute");
+		});
 	};
 	
 	$.extend(This.prototype,{

@@ -1,5 +1,12 @@
 <div class="row-fluid data-row">
 	<div class="span3 attribute">
+		<%= name %>
 	</div>
-	<div class="span9 value"></div>
+	<div class="span9 values">
+		<% _.each(values,function(item) { %>
+			<div class="value" data-value="<%= item.value %>" data-id="<%= item.id %>">
+				<%= item.value %>
+			</div>
+		<% }); %>
+	</div>
 </div>

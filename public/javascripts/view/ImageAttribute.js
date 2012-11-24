@@ -1,33 +1,77 @@
 define(
-	['view/RenderedView', 'util/Util', 'text!tmpl/ImageAttribute.html'],
-	function (RenderedView, Util, tmpl) {
+	['view/RenderedView', 'util/Util', 'data/Link', 'text!tmpl/ImageAttribute.html'],
+	function (RenderedView, Util, Link, tmpl) {
 		
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
 			
-			initialize: function() {
-				this.dbo = this.options.dbo;
-				this.canEdit = this.options.canEdit;
+			initialize: function(options) {
+				this.attributeName = options.attr;
+				this.link = options.link;
 				
-				this.project = this.options.project;
-				this.dataMode = this.options.dataMode;
-				
-				this.model = {canEdit:this.canEdit};
-				this.render();
-				this.$attribute = $(".attribute",this.el);
-				this.$value = $(".value",this.el);
-				this.editmode = false;
-				
-				$(this.el).find(".delete").click($.proxy(this.handleDelete,this));
-				
-				this.refresh();
+				this.link.asap($.proxy(this.refresh,this));
 			},
 			
 			refresh : function() {
-				this.refreshAttribute();
-				this.refreshValue();
+				var values = this.link.getData("byAttribute")[this.attributeName];
 				
-				$(this.el).toggleClass("templated",this.dbo.templated);
+				this.model = {name:this.attributeName, values:values};
+				this.render();
+				
+				$(".value",this.el).click($.proxy(this.triggerEditValue,this));
+				//this.$attribute.dblclick($.proxy(this.triggerEditAttribute,this));
+				
+				$(this.el).find(".delete").click($.proxy(this.handleDelete,this));
+				//this.$attribute.toggleClass("novalue",this.dbo.id == undefined);
+			},
+			
+			triggerEditAttribute : function() {
+				console.log("editing attribute");
+			},
+			
+			triggerEditValue : function(e) {
+				e.stopPropagation();
+				
+				var $el = $(e.target).closest(".value");
+				$el.unbind("click");
+				
+				var val = $el.data("value");
+				
+				var text = $("<textarea class='seamless' rows='auto'/>");
+				text.val(val);
+				
+				$el.empty().append(text);
+				text.autosize();
+				text.bind("blur", $.proxy(this.handleValueBlur,this));
+				
+				var self = this;
+				text.bind("keydown",function(e) {
+					if (e.keyCode == 13) {
+						self.handleValueBlur($el);
+					}
+				});
+				
+				text.focus();
+				text.select();
+			},
+			
+			handleValueBlur : function(arg) {
+				var $el = arg.target ? $(event.target).closest(".value") : arg;
+				
+				var value = $("textarea",this.el).val();
+				var oldValue = $el.data("value");
+				
+				if (value == oldValue || value == "") {
+					this.refresh();
+					return;
+				};
+				
+				var id = $el.data("id");
+				
+				var link = this.link;
+				Link.updateImageAttribute(id,value).post(function() {
+					link.pull();
+				});
 			},
 				
 			handleDelete : function() {
@@ -42,57 +86,15 @@ define(
 					$(this.el).remove();
 				}
 			},
-
-			refreshAttribute : function() {
-				this.$attribute.html(this.dbo.attribute);
-		
-				this.$attribute.toggleClass("novalue",this.dbo.id == undefined);
-			},
-
-			refreshValue : function() {
-				var $el = this.$value;
-				
-				$el.unbind("click"); 
-				
-				if (this.editmode) {
-					var input = $("<input class='seamless' />");
-					input.val(this.dbo.value);
-					$el.empty().append(input);
-					input.bind("blur", $.proxy(this.handleValueBlur,this));
-				} else {
-					$el.html(this.dbo.value);
-					if (this.canEdit) $el.bind("click", $.proxy(this.handleValueClick,this));
-				}
-			},
-
-			handleValueClick : function(event) {
-				this.editmode = true;
-				
-				this.refreshValue();
-				
-				this.$value.find("input").focus();
-			},
-
-			handleValueBlur : function(event) {
-				var $el = $(event.target);
-				var value = $el.val();
-				
-				if (value == this.value || value == "") return;
-				this.value = value;
-				this.saveAttribute();
-			},
+			
 
 			saveAttribute : function(event) {
-				if (this.dbo.id == undefined) {
-					Link.createAttribute({path:browser.selectedFile.path,attribute:this.dbo.attribute,value:this.value}).post(function(attribute) {
-						var templated = that.dbo.templated;
-						that.dbo = attribute;
-						that.dbo.templated = templated;
-						that.refresh();
-					});
-				} else {
-					Link.updateAttribute({attributeId:this.dbo.id,value:this.value}).post();
-				}
+//					Link.createAttribute({path:browser.selectedFile.path,attribute:this.dbo.attribute,value:this.value}).post(function(attribute) {
+//						var templated = that.dbo.templated;
+//						that.dbo = attribute;
+//						that.dbo.templated = templated;
+//						that.refresh();
+//					});
 			}
 		});
 		

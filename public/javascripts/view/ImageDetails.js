@@ -38,7 +38,8 @@ define(
 					return;
 				}
 				
-				Link.fetchInfo({projectId:this.project.id,path:this.file.path,dataMode:this.dataMode}).post( $.proxy(this.imageDetailsLoaded,this));
+				this.link = Link.fetchInfo({projectId:this.project.id,path:this.file.path,dataMode:this.dataMode});
+				this.link.loadOnce( $.proxy(this.imageDetailsLoaded,this));
 			},
 			
 			setFile : function(file) {
@@ -55,13 +56,13 @@ define(
 				$body.append("<div class='no-selection'>This image has no attributes</div>");
 			},
 			
-			imageDetailsLoaded : function(attributes) {
-				this.attributes = attributes;
-				
+			imageDetailsLoaded : function() {
 				this.refresh();
 			},
 			
 			refresh : function() {
+				this.attributes = this.link.getData();
+				
 				this.model = {file:this.file,attributes:this.attributes,canEdit:this.canEdit,dataMode:this.dataMode};
 				
 				this.render();
@@ -88,7 +89,7 @@ define(
 				var attribute = prompt("Attribute name");
 				if (!attribute || attribute == "") return false;
 				$.post("@{ImageBrowser.createAttribute()}", {
-						projectId : this.project.id,
+						"project.id" : this.project.id,
 						path : this.file.path,
 						attribute : attribute,
 						value : "",
@@ -98,7 +99,7 @@ define(
 			},
 			
 			addAttribute : function(attribute) {
-				var imageAttribute = new ImageAttribute({dbo:attribute,canEdit:this.canEdit});
+				var imageAttribute = new ImageAttribute({attr:attribute.attribute, link:this.link});
 				this.$body.append(imageAttribute.el);
 				
 				$(imageAttribute.el).click($.proxy(this.selectAttribute,this));

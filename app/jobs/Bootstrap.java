@@ -42,20 +42,25 @@ public class Bootstrap extends Job {
 	        new Permission(a,null,AccessType.CREATE_PROJECT).save();
 	        new Permission(a,null,AccessType.CREATE_PAPER).save();
 	        
-	        //Default project
-	        Project project = new Project("Default Project").save();
-	        new Permission(c,project,AccessType.OWNER).save();
-	        
-	        List<User> users = User.findAll();
-	        for (User u : users) {
-	        	if (u.special) continue;
-		        new Permission(u,project,AccessType.VISIBLE).save();
-		        new Permission(u,project,AccessType.LISTED).save();
-	        }
+	        List<User> users = new LinkedList<User>();
+	        users.add(a);
+	        users.add(b);
+	        users.add(c);
 	        
 	        for (File f : ImageBrowser.getRootImageDirectoryFile().listFiles()) {
-	        	project.addDirectory("/"+f.getName());
+	        	if (f.isDirectory()) {
+			        Project project = new Project(f.getName()).save();
+			        
+			        new Permission(c,project,AccessType.OWNER).save();
+			        new Permission(authenticated,project,AccessType.VISIBLE).save();
+			        new Permission(authenticated,project,AccessType.LISTED).save();
+			        
+			        addUsersToProject(project, users);
+			        
+		        	project.addDirectory("/"+f.getName());
+	        	}
 	        }
+	        
     	} else {
 	        // Check if the database is empty
 	        if(Project.count() == 0) {
@@ -65,4 +70,13 @@ public class Bootstrap extends Job {
 	        }
     	}
     }
+    
+    private void addUsersToProject(Project project, List<User> users) {
+        for (User u : users) {
+	        new Permission(u,project,AccessType.LISTED).save();
+	        new Permission(u,project,AccessType.VISIBLE).save();
+	        new Permission(u,project,AccessType.EDITOR).save();
+        }
+    }
+    
 }

@@ -31,7 +31,6 @@ define(
 				this.imageBrowser = new ImageBrowser({project:project,access:access});
 				this.templateManager = new TemplateManager({project:project,access:access});
 				this.projectPermissions = new Permissions({model:project,access:access,type:"project"});
-				this.projectSettings = new ProjectSettings({project:project,access:access});
 				var tabs = [];
 				
 				tabs.push({
@@ -56,13 +55,14 @@ define(
 					});
 				}
 				
-				if (_.include(access,"PROJECT_MANAGE_DIRECTORIES")) {
-					tabs.push({
-						id: "settings",
-						label: "Project Settings",
-						content: this.projectSettings
-					});
-				}
+//				this.projectSettings = new ProjectSettings({project:project,access:access});
+//				if (_.include(access,"PROJECT_MANAGE_DIRECTORIES")) {
+//					tabs.push({
+//						id: "settings",
+//						label: "Project Settings",
+//						content: this.projectSettings
+//					});
+//				}
 				
 				this.tabs = new TabModule({tabs: tabs,selectedTab: this.selectedTab });
 				$(this.tabs).on("TabSelected",$.proxy(this.tabSelected,this));

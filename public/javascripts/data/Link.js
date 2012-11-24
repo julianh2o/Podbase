@@ -36,6 +36,7 @@ define(['data/Loader'],function(Loader) {
 		this.fetchPath = new Loader("@{ImageBrowser.fetchPath}?path={path}");
 		this.resolveFile = new Loader("@{ImageBrowser.resolveFile}?path={path}&mode={mode}&project.id={projectId}&scale={scale}&width={width}&height={height}&brightness={brightness}&contrast={contrast}&histogram={histogram}");
 		this.fetchInfo = new Loader("@{ImageBrowser.fetchInfo}?project.id={projectId}&path={path}&dataMode={dataMode}");
+		this.updateImageAttribute = new Loader("@{ImageBrowser.updateImageAttribute}?attribute.id={attributeId}&value={value}");
 		this.createAttribute = new Loader("@{ImageBrowser.createAttribute}?project.id={projectId}&path={path}&attribute={attribute}&value={value}&dataMode={dataMode}");
 		
 		
@@ -114,6 +115,10 @@ define(['data/Loader'],function(Loader) {
 				map[item.id] = item;
 			});
 			return map;
+		});
+		
+		this.fetchInfo.addTransformer("byAttribute", function(data) {
+			return _.groupBy(data,"attribute");
 		});
 	};
 	

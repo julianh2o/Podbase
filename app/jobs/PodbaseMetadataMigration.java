@@ -26,7 +26,7 @@ public class PodbaseMetadataMigration extends Job {
 		File f = new File("./migrate/data.yaml");
 		
 		List<Entry> entries = parseFile(f);
-		Project project = Project.findById(new Long(1));
+		Project project = null; //Project.findById(new Long(1));
 		
 		int i=0;
 		for(Entry entry : entries) {

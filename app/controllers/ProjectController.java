@@ -39,6 +39,9 @@ public class ProjectController extends ParentController {
     	Project project = new Project(name);
     	project.save();
     	
+    	project.addDirectory("/"+name);
+    	
+    	
     	PermissionService.togglePermission(user,project,AccessType.OWNER,true);
     	PermissionService.togglePermission(user,project,AccessType.VISIBLE,true);
     	PermissionService.togglePermission(user,project,AccessType.LISTED,true);

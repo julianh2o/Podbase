@@ -1,9 +1,14 @@
 REQUIRED:
+* fix ui for create attribute
+* fix ui for editing attributes (esp for data/analysis mode)
+* visible/hidden toggle on a per-image basis
 * file system datastore
 * inherited templates
 * change password
+* smooth over behavior of attributes and templates
 
 FIX:
+* fix sending post data via get strings.. @.@
 * fix logging (on server)
 * find out why email isnt working
 * image file hash data
@@ -25,6 +30,7 @@ OTHER:
 
 V2:
 * image annotations
+* crop images
 
 CCU:
 * redo serialization
@@ -36,6 +42,7 @@ CCU:
 
 ################################################################################
 DONE
+* one project per root folder
 * add/remove user privs
 * secure controllers
 * access control for papers

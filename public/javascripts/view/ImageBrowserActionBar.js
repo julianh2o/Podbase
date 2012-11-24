@@ -16,7 +16,7 @@ define(
 				
 				
 				this.doDataModeSelection();
-				if (!_.contains(this.access,"PROJECT_EDIT_METADATA")) {
+				if (!_.contains(this.access,"EDITOR")) {
 					$(".data-mode li",this.el).addClass("disabled");
 				} else {
 					$(".data-mode a",this.el).click($.proxy(this.dataModeClicked,this));
@@ -24,6 +24,7 @@ define(
 			},
 			
 			dataModeClicked : function(e) {
+				e.preventDefault();
 				var $el = $(e.target);
 				$el.closest("ul").find("li").removeClass("active");
 				$el.closest("li").addClass("active");
