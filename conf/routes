@@ -11,8 +11,8 @@ PUT     /project                                ProjectController.newProjects
 
 *		/data{<.*>path}						ImageBrowser.resolveFile
 
-*		/view									ImageViewer.index
-*		/view/{<.*>path}						ImageViewer.index
+*		/view       						ImageViewer.index
+*		/view{<.*>path}						ImageViewer.index
 
 
 # Import CRUD routes

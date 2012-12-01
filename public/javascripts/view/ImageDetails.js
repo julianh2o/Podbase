@@ -16,13 +16,11 @@ define(
 			
 			initialize: function() {
 				this.access = this.options.access;
-				this.canEdit = $.inArray("editMetadata",this.access) >= 0;
+				this.canEdit = $.inArray("EDITOR",this.access) >= 0;
 				this.dataMode = this.options.dataMode;
 				
 				this.project = this.options.project;
 				this.setFile(this.options.file);
-				
-				$(this.el).dblclick($.proxy(this.createAttribute,this));
 				
 				this.reload();
 			},
@@ -39,12 +37,11 @@ define(
 				}
 				
 				this.link = Link.fetchInfo({projectId:this.project.id,path:this.file.path,dataMode:this.dataMode});
-				this.link.loadOnce( $.proxy(this.imageDetailsLoaded,this));
+				this.link.invalidate().loadOnce( $.proxy(this.imageDetailsLoaded,this));
 			},
 			
 			setFile : function(file) {
 				this.file = file;
-				
 				
 				this.reload();
 			},
@@ -70,8 +67,8 @@ define(
 				
 				if (this.file) {
 					var self = this;
-					_.each(this.attributes,function(attr) {
-						self.addAttribute(attr);
+					_.each(this.link.getData("byAttribute"),function(value,key) {
+						self.addAttribute(key);
 					});
 				}
 				
@@ -86,7 +83,7 @@ define(
 			createAttribute : function(e) {
 				e.preventDefault();
 				clearSelection();
-				var attribute = prompt("Attribute name");
+				var attribute = prompt("Add new attribute");
 				if (!attribute || attribute == "") return false;
 				$.post("@{ImageBrowser.createAttribute()}", {
 						"project.id" : this.project.id,
@@ -94,21 +91,28 @@ define(
 						attribute : attribute,
 						value : "",
 						dataMode : this.dataMode
-					},$.proxy(this.addAttribute,this),'json');
+					},$.proxy(this.createAttributeSuccess,this),'json');
 				return false;
 			},
 			
-			addAttribute : function(attribute) {
-				var imageAttribute = new ImageAttribute({attr:attribute.attribute, link:this.link});
+			createAttributeSuccess : function(attribute) {
+				this.reload();
+				
+				var $el = $(".attributes",this.el);
+				$el.scrollTop( $el.prop("scrollHeight") );
+			},
+			
+			addAttribute : function(attributeName) {
+				var imageAttribute = new ImageAttribute({attr:attributeName, link:this.link});
 				this.$body.append(imageAttribute.el);
 				
 				$(imageAttribute.el).click($.proxy(this.selectAttribute,this));
+				
 			},
 			
 			selectAttribute : function(e) {
-				
-				//TODO fix me
 				var $selected = $(e.target);
+				//TODO fix me
 				$selected.addClass("selected");
 			}
 		});
