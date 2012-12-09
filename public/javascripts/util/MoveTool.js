@@ -7,8 +7,23 @@ define(
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
 		
-			activate : function(state) {
+			activate : function(viewer) {
+				this.viewer = viewer;
 				this.render();
+				
+				this.$x = $(".x",this.el);
+				this.$y = $(".y",this.el);
+				this.$scale = $(".scale",this.el);
+				
+				this.update(viewer.state);
+			},
+			
+			update : function() {
+				var state = this.viewer.state;
+				this.$x.text(Math.round(state.pan.x));
+				this.$y.text(Math.round(state.pan.y));
+				var percent = Math.round(state.scale * 100);
+				this.$scale.text(percent+"%");
 			},
 			
 			deactivate : function() {
@@ -31,6 +46,8 @@ define(
 				var delta = pos.plus(origin.neg());
 				
 				state.pan = originState.pan.plus(delta);
+				
+				this.update();
 				
 				return true;
 			},

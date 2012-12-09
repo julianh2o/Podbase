@@ -5,14 +5,41 @@ define(
 			this.calibrated = false;
 			this.calibration = null;
 			this.measure = null;
-			this.calibrationLength = 0;
+			this.calibrationLength = 1;
 		};
 		
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
 		
-			activate : function(state) {
+			activate : function(viewer) {
+				this.viewer = viewer;
+				
 				this.render();
+				
+				this.$legendLength = $(".legend-length",this.el);
+				
+				this.setCalibrationLength(1);
+				
+				this.$legendLength.change($.proxy(this.fieldUpdated,this));
+			},
+			
+			update : function() {
+				
+			},
+			
+			fieldUpdated : function(e) {
+				var num = parseFloat(this.$legendLength.val());
+				this.setCalibrationLength(num);
+			},
+			
+			setCalibrationLength : function(newLength) {
+				var valueUpdated = false;
+				if (newLength != this.calibrationLength) valueUpdated = true;
+					
+				this.calibrationLength = newLength;
+				this.$legendLength.val(this.calibrationLength.toFixed(2));
+				
+				if (valueUpdated) this.viewer.updateCanvas();
 			},
 			
 			deactivate : function() {
@@ -26,10 +53,7 @@ define(
 			},
 			
 			mouseup : function(e,state) {
-				if (!this.calibrated) {
-					this.calibrationLength = parseFloat(prompt("distance"));
-					this.calibrated = true;
-				}
+				this.calibrated = true;
 			},
 			
 			mousemove : function(e,state) {

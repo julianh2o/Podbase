@@ -62,12 +62,20 @@ define(
 				
 				$(window).resize($.proxy(this.doResize,this));
 				
+				this.doResize();
+				this.state.scale = Math.min(this.state.canvasDim.x / this.state.imageDim.x, this.state.canvasDim.y / this.state.imageDim.y);
+				this.stateUpdated();
+				
 				this.updateImage();
 			},
 			
 			copyImageToProcess : function() {
 				var g = this.$processed.get(0).getContext("2d");
 				g.drawImage(this.$original.get(0),0,0);
+			},
+			
+			stateUpdated : function() {
+				if (this.tool) this.tool.update();
 			},
 			
 			addTool : function(name,display,object) {
@@ -112,8 +120,6 @@ define(
 			
 			updateCanvas : function() {
 				var g = this.$viewport.get(0).getContext("2d");
-				
-				this.state.canvasDim = new Point2d(this.$viewport.width(), this.$viewport.height());
 				
 				g.clearRect(0,0,this.state.canvasDim.x,this.state.canvasDim.y);
 				
@@ -173,7 +179,6 @@ define(
 					this.doProcess();
 				} else if (response) {
 					this.updateCanvas();
-					
 				}
  				
 				
@@ -202,6 +207,7 @@ define(
 				
 				this.state.pan = this.state.pan.minus(newPos.minus(this.mouse));
 				
+				this.tool.update();
 				this.updateCanvas();
 			},
 			
@@ -231,6 +237,8 @@ define(
 				this.$viewport.width(remaining);
 				this.$viewport.attr("width",remaining);
 				this.$viewport.attr("height",remaining);
+				
+				this.state.canvasDim = new Point2d(remaining,remaining);
 				
 				this.updateCanvas();
 			}

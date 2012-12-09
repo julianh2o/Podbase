@@ -24,7 +24,8 @@ define(
 				this.update(viewer.state);
 			},
 			
-			update : function(state) {
+			update : function() {
+				var state = this.viewer.state;
 				this.$brightness.val(state.brightness);
 				this.$contrast.val(state.contrast);
 			},
