@@ -260,6 +260,11 @@ public class ImageBrowser extends ParentController {
 		renderJSON(attribute);
 	}
 	
+	public static void deleteImageAttribute(ImageAttribute attribute) {
+		attribute.delete();
+		ok();
+	}
+	
 	public static void createAttribute(Project project, String path, String attribute, String value, boolean dataMode) {
 		PodbaseUtil.assertPath(path);
 		

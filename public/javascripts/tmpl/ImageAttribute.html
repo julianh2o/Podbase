@@ -6,6 +6,7 @@
 		<% _.each(values,function(item) { %>
 			<div class="value" data-value="<%= item.value %>" data-id="<%= item.id %>">
 				<%= item.value %>
+				<span class="delete-attribute"><i class="icon-remove"/></span>
 			</div>
 		<% }); %>
 	</div>
