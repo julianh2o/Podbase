@@ -106,9 +106,9 @@ public class ImageBrowser extends ParentController {
 		File directory = getDirectory(project, path);
 		final boolean isRoot = directory.equals(getRootImageDirectoryFile());
 		if (isRoot) {
-			renderJSON(wrapFiles(projectFiles));
+			renderJSON(wrapFiles(project, projectFiles));
 		} else {
-			renderJSON(wrapFiles(Arrays.asList(directory.listFiles())));
+			renderJSON(wrapFiles(project, Arrays.asList(directory.listFiles())));
 		}
 	}
 	
@@ -117,16 +117,21 @@ public class ImageBrowser extends ParentController {
 		PodbaseUtil.assertPath(path);
 		
 		File directory = getDirectory(null, path);
-		renderJSON(wrapFiles(Arrays.asList(directory.listFiles())));
+		renderJSON(wrapFiles(null, Arrays.asList(directory.listFiles())));
+	}
+	
+	@ProjectAccess(AccessType.EDITOR)
+	public static void setVisible(Project project, DatabaseImage image, boolean visible) {
+		ProjectVisibleImage.setVisible(project,image,visible);
 	}
 	
 	@Util
-	public static List<FileWrapper> wrapFiles(List<File> files) {
+	public static List<FileWrapper> wrapFiles(Project project, List<File> files) {
 		Collections.sort(files);
 		
 		List<FileWrapper> fileWrappers = new LinkedList<FileWrapper>();
 		for (File f : files) {
-			fileWrappers.add(new FileWrapper(getRootImageDirectory(),f));
+			fileWrappers.add(new FileWrapper(project, getRootImageDirectory(),f));
 		}
 		
 		return fileWrappers;
@@ -146,7 +151,6 @@ public class ImageBrowser extends ParentController {
 		} catch (IOException e) {
 			return null;
 		}
-			
 	}
 	
 	public static void resolveFile(String path, String mode, Project project, Float scale, Integer width, Integer height, Float brightness, Float contrast, Boolean histogram) {

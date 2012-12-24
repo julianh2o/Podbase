@@ -1,7 +1,8 @@
-REQUIRED:
-* fix ui for create attribute
-* fix ui for editing attributes (esp for data/analysis mode)
+NEXT
 * visible/hidden toggle on a per-image basis
+
+REQUIRED:
+* fix ui for editing attributes (esp for data/analysis mode)
 * file system datastore
 * inherited templates
 * change password
@@ -17,7 +18,6 @@ FIX:
 * fix link so that null values can be sent for objects
 
 NICE TO HAVE:
-* image viewer overhaul
 * data mode, analysis mode, paper specific metadata
 * image groups within papers
 * access levels "user groups"

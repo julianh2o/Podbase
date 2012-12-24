@@ -26,7 +26,13 @@ define(
 			
 			loadPath : function(path, selectedFile) {
 				path = path || "/";
-				this.path = path.chopEnd("/") + "/";
+				path = path.chopEnd("/");
+				if (path == "") {
+					path = "/";
+				} else {
+					this.path = path + "/";
+				}
+				
 				this.$path.html(this.path);
 				$(this).trigger("PathChanged",[this.path]);
 
@@ -38,7 +44,7 @@ define(
 					if (this.project) {
 						link = Link.fetchProjectPath({projectId:this.project.id,path:path});
 					} else {
-						link = Link.fetchPath({path:path});
+						link = Link.fetchPath(path);
 					}
 					link.invalidate().loadOnce(function(link) {
 						files = link.getData();
@@ -60,11 +66,11 @@ define(
 				function renderOption(file) {
 					var option = new Option();
 
-					option.text = file.display + (file.isDir ? "/" : "");
+					option.text = (file.visible?"(visible) ":"") + file.display + (file.isDir ? "/" : "");
 
 					option.value = file.path;
 					option.title = file.path;
-					if (file.display == selectedFile) {
+					if (file && selectedFile && file.display == selectedFile.display) {
 						option.selected = true;
 						selectedFileObject = file;
 						selectedOption = option;

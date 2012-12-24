@@ -34,6 +34,14 @@ define(
 				
 				this.render();
 				
+				var ctx = $(".test",this.el).get(0).getContext("2d");
+				ctx.moveTo(0,100);
+				ctx.lineTo(100,0);
+				ctx.stroke();
+				this.$test = $(".test",this.el);
+				
+				window.viewer = this;
+				
 				
 				this.$tools = $(".tools",this.el)
 				this.$toolOptions = $(".tool-options",this.el);
@@ -62,11 +70,11 @@ define(
 				
 				$(window).resize($.proxy(this.doResize,this));
 				
+				this.updateImage();
+				
 				this.doResize();
 				this.state.scale = Math.min(this.state.canvasDim.x / this.state.imageDim.x, this.state.canvasDim.y / this.state.imageDim.y);
 				this.stateUpdated();
-				
-				this.updateImage();
 			},
 			
 			copyImageToProcess : function() {
@@ -109,7 +117,9 @@ define(
 				//this.state.brightness and contrast between -100 and 100
 				var brightness = this.state.brightness;
 				var contrast = this.state.contrast;
-				Pixastic.process(this.$processed.get(0), "brightness", {brightness:brightness,contrast:contrast},$.proxy(this.imageProcessingComplete,this));
+				this.$processed.attr("width",this.state.imageDim.x);
+				this.$processed.attr("height",this.state.imageDim.y);
+				Pixastic.process(this.$original.get(0), "brightness", {brightness:brightness,contrast:contrast},$.proxy(this.imageProcessingComplete,this));
 			},
 			
 			imageProcessingComplete : function(image) {
@@ -119,6 +129,7 @@ define(
 			},
 			
 			updateCanvas : function() {
+				if (!this.processedImage) return;
 				var g = this.$viewport.get(0).getContext("2d");
 				
 				g.clearRect(0,0,this.state.canvasDim.x,this.state.canvasDim.y);
@@ -130,6 +141,7 @@ define(
 				if (this.processedImage) image = this.processedImage;
 				
 				var scaledImageDim = this.state.effectiveDim();
+				
 				g.drawImage(
 						image,
 						0,
@@ -180,15 +192,6 @@ define(
 				} else if (response) {
 					this.updateCanvas();
 				}
- 				
-				
-//					var delta = {x:this.mouse.x - this.origin.x,y:this.mouse.y - this.origin.y};
-					
-//					if (this.activeTool == "adjust"){
-//						this.state.brightness = scaleRange(this.mouse.x,0,this.$viewport.width(),-255,255);
-//						this.state.contrast = scaleRange(this.mouse.y,0,this.$viewport.height(),0,10);
-//						if (!this.imageLoading) this.updateImage();
-//					}
 			},
 			
 			mousewheel : function(event, delta, deltaX, deltaY) {
@@ -209,6 +212,8 @@ define(
 				
 				this.tool.update();
 				this.updateCanvas();
+				
+				event.preventDefault();
 			},
 			
 			handleToolClick : function(e) {
