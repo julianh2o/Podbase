@@ -40,6 +40,7 @@ define(['data/Loader'],function(Loader) {
 		this.updateImageAttribute = new Loader("@{ImageBrowser.updateImageAttribute}?attribute.id={attributeId}&value={value}");
 		this.deleteImageAttribute = new Loader("@{ImageBrowser.deleteImageAttribute}?attribute.id={attributeId}");
 		this.createAttribute = new Loader("@{ImageBrowser.createAttribute}?project.id={projectId}&path={path}&attribute={attribute}&value={value}&dataMode={dataMode}");
+		this.importFromFile = new Loader("@{ImageBrowser.importFromFile}?project.id={projectId}&path={path}");
 		
 		
 		// ############################################

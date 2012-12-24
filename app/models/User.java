@@ -66,10 +66,10 @@ public class User extends TimestampModel {
 	}
 
 	public static User getAuthenticatedAccount() {
-		return User.find("authenticated", true).first();
+		return User.find("email", "authenticated").first();
 	}
 	
 	public static User getRootAccount() {
-		return User.find("root", true).first();
+		return User.find("email", "root").first();
 	}
 }

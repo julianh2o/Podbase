@@ -41,6 +41,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import models.*;
+import services.ImportExportService;
 import services.PermissionService;
 import util.*;
 
@@ -104,12 +105,29 @@ public class ImageBrowser extends ParentController {
 		
 		List<File> projectFiles = getProjectFiles(project);
 		File directory = getDirectory(project, path);
-		final boolean isRoot = directory.equals(getRootImageDirectoryFile());
-		if (isRoot) {
-			renderJSON(wrapFiles(project, projectFiles));
-		} else {
-			renderJSON(wrapFiles(project, Arrays.asList(directory.listFiles())));
+		final boolean isRootDirectory = directory.equals(getRootImageDirectoryFile());
+		
+		List<File> files = isRootDirectory ? projectFiles : Arrays.asList(directory.listFiles());
+		
+		List<FileWrapper> wrappedFiles = wrapFiles(project, files);
+		
+		wrappedFiles = visibilityFilter(project, Security.getUser(), wrappedFiles);
+		
+		renderJSON(wrappedFiles);
+	}
+	
+	@Util
+	public static List<FileWrapper> visibilityFilter(Project project, User user, List<FileWrapper> files) {
+		if (PermissionService.hasInheritedAccess(user,project,AccessType.EDITOR)) {
+			return files;
 		}
+		
+		List<FileWrapper> filtered = new LinkedList<FileWrapper>();
+		for (FileWrapper f : files) {
+			if (f.visible || f.isDir) filtered.add(f);
+		}
+		
+		return filtered;
 	}
 	
 	@Access(AccessType.ROOT)
@@ -131,17 +149,27 @@ public class ImageBrowser extends ParentController {
 		
 		List<FileWrapper> fileWrappers = new LinkedList<FileWrapper>();
 		for (File f : files) {
+			if (f.getName().startsWith(".")) continue;
+			if (f.getName().endsWith(".yml")) continue;
+			if (f.getName().endsWith(".swp")) continue;
 			fileWrappers.add(new FileWrapper(project, getRootImageDirectory(),f));
 		}
 		
 		return fileWrappers;
 	}
 	
-	static BufferedImage getImage(String path) {
+	@Util
+	public static File getFile(String path) {
+		File imageFile = new File(PodbaseUtil.concatenatePaths(getRootImageDirectory(),path));
+		return imageFile;
+	}
+	
+	@Util
+	public static BufferedImage getImage(String path) {
 		PodbaseUtil.assertPath(path);
 		
 		User user = Security.getUser();
-		File imageFile = new File(PodbaseUtil.concatenatePaths(getRootImageDirectory(),path));
+		File imageFile = getFile(path);
 		
 		boolean hasAccess = PermissionService.userCanAccessImage(user,path);
 		if (!hasAccess) forbidden();
@@ -275,5 +303,9 @@ public class ImageBrowser extends ParentController {
 		DatabaseImage image = DatabaseImage.forPath(path);
 		ImageAttribute attr = image.addAttribute(project, attribute, value, dataMode);
 		renderJSON(attr);
+	}
+	
+	public static void importFromFile(Project project, String path) throws IOException {
+		ImportExportService.importData(project, path);
 	}
 }

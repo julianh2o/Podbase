@@ -27,8 +27,10 @@ define(
 				this.directoryCache = new Cache();
 				this.selectedFile = null;
 				
-				this.fileBrowser = new FileBrowser({project:this.project});
+				this.fileBrowser = new FileBrowser({project:this.project, showVisibility: _.contains(this.access,"EDITOR")});
 				this.$browser.append(this.fileBrowser.el);
+				
+				$(".path",this.fileBrowser.el).remove().appendTo($(".path",this.actionBar.el));
 				
 				this.templateChooser.setPath("/");
 				

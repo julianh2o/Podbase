@@ -53,6 +53,7 @@ public class PermissionService {
 	
 	// Inherited permissions
 	public static boolean hasInheritedAccess(User user, PermissionedModel model, AccessType access) {
+		if (user.isRoot()) return true;
 		if (hasPermission(User.getGuestAccount(),model,access)) return true;
 		if (hasPermission(User.getAuthenticatedAccount(),model,access)) return true;
 		if (hasPermission(user,model,access)) return true;

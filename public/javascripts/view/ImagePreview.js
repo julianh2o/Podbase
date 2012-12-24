@@ -19,9 +19,21 @@ define(
 				this.$toggleVisible = $(".toggle-visible",this.el);
 				this.$toggleVisible.click($.proxy(this.toggleVisible,this));
 				
+				this.$import = $(".import-data",this.el);
+				this.$import.click($.proxy(this.importData,this));
+				
 				this.updateVisibleText();
 				
 				$(".add-to-image-set",this.el).unbind('click').click($.proxy(this.addToImageSet,this));
+			},
+			
+			importData : function() {
+				console.log(this.browser.project.id,this.file.path);
+				Link.importFromFile(this.browser.project.id,this.file.path).post($.proxy(this.dataImported,this));
+			},
+			
+			dataImported : function() {
+				this.browser.fileBrowser.reload();
 			},
 			
 			updateVisibleText : function() {

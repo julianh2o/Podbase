@@ -7,6 +7,7 @@ define(
 			
 			initialize: function(options) {
 				this.project = options.project;
+				this.showVisibility = options.showVisibility;
 				this.render();
 				
 				this.$browser = $(".file-select",this.el);
@@ -66,7 +67,7 @@ define(
 				function renderOption(file) {
 					var option = new Option();
 
-					option.text = (file.visible?"(visible) ":"") + file.display + (file.isDir ? "/" : "");
+					option.text = (file.visible && that.showVisibility?"(visible) ":"") + file.display + (file.isDir ? "/" : "");
 
 					option.value = file.path;
 					option.title = file.path;

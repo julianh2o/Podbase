@@ -1,11 +1,11 @@
-NEXT
-* visible/hidden toggle on a per-image basis
-
 REQUIRED:
-* fix ui for editing attributes (esp for data/analysis mode)
 * file system datastore
 * inherited templates
 * change password
+* hidden fields
+* xml data store: original, backup
+
+POLISHING
 * smooth over behavior of attributes and templates
 
 FIX:
@@ -39,13 +39,3 @@ CCU:
 * make it so that bin folder is accessible from project root
 * write tests
 * user refresh in paperAndProjectListing is firing twice
-
-################################################################################
-DONE
-* one project per root folder
-* add/remove user privs
-* secure controllers
-* access control for papers
-* finish revised access control scheme
-* image access control
-* filter permissions when listing them to the user "project" permissions, "paper" permissions, "misc" permissions
