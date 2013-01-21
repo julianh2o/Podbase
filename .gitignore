@@ -11,3 +11,8 @@ data/*
 logs/*
 server.pid
 migrate/data.*
+
+*.class
+*.jar
+*.war
+*.ear
