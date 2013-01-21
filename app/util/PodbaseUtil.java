@@ -8,7 +8,11 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
+import models.DatabaseImage;
 import models.GsonTransient;
 
 import com.google.gson.ExclusionStrategy;
@@ -16,11 +20,31 @@ import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import controllers.ImageBrowser;
+
 public class PodbaseUtil {
+	public static boolean isImage(File file) {
+		String[] extensions = {"jpg","jpeg","png","tiff","tif","gif","bmp"};
+		
+		String name = file.getName().toLowerCase();
+		for (String ext : extensions) {
+			if (name.endsWith(ext)) return true;
+		}
+		return false;
+	}
+	
 	public static String concatenatePaths(String path, String rel) {
 		String sep = "/";
 		if (path.endsWith("/") || rel.startsWith("/")) sep = "";
 		return path + sep + rel;
+	}
+	
+	public static DatabaseImage imageForFile(File f) {
+        Path pathAbsolute = f.toPath();
+        Path pathBase = ImageBrowser.getRootImageDirectoryFile().toPath();
+        Path pathRelative = pathBase.relativize(pathAbsolute);
+        String path = "/"+pathRelative.toString();
+        return DatabaseImage.forPath(path);
 	}
 	
 	public static boolean isValidPath(String path) {
@@ -119,4 +143,5 @@ public class PodbaseUtil {
 			}}).create();
 		return gson;
 	}
+
 }

@@ -289,11 +289,17 @@ public class ImageBrowser extends ParentController {
 	public static void updateImageAttribute(ImageAttribute attribute, String value) {
 		attribute.value = value;
 		attribute.save();
+		
+		ImportExportService.tryExportData(attribute.image);
+		
 		renderJSON(attribute);
 	}
 	
 	public static void deleteImageAttribute(ImageAttribute attribute) {
 		attribute.delete();
+		
+		ImportExportService.tryExportData(attribute.image);
+		
 		ok();
 	}
 	
@@ -302,10 +308,18 @@ public class ImageBrowser extends ParentController {
 		
 		DatabaseImage image = DatabaseImage.forPath(path);
 		ImageAttribute attr = image.addAttribute(project, attribute, value, dataMode);
+		
+		ImportExportService.tryExportData(image);
+		
 		renderJSON(attr);
 	}
 	
 	public static void importFromFile(Project project, String path) throws IOException {
 		ImportExportService.importData(project, path);
+	}
+	
+	public static void exportToFile(String path) throws IOException {
+		DatabaseImage image = DatabaseImage.forPath(path);
+		ImportExportService.exportData(image);
 	}
 }

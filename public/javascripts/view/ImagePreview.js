@@ -22,17 +22,23 @@ define(
 				this.$import = $(".import-data",this.el);
 				this.$import.click($.proxy(this.importData,this));
 				
+				this.$export = $(".export-data",this.el);
+				this.$export.click($.proxy(this.exportData,this));
+				
 				this.updateVisibleText();
 				
 				$(".add-to-image-set",this.el).unbind('click').click($.proxy(this.addToImageSet,this));
 			},
 			
 			importData : function() {
-				console.log(this.browser.project.id,this.file.path);
-				Link.importFromFile(this.browser.project.id,this.file.path).post($.proxy(this.dataImported,this));
+				Link.importFromFile(this.browser.project.id,this.file.path).post($.proxy(this.refreshFilebrowser,this));
 			},
 			
-			dataImported : function() {
+			exportData : function() {
+				Link.exportToFile(this.file.path).post();
+			},
+			
+			refreshFilebrowser : function() {
 				this.browser.fileBrowser.reload();
 			},
 			
