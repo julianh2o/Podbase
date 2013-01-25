@@ -26,6 +26,10 @@ public class Project extends PermissionedModel {
 	@OneToMany(mappedBy="project", cascade=CascadeType.ALL)
 	public List<Template> templates = new LinkedList<Template>();
 	
+	public static Project get(String name) {
+		return (Project)Project.find("byName", name).first();
+	}
+	
 	public Project(String name) {
 		super();
 		this.dataMode = true;

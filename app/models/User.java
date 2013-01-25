@@ -21,6 +21,10 @@ public class User extends TimestampModel {
 	
 	public boolean special;
 	
+	public static User get(String email) {
+		return (User)User.find("byEmail", email).first();
+	}
+	
 	public User(String email, String password) {
 		super();
 		this.email = email;

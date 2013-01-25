@@ -10,6 +10,7 @@ import access.ProjectAccess;
 import play.mvc.Util;
 import play.mvc.With;
 import services.PermissionService;
+import services.ProjectService;
 
 import models.Directory;
 import models.Permission;
@@ -19,11 +20,7 @@ import models.User;
 @With(Security.class)
 public class ProjectController extends ParentController {
     public static void getProjects() {
-    	User user = Security.getUser();
-    	
-    	if (user.isRoot())renderJSON(Project.findAll());
-    	List<Project> projects = PermissionService.filter(PermissionService.getModelsForUser(user, AccessType.VISIBLE), Project.class);
-    	
+    	List<Project> projects = ProjectService.getVisibleProjects();
     	renderJSON(projects);
     }
     
@@ -34,18 +31,7 @@ public class ProjectController extends ParentController {
     
     @Access(AccessType.CREATE_PROJECT)
     public static void createProject(String name) {
-    	User user = Security.getUser();
-    	
-    	Project project = new Project(name);
-    	project.save();
-    	
-    	project.addDirectory("/"+name);
-    	
-    	
-    	PermissionService.togglePermission(user,project,AccessType.OWNER,true);
-    	PermissionService.togglePermission(user,project,AccessType.VISIBLE,true);
-    	PermissionService.togglePermission(user,project,AccessType.LISTED,true);
-    	
+    	ProjectService.createProject(name);
     	ok();
     }
     

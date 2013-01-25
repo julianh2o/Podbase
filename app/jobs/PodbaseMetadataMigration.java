@@ -37,7 +37,7 @@ public class PodbaseMetadataMigration extends Job {
 				image.addAttribute(project, key,entry.data.get(key), true);
 			}
 			
-			if (Play.id.equals("dev") && i++ > 5) return; //cut off after 5 in dev mode
+			if ("dev".equals(Play.configuration.get("application.mode")) && i++ > 5) return; //cut off after 5 in dev mode
 		}
 	}
 	

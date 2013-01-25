@@ -1,5 +1,6 @@
 package services;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,8 +44,10 @@ public class PermissionService {
 	public static void togglePermission(User user, PermissionedModel model, AccessType access, boolean value) {
     	Permission perm = getPermission(user,model,access);
     	if (perm == null && value) {
+    		System.out.println("adding permission");
     		addPermission(user, model, access);
     	} else if (perm != null && !value) {
+    		System.out.println("removing permission");
     		perm.delete();
     	}
 	}
@@ -83,7 +86,16 @@ public class PermissionService {
 		return permissions;
 	}
 	
-	public static List<AccessType> getStringPermissions(User user, PermissionedModel model) {
+	public static List<String> getStringPermissions(User user, PermissionedModel model) {
+		List<String> strings = new LinkedList<String>();
+		List<AccessType> accessTypes = getAccessFromPermissions(getPermissions(user,model));
+		for (AccessType accessType : accessTypes) {
+			strings.add(accessType.toString());
+		}
+		return strings;
+	}
+	
+	public static List<AccessType> getAccess(User user, PermissionedModel model) {
 		return getAccessFromPermissions(getPermissions(user,model));
 	}
 	
@@ -156,4 +168,5 @@ public class PermissionService {
     	
     	return false;
 	}
+
 }
