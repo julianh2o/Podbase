@@ -1,3 +1,6 @@
+Current refactoring:
+* unify path representation
+
 REQUIRED:
 * file system datastore
 * inherited templates

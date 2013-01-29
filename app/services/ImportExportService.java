@@ -44,7 +44,7 @@ public class ImportExportService {
 	public static File getInputFile(DatabaseImage image) {
 		int dot = image.path.lastIndexOf(".");
 		String trunk = image.path.substring(0,dot);
-		File f = ImageBrowser.getFile(trunk + ".yml");
+		File f = PathService.getFile(trunk + ".yml");
 		
 		return f;
 	}
@@ -52,7 +52,7 @@ public class ImportExportService {
 	public static File getOutputFile(DatabaseImage image) {
 		int dot = image.path.lastIndexOf(".");
 		String trunk = image.path.substring(0,dot);
-		File f = ImageBrowser.getFile(trunk + ".bak.yml");
+		File f = PathService.getFile(trunk + ".bak.yml");
 		
 		return f;
 	}
@@ -113,8 +113,8 @@ public class ImportExportService {
 		Files.walkFileTree(f.toPath(),new SimpleFileVisitor<Path>() {
 			@Override
 			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-				if (PodbaseUtil.isImage(file.toFile())) {
-					importData(project,PodbaseUtil.imageForFile(file.toFile()));
+				if (PathService.isImage(file.toFile())) {
+					importData(project,PathService.imageForFile(file.toFile()));
 				}
 				return FileVisitResult.CONTINUE;
 			}

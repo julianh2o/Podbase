@@ -44,10 +44,8 @@ public class PermissionService {
 	public static void togglePermission(User user, PermissionedModel model, AccessType access, boolean value) {
     	Permission perm = getPermission(user,model,access);
     	if (perm == null && value) {
-    		System.out.println("adding permission");
     		addPermission(user, model, access);
     	} else if (perm != null && !value) {
-    		System.out.println("removing permission");
     		perm.delete();
     	}
 	}

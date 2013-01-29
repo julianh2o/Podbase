@@ -59,7 +59,6 @@ public class TestPermissionService extends UnitTest {
 	
 	@Test
 	public void testTogglePermission() {
-		System.out.println("toggle test");
 		User u1 = User.get("test1@test.com");
 		Project p1 = Project.get("test");
 		
