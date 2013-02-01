@@ -48,7 +48,7 @@ public class Bootstrap extends Job {
 	        users.add(b);
 	        users.add(c);
 	        
-	        for (File f : PathService.getRootImageDirectoryFile().listFiles()) {
+	        for (File f : PathService.getRootImageDirectory().toFile().listFiles()) {
 	        	if (f.isDirectory()) {
 			        Project project = new Project(f.getName()).save();
 			        

@@ -1,6 +1,7 @@
 package util;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,12 +24,9 @@ public class FileWrapper {
 	public boolean isDir;
 	public boolean visible;
 	
-	public FileWrapper(Project project, String display, String rootDirectory, File f) {
+	public FileWrapper(Project project, String display, Path path) {
 		this.display = display;
-		this.path = f.getAbsolutePath();
-		if (path.startsWith(rootDirectory)) {
-			path = path.substring(rootDirectory.length());
-		}
+		this.path = PathService.getRelativePath(path).toString();
 		this.project = project;
 		DatabaseImage image = DatabaseImage.forPath(path);
 		this.image = image;
@@ -40,17 +38,17 @@ public class FileWrapper {
 				this.visible = true;
 			}
 		}
-		this.isDir = f.isDirectory();
+		this.isDir = path.toFile().isDirectory();
 	}
 	
-	public FileWrapper(Project project, String rootDirectory, File f) {
-		this(project, f.getName(),rootDirectory,f);
+	public FileWrapper(Project project, Path path) {
+		this(project, path.getFileName().toString(),path);
 	}
 	
-	public static List<FileWrapper> wrapFiles(Project project, List<File> files) {
+	public static List<FileWrapper> wrapFiles(Project project, List<Path> paths) {
 		List<FileWrapper> fileWrappers = new LinkedList<FileWrapper>();
-		for (File f : files) {
-			fileWrappers.add(new FileWrapper(project, PathService.getRootImageDirectory(),f));
+		for (Path path : paths) {
+			fileWrappers.add(new FileWrapper(project, path));
 		}
 		
 		return fileWrappers;

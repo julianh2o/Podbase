@@ -1,5 +1,6 @@
 package models;
 
+import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,13 +36,17 @@ public class DatabaseImage extends TimestampModel {
 		return attr;
 	}
 	
-	public static DatabaseImage forPath(String path) {
-		PathService.assertPath(path);
-		
+	public Path getPath() {
+		return PathService.resolve(this.path);
+	}
+	
+	public static DatabaseImage forPath(Path path) {
 		if (path == null) return null;
-		DatabaseImage image = DatabaseImage.find("path",path).first();
+		
+		String rel = PathService.getRelativePath(path).toString();
+		DatabaseImage image = DatabaseImage.find("path",rel).first();
 		if (image == null) {
-			image = new DatabaseImage(path);
+			image = new DatabaseImage(rel);
 			image.save();
 		}
 		return image;

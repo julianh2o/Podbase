@@ -29,10 +29,9 @@ import models.Project;
 import models.User;
 
 public class PathPermissionService {
-	public static boolean canAccessFile(Project project, File f) {
-		String root = PathService.getRootImageDirectory();
+	public static boolean canAccessPath(Project project, Path path) {
+		Path root = PathService.getRootImageDirectory();
 		try {
-			String path = f.getCanonicalPath();
 			if (path.startsWith(root)) return true;
 		} catch (Exception e) {
 			return false;

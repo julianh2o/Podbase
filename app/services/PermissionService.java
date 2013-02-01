@@ -1,5 +1,6 @@
 package services;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
@@ -140,10 +141,10 @@ public class PermissionService {
 	
 	//TODO make this more efficient? (caching?)
     @Util
-	public static boolean userCanAccessImage(User user, String imagePath) {
+	public static boolean userCanAccessPath(User user, Path path) {
     	if (user.isRoot()) return true;
     	
-    	DatabaseImage image = DatabaseImage.forPath(imagePath);
+    	DatabaseImage image = DatabaseImage.forPath(path);
     	
     	List<PermissionedModel> models = getModelsForUser(user,AccessType.VISIBLE);
     	for(PermissionedModel model : models) {

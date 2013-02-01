@@ -3,6 +3,7 @@ package services;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
@@ -32,25 +33,33 @@ import models.User;
 
 //TODO unify path representation
 public class PathService {
-	public static String getRootImageDirectory() {
-		return Play.applicationPath.getAbsolutePath() + "/data";
+	public static Path getRootImageDirectory() {
+		return Paths.get(Play.applicationPath.getAbsolutePath() + "/data");
 	}
 	
-	public static File getRootImageDirectoryFile() {
-		return new File(getRootImageDirectory());
+	public static Path resolve(String rel) {
+		assertPath(rel);
+		return getRootImageDirectory().resolve(rel);
 	}
 	
-	public static String relativeToRoot(String rel) {
-		return concatenatePaths(getRootImageDirectory(), rel);
+	public static String getRelativeString(Path path) {
+		return getRelativePath(path).toString();
 	}
 	
-	public static File getFile(String path) {
-		assertPath(path);
-		File imageFile = new File(PathService.concatenatePaths(PathService.getRootImageDirectory(),path));
-		return imageFile;
+	public static Path replaceExtension(Path path, String ext) {
+		String fileName = path.getFileName().toString();
+		String fileNameTrunk = fileName.substring(0,fileName.lastIndexOf('.'));
+		return path.getParent().resolve(fileNameTrunk+"."+ext);
 	}
 	
-	public static boolean isValidPath(String path) {
+	public static Path getRelativePath(Path path) {
+        Path pathAbsolute = path;
+        Path pathBase = getRootImageDirectory();
+        Path pathRelative = pathBase.relativize(pathAbsolute);
+        return pathRelative;
+	}
+	
+	private static boolean isValidPath(String path) {
 		if (!path.startsWith("/")) return false;
 		if (path.length() == 1) return true;
 		if (path.endsWith("/")) return false;
@@ -63,28 +72,30 @@ public class PathService {
 		if (!isValidPath(path)) throw new RuntimeException("Invalid path: "+path);
 	}	
 	
-	public static List<File> getProjectFiles(Project project) {
+	public static List<Path> getProjectFiles(Project project) {
 		if (project == null) return null;
-		List<File> files = new LinkedList<File>();
+		List<Path> files = new LinkedList<Path>();
 		for (Directory dir : project.directories) {
-			File f = new File(relativeToRoot(dir.path));
-			if (f.exists()) files.add(f);
+			Path path = resolve(dir.path);
+			if (path.toFile().exists()) {
+				files.add(path);
+			}
 		}
 		return files;
 	}
 	
-	public static List<File> filterImages(List<File> in) {
-		List<File> out = new LinkedList<File>();
-		for (File f : in) {
-			if (isImage(f)) {
-				out.add(f);
+	public static List<Path> filterImagesAndDirectories(List<Path> in) {
+		List<Path> out = new LinkedList<Path>();
+		for (Path path : in) {
+			if (isImage(path) || path.toFile().isDirectory()) {
+				out.add(path);
 			}
 		}
 		return out;
 	}
 	
-	public static boolean isImage(File file) {
-		return isImage(file.getName());
+	public static boolean isImage(Path path) {
+		return isImage(path.getFileName());
 	}
 	
 	public static boolean isImage(String name) {
@@ -97,27 +108,13 @@ public class PathService {
 		return false;
 	}
 	
-	public static String concatenatePaths(String path, String rel) {
-		String sep = "/";
-		if (path.endsWith("/") || rel.startsWith("/")) sep = "";
-		return path + sep + rel;
+	public static List<Path> listPaths(Path path) {
+		File parent = path.toFile();
+		List<Path> paths = new LinkedList<Path>();
+		for (File f : parent.listFiles()) {
+			paths.add(f.toPath());
+		}
+		return paths;
 	}
 	
-	public static DatabaseImage imageForFile(File f) {
-        Path pathAbsolute = f.toPath();
-        Path pathBase = getRootImageDirectoryFile().toPath();
-        Path pathRelative = pathBase.relativize(pathAbsolute);
-        String path = "/"+pathRelative.toString();
-        return DatabaseImage.forPath(path);
-	}
-	
-	//TODO toss me?
-	public static File getDirectory(String path) throws FileNotFoundException {
-		File f = new File(concatenatePaths(getRootImageDirectory(),path));
-		while(!f.isDirectory()) f = f.getParentFile();
-		
-		if (!f.exists()) throw new FileNotFoundException(f.getAbsolutePath());
-	
-		return f;
-	}
 }

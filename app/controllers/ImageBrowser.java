@@ -4,6 +4,7 @@ import play.*;
 import play.mvc.*;
 import play.mvc.Http.Response;
 
+import groovy.lang.DeprecationException;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.process.ImageStatistics;
@@ -25,6 +26,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.nio.file.Path;
 import java.util.*;
 
 import javax.imageio.ImageIO;
@@ -54,31 +56,22 @@ public class ImageBrowser extends ParentController {
 		render();
 	}
 	
-	@Util
-	
 	@ProjectAccess(AccessType.VISIBLE)
-	public static void fetchProjectPath(Project project, String path) throws FileNotFoundException {
-		PathService.assertPath(path);
+	public static void fetchProjectPath(Project project, String strPath) throws FileNotFoundException {
+		Path path = PathService.resolve(strPath);
 		
-		List<File> projectFiles = PathService.getProjectFiles(project);
-		File directory = PathService.getDirectory(path);
-		final boolean isRootDirectory = directory.equals(PathService.getRootImageDirectoryFile());
+		List<Path> paths = PathService.listPaths(path);
 		
-		List<File> files = isRootDirectory ? projectFiles : Arrays.asList(directory.listFiles());
+		paths = PathService.filterImagesAndDirectories(paths);
 		
-		files = PathService.filterImages(files);
-		
-		List<FileWrapper> wrappedFiles = FileWrapper.wrapFiles(project, files);
+		List<FileWrapper> wrappedFiles = FileWrapper.wrapFiles(project, paths);
 		wrappedFiles = FileWrapper.visibilityFilter(project, Security.getUser(), wrappedFiles);
 		renderJSON(wrappedFiles);
 	}
 	
 	@Access(AccessType.ROOT)
-	public static void fetchPath(String path) throws FileNotFoundException {
-		PathService.assertPath(path);
-		
-		File directory = PathService.getDirectory(path);
-		renderJSON(FileWrapper.wrapFiles(null, Arrays.asList(directory.listFiles())));
+	public static void fetchPath(String strPath) throws FileNotFoundException {
+		throw new DeprecationException("fetchPath is deprecated");
 	}
 	
 	@ProjectAccess(AccessType.EDITOR)
@@ -87,24 +80,21 @@ public class ImageBrowser extends ParentController {
 	}
 	
 	@Util
-	public static BufferedImage getImage(String path) {
-		PathService.assertPath(path);
-		
+	public static BufferedImage getImage(Path path) {
 		User user = Security.getUser();
-		File imageFile = PathService.getFile(path);
 		
-		boolean hasAccess = PermissionService.userCanAccessImage(user,path);
+		boolean hasAccess = PermissionService.userCanAccessPath(user,path);
 		if (!hasAccess) forbidden();
 
 		try {
-			return ImageIO.read(imageFile);
+			return ImageIO.read(path.toFile());
 		} catch (IOException e) {
 			return null;
 		}
 	}
 	
-	public static void resolveFile(String path, String mode, Project project, Float scale, Integer width, Integer height, Float brightness, Float contrast, Boolean histogram) throws IOException {
-		PathService.assertPath(path);
+	public static void resolveFile(String strPath, String mode, Project project, Float scale, Integer width, Integer height, Float brightness, Float contrast, Boolean histogram) throws IOException {
+		Path path = PathService.resolve(strPath);
 		
 		BufferedImage image = getImage(path);
 		
@@ -136,12 +126,12 @@ public class ImageBrowser extends ParentController {
 		renderImage(image);
 	}
 	
-	public static void fetchInfo(Project project, String path, boolean dataMode) {
-		PathService.assertPath(path);
+	public static void fetchInfo(Project project, String strPath, boolean dataMode) {
+		Path path = PathService.resolve(strPath);
 		
 		//TODO fix this by using inherited template assignments
-		String usePath =  path.substring(0,path.lastIndexOf("/")+1);
-		TemplateAssignment assignment = TemplateAssignment.forPath(project,usePath);
+		TemplateAssignment assignment = TemplateAssignment.forPath(project,path.getParent());
+		
 		Template template = assignment==null?null:assignment.template;
 		List<TemplateAttribute> templateAttributes = template==null?null:template.attributes;
 		
@@ -197,8 +187,8 @@ public class ImageBrowser extends ParentController {
 		ok();
 	}
 	
-	public static void createAttribute(Project project, String path, String attribute, String value, boolean dataMode) {
-		PathService.assertPath(path);
+	public static void createAttribute(Project project, String strPath, String attribute, String value, boolean dataMode) {
+		Path path = PathService.resolve(strPath);
 		
 		DatabaseImage image = DatabaseImage.forPath(path);
 		ImageAttribute attr = image.addAttribute(project, attribute, value, dataMode);
@@ -208,11 +198,15 @@ public class ImageBrowser extends ParentController {
 		renderJSON(attr);
 	}
 	
-	public static void importFromFile(Project project, String path) throws IOException {
+	public static void importFromFile(Project project, String strPath) throws IOException {
+		Path path = PathService.resolve(strPath);
+		
 		ImportExportService.importData(project, path);
 	}
 	
-	public static void exportToFile(String path) throws IOException {
+	public static void exportToFile(String strPath) throws IOException {
+		Path path = PathService.resolve(strPath);
+		
 		DatabaseImage image = DatabaseImage.forPath(path);
 		ImportExportService.exportData(image);
 	}

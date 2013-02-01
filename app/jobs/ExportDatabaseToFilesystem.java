@@ -36,12 +36,12 @@ import util.PodbaseUtil;
 @Every("1h")
 public class ExportDatabaseToFilesystem extends Job {
 	public void doJob() throws Exception {
-		Path p = PathService.getFile("/").toPath();
+		Path p = PathService.getRootImageDirectory();
 		Files.walkFileTree(p,new SimpleFileVisitor<Path>() {
 			@Override
-			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-				if (PathService.isImage(file.toFile())) {
-					DatabaseImage dbi = PathService.imageForFile(file.toFile());
+			public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+				if (PathService.isImage(path)) {
+					DatabaseImage dbi = DatabaseImage.forPath(path);
 					ImportExportService.exportData(dbi);
 				}
 				return FileVisitResult.CONTINUE;

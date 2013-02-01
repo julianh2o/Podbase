@@ -1,4 +1,5 @@
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.List;
 
 import models.Permission;
@@ -70,24 +71,16 @@ public class TestPathService extends UnitTest {
 	
 	@Test
 	public void testIsImage() {
-		assertTrue(PathService.isImage(new File("foo.jpg")));
-		assertTrue(PathService.isImage(new File("foo.png")));
-		assertTrue(PathService.isImage(new File("foo.tiff")));
-		assertTrue(PathService.isImage(new File("foo.tif")));
-		assertTrue(PathService.isImage(new File("foo.gif")));
-		assertTrue(PathService.isImage(new File("foo.jpeg")));
-		assertTrue(PathService.isImage(new File("foo.gif")));
+		assertTrue(PathService.isImage(Paths.get("foo.jpg")));
+		assertTrue(PathService.isImage(Paths.get("foo.png")));
+		assertTrue(PathService.isImage(Paths.get("foo.tiff")));
+		assertTrue(PathService.isImage(Paths.get("foo.tif")));
+		assertTrue(PathService.isImage(Paths.get("foo.gif")));
+		assertTrue(PathService.isImage(Paths.get("foo.jpeg")));
+		assertTrue(PathService.isImage(Paths.get("foo.gif")));
 		
-		assertFalse(PathService.isImage(new File("foo.xml")));
-		assertFalse(PathService.isImage(new File("foo.yml")));
-		assertFalse(PathService.isImage(new File("foo.txt")));
+		assertFalse(PathService.isImage(Paths.get("foo.xml")));
+		assertFalse(PathService.isImage(Paths.get("foo.yml")));
+		assertFalse(PathService.isImage(Paths.get("foo.txt")));
 	}
-	
-	@Test
-	public void testConcatenatePaths() {
-		assertTrue(PathService.concatenatePaths("/", "foo").equals("/foo"));
-		assertTrue(PathService.concatenatePaths("/bar", "foo").equals("/bar/foo"));
-		assertTrue(PathService.concatenatePaths("/giggle/bar", "mew/biff").equals("/giggle/bar/mew/biff"));
-	}
-	
 }
