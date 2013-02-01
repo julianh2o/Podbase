@@ -33,7 +33,8 @@ public class PodbaseMetadataMigration extends Job {
 		for(Entry entry : entries) {
 			if (Play.id.equals("dev")) System.out.println("Importing metadata: "+entry.path);
 			
-			DatabaseImage image = DatabaseImage.forPath(PathService.resolve(entry.path));
+			System.out.println("entry path: "+entry.path);
+			DatabaseImage image = DatabaseImage.forPath(PathService.resolve("/"+entry.path));
 			for(String key : entry.data.keySet()) {
 				image.addAttribute(project, key,entry.data.get(key), true);
 			}

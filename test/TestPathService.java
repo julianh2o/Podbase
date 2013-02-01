@@ -35,6 +35,34 @@ public class TestPathService extends UnitTest {
 		PermissionService.addPermission(u1,p1,AccessType.LISTED);
 	}
 	
+	@Test(expected=RuntimeException.class)
+	public void testResolvePath() {
+		String root = PathService.getRootImageDirectory().toAbsolutePath().toString();
+		
+		assertEquals(root + "/rawr", PathService.resolve("rawr").toAbsolutePath().toString());
+	}
+	
+	@Test
+	public void testResolvePath1() {
+		String root = PathService.getRootImageDirectory().toAbsolutePath().toString();
+		
+		assertEquals(root + "/rawr",PathService.resolve("/rawr").toAbsolutePath().toString());
+	}
+	
+	@Test
+	public void testGetRelativeString() {
+		assertEquals("/rawr",PathService.getRelativeString(PathService.resolve("/rawr")));
+	}
+	
+	@Test
+	public void testReplaceExtension() {
+		assertEquals(Paths.get("/rawr/foo.jpg"),PathService.replaceExtension(Paths.get("/rawr/foo.txt"),"jpg"));
+	}
+	
+	/*
+	public static List<Path> getProjectFiles(Project project) {
+	public static List<Path> filterImagesAndDirectories(List<Path> in) {
+		*/
 	
 	@Test
 	public void testPathValidation() {

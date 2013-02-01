@@ -43,7 +43,7 @@ public class DatabaseImage extends TimestampModel {
 	public static DatabaseImage forPath(Path path) {
 		if (path == null) return null;
 		
-		String rel = PathService.getRelativePath(path).toString();
+		String rel = PathService.getRelativeString(path);
 		DatabaseImage image = DatabaseImage.find("path",rel).first();
 		if (image == null) {
 			image = new DatabaseImage(rel);

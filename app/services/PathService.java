@@ -39,17 +39,7 @@ public class PathService {
 	
 	public static Path resolve(String rel) {
 		assertPath(rel);
-		return getRootImageDirectory().resolve(rel);
-	}
-	
-	public static String getRelativeString(Path path) {
-		return getRelativePath(path).toString();
-	}
-	
-	public static Path replaceExtension(Path path, String ext) {
-		String fileName = path.getFileName().toString();
-		String fileNameTrunk = fileName.substring(0,fileName.lastIndexOf('.'));
-		return path.getParent().resolve(fileNameTrunk+"."+ext);
+		return getRootImageDirectory().resolve("./"+rel).normalize();
 	}
 	
 	public static Path getRelativePath(Path path) {
@@ -58,6 +48,17 @@ public class PathService {
         Path pathRelative = pathBase.relativize(pathAbsolute);
         return pathRelative;
 	}
+	
+	public static String getRelativeString(Path path) {
+		return "/"+getRelativePath(path).toString();
+	}
+	
+	public static Path replaceExtension(Path path, String ext) {
+		String fileName = path.getFileName().toString();
+		String fileNameTrunk = fileName.substring(0,fileName.lastIndexOf('.'));
+		return path.getParent().resolve(fileNameTrunk+"."+ext);
+	}
+	
 	
 	private static boolean isValidPath(String path) {
 		if (!path.startsWith("/")) return false;
@@ -95,7 +96,7 @@ public class PathService {
 	}
 	
 	public static boolean isImage(Path path) {
-		return isImage(path.getFileName());
+		return isImage(path.getFileName().toString());
 	}
 	
 	public static boolean isImage(String name) {
