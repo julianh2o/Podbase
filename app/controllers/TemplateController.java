@@ -33,9 +33,7 @@ public class TemplateController extends ParentController {
 		template.save();
 	}
 	
-	public static void setFolderTemplate(Project project, Template template, String strPath) {
-		Path path = PathService.resolve(strPath);
-		
+	public static void setFolderTemplate(Project project, Template template, Path path) {
 		TemplateAssignment assignment = TemplateAssignment.find("project = ? AND path = ?", project, PathService.getRelativeString(path)).first();
 		if (assignment == null) {
 			assignment = new TemplateAssignment(path, project, template);
@@ -47,9 +45,7 @@ public class TemplateController extends ParentController {
 		renderJSON(assignment);
 	}
 	
-	public static void getTemplateForPath(Project project, String strPath) {
-		Path path = PathService.resolve(strPath);
-		
+	public static void getTemplateForPath(Project project, Path path) {
 		TemplateAssignment assignment = TemplateAssignment.forPath(project, path);
 		if (assignment == null) {
 			ok();

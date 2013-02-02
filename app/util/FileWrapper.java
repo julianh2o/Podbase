@@ -26,7 +26,7 @@ public class FileWrapper {
 	
 	public FileWrapper(Project project, String display, Path path) {
 		this.display = display;
-		this.path = PathService.getRelativePath(path).toString();
+		this.path = PathService.getRelativeString(path);
 		this.project = project;
 		DatabaseImage image = DatabaseImage.forPath(path);
 		this.image = image;

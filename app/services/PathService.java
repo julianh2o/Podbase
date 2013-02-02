@@ -31,7 +31,6 @@ import models.PermissionedModel;
 import models.Project;
 import models.User;
 
-//TODO unify path representation
 public class PathService {
 	public static Path getRootImageDirectory() {
 		return Paths.get(Play.applicationPath.getAbsolutePath() + "/data");
@@ -58,7 +57,6 @@ public class PathService {
 		String fileNameTrunk = fileName.substring(0,fileName.lastIndexOf('.'));
 		return path.getParent().resolve(fileNameTrunk+"."+ext);
 	}
-	
 	
 	private static boolean isValidPath(String path) {
 		if (!path.startsWith("/")) return false;

@@ -69,8 +69,7 @@ public class PaperController extends ParentController {
     }
     
 	@PaperAccess(AccessType.EDITOR)
-    public static void addImageToSet(ImageSet imageset, String strPath) {
-		Path path = PathService.resolve(strPath);
+    public static void addImageToSet(ImageSet imageset, Path path) {
     	for (ImageSetMembership mem : imageset.images) {
     		DatabaseImage img = mem.image;
     		if (img.path.equals(path)) {
@@ -85,9 +84,7 @@ public class PaperController extends ParentController {
     }
     
 	@PaperAccess(AccessType.EDITOR)
-    public static void removeImageFromSet(ImageSet imageset, String strPath) {
-		Path path = PathService.resolve(strPath);
-		
+    public static void removeImageFromSet(ImageSet imageset, Path path) {
     	DatabaseImage image = DatabaseImage.forPath(path);
     	
     	ImageSetMembership mem = ImageSetMembership.find("byImageAndImageset", image, imageset).first();

@@ -13,7 +13,7 @@ define(
 				this.$browser = $(".file-select",this.el);
 				this.$path = $(".path",this.el);
 				
-				this.path = options.path;
+				this.path = options.path || "/";
 				this.directoryCache = new Cache();
 				this.selectedFile = null;
 				
@@ -26,6 +26,8 @@ define(
 			},
 			
 			loadPath : function(path, selectedFile) {
+				Util.assertPath(path);
+				
 				path = path || "/";
 				path = path.chopEnd("/");
 				if (path == "") {
@@ -116,6 +118,8 @@ define(
 			},
 
 			fileSelected : function(file) {
+				Util.assertPath(this.getSelectedPath());
+				
 				if (file.isMagic) {
 					if (this.selectedFile == null) return;
 					

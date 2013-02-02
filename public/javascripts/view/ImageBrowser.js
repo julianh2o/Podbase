@@ -67,11 +67,15 @@ define(
 			loadHashPath : function(hash) {
 				var pageParameters = Util.parseLocationHash();
 				var path = pageParameters[" "];
+				var selectedFile = Util.getFileName(path);
+				
+				path = path.substring(0, path.lastIndexOf("/"));
+				
 				if (path == "" || path == undefined) {
 					path = "/";
 				}
-				var selectedFile = Util.getFileName(path);
-				path = path.substring(0, path.lastIndexOf("/"));
+				
+				Util.assertPath(path);
 				this.fileBrowser.loadPath(path, selectedFile);
 			},
 			
@@ -80,6 +84,8 @@ define(
 			},
 			
 			onPathSelected : function(e,path,file) {
+				Util.assertPath(path);
+				
 				if (!file.isDir) {
 					this.imagePreview.loadPreview(file);
 					this.imageDetails.setFile(file);

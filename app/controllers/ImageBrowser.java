@@ -57,9 +57,7 @@ public class ImageBrowser extends ParentController {
 	}
 	
 	@ProjectAccess(AccessType.VISIBLE)
-	public static void fetchProjectPath(Project project, String strPath) throws FileNotFoundException {
-		Path path = PathService.resolve(strPath);
-		
+	public static void fetchProjectPath(Project project, Path path) throws FileNotFoundException {
 		List<Path> paths = PathService.listPaths(path);
 		
 		paths = PathService.filterImagesAndDirectories(paths);
@@ -70,7 +68,7 @@ public class ImageBrowser extends ParentController {
 	}
 	
 	@Access(AccessType.ROOT)
-	public static void fetchPath(String strPath) throws FileNotFoundException {
+	public static void fetchPath(Path path) throws FileNotFoundException {
 		throw new DeprecationException("fetchPath is deprecated");
 	}
 	
@@ -84,6 +82,7 @@ public class ImageBrowser extends ParentController {
 		User user = Security.getUser();
 		
 		boolean hasAccess = PermissionService.userCanAccessPath(user,path);
+		System.out.println("has access "+hasAccess);
 		if (!hasAccess) forbidden();
 
 		try {
@@ -93,9 +92,7 @@ public class ImageBrowser extends ParentController {
 		}
 	}
 	
-	public static void resolveFile(String strPath, String mode, Project project, Float scale, Integer width, Integer height, Float brightness, Float contrast, Boolean histogram) throws IOException {
-		Path path = PathService.resolve(strPath);
-		
+	public static void resolveFile(Path path, String mode, Project project, Float scale, Integer width, Integer height, Float brightness, Float contrast, Boolean histogram) throws IOException {
 		BufferedImage image = getImage(path);
 		
 		if ("thumb".equals(mode)) {
@@ -126,16 +123,14 @@ public class ImageBrowser extends ParentController {
 		renderImage(image);
 	}
 	
-	public static void fetchInfo(Project project, String strPath, boolean dataMode) {
-		Path path = PathService.resolve(strPath);
-		
+	public static void fetchInfo(Project project, Path path, boolean dataMode) {
 		//TODO fix this by using inherited template assignments
 		TemplateAssignment assignment = TemplateAssignment.forPath(project,path.getParent());
 		
 		Template template = assignment==null?null:assignment.template;
 		List<TemplateAttribute> templateAttributes = template==null?null:template.attributes;
 		
-		DatabaseImage image = DatabaseImage.find("path", path).first();
+		DatabaseImage image = DatabaseImage.forPath(path);
 		List<ImageAttribute> attributes = new LinkedList<ImageAttribute>();
 		
 		if (image != null) attributes.addAll(image.attributes);
@@ -187,9 +182,7 @@ public class ImageBrowser extends ParentController {
 		ok();
 	}
 	
-	public static void createAttribute(Project project, String strPath, String attribute, String value, boolean dataMode) {
-		Path path = PathService.resolve(strPath);
-		
+	public static void createAttribute(Project project, Path path, String attribute, String value, boolean dataMode) {
 		DatabaseImage image = DatabaseImage.forPath(path);
 		ImageAttribute attr = image.addAttribute(project, attribute, value, dataMode);
 		
@@ -198,15 +191,11 @@ public class ImageBrowser extends ParentController {
 		renderJSON(attr);
 	}
 	
-	public static void importFromFile(Project project, String strPath) throws IOException {
-		Path path = PathService.resolve(strPath);
-		
+	public static void importFromFile(Project project, Path path) throws IOException {
 		ImportExportService.importData(project, path);
 	}
 	
-	public static void exportToFile(String strPath) throws IOException {
-		Path path = PathService.resolve(strPath);
-		
+	public static void exportToFile(Path path) throws IOException {
 		DatabaseImage image = DatabaseImage.forPath(path);
 		ImportExportService.exportData(image);
 	}

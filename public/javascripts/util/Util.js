@@ -2,6 +2,16 @@ define(
 	[],
 	function () {
 		var This = {
+			isPathValid : function(path) {
+				if (!path) return false;
+				if (path == "/") return true;
+				return !!path.match(/^(\/[^\/]+)$/);
+			},
+			assertPath : function(path) {
+				console.log("asserting path",path);
+				if (This.isPathValid(path)) return;
+				throw "Invalid path! '"+path+"'";
+			},
 			appendPaths : function(path, file) {
 				path = path.chopEnd("/");
 				file = file.chopStart("/");

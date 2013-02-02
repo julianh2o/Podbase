@@ -1,5 +1,4 @@
-Current refactoring:
-* unify path representation
+write tests (and clean up api, create services)
 
 REQUIRED:
 * file system datastore

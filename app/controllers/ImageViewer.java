@@ -8,14 +8,12 @@ import services.PathService;
 
 @With(Security.class)
 public class ImageViewer extends ParentController {
-	public static void index(String strPath) {
-		Path path = PathService.resolve(strPath);
-		
+	public static void index(Path path) {
 		BufferedImage image = ImageBrowser.getImage(path);
 		int width = image.getWidth();
 		int height = image.getHeight();
 		
-		render(strPath,width,height);
+		render(path.toString(),width,height);
 	}
 	
 	public static void script() {
