@@ -2,13 +2,16 @@ write tests (and clean up api, create services)
 
 REQUIRED:
 * file system datastore
+* yml data store: original, backup
+
 * inherited templates
 * change password
 * hidden fields
-* xml data store: original, backup
 
 POLISHING
 * smooth over behavior of attributes and templates
+* add EHCache (or other caching solution)
+* add filesystem watching (add upload features)
 
 FIX:
 * fix sending post data via get strings.. @.@

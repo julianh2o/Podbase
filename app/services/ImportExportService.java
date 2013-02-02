@@ -49,6 +49,10 @@ public class ImportExportService {
 		return PathService.replaceExtension(image.getPath(),"bak.yml");
 	}
 	
+	public static Path getImportedFile(DatabaseImage image) {
+		return PathService.replaceExtension(image.getPath(),"imported.yml");
+	}
+	
 	public static Map<String, String> loadFile(Path path) throws IOException {
 		return loadYaml(path);
 	}
@@ -75,6 +79,32 @@ public class ImportExportService {
 		for (Entry<String,String> entry : data.entrySet()) {
 			dbi.addAttribute(project, entry.getKey(), entry.getValue(), true);
 		}
+	}
+	
+	public static boolean hasFileToImport(DatabaseImage image) {
+		return getInputFile(image).toFile().exists();
+	}
+	
+	public static List<DatabaseImage> findImportables(Path path) {
+		final List<DatabaseImage> importable = new LinkedList<DatabaseImage>();
+		try {
+			Files.walkFileTree(path,new SimpleFileVisitor<Path>() {
+				@Override
+				public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+					if (PathService.isImage(path)) {
+						DatabaseImage image = DatabaseImage.forPath(path);
+						if (hasFileToImport(image)) {
+							importable.add(image);
+						}
+					}
+					return FileVisitResult.CONTINUE;
+				}
+			});
+		} catch (IOException io) {
+			io.printStackTrace();
+			return importable;
+		}
+		return importable;
 	}
 		
 	public static void importData(Project project, Path path) throws IOException {

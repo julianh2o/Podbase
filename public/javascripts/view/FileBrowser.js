@@ -25,19 +25,18 @@ define(
 				this.loadPath(this.path,this.selectedFile);
 			},
 			
-			loadPath : function(path, selectedFile) {
+			loadPath : function(path, selectedFile,hashUpdate) {
 				Util.assertPath(path);
-				
-				path = path || "/";
-				path = path.chopEnd("/");
-				if (path == "") {
-					path = "/";
-				} else {
-					this.path = path + "/";
-				}
+				this.path = path;
 				
 				this.$path.html(this.path);
 				$(this).trigger("PathChanged",[this.path]);
+				
+				if (!hashUpdate) {
+					var hashpath = this.getSelectedPath();
+					if (hashpath != "/") hashpath += "/";
+					HashHandler.getInstance().setHash(hashpath);
+				}
 
 				if (this.directoryCache.has(path)) {
 					this.loadFiles(path, selectedFile, this.directoryCache.get(path));
@@ -57,7 +56,7 @@ define(
 				}
 			},
 
-			loadFiles : function(path, selectedFile, files) {
+			loadFiles : function(path, selectedName, files) {
 				if (files == null) {
 					return;
 				}
@@ -73,7 +72,7 @@ define(
 
 					option.value = file.path;
 					option.title = file.path;
-					if (file && selectedFile && file.display == selectedFile.display) {
+					if (file && selectedName && file.display == selectedName) {
 						option.selected = true;
 						selectedFileObject = file;
 						selectedOption = option;
@@ -107,31 +106,29 @@ define(
 			getSelectedPath : function() {
 				if (!this.selectedFile) return this.path;
 				
-				return Util.appendPaths(this.path, this.selectedFile.display);
+				return this.selectedFile.path;
 			},
 			
 			optionSelected : function(event) {
 				var $option = $(event.target);
 				var file = $option.data("file");
 				
-				this.fileSelected(file);
+				if (this.selectedFile != file) this.fileSelected(file);
 			},
 
 			fileSelected : function(file) {
-				Util.assertPath(this.getSelectedPath());
-				
 				if (file.isMagic) {
 					if (this.selectedFile == null) return;
 					
 					this.selectedFile = null;
 					$(this).trigger("PathDeselected");
-					HashHandler.getInstance().setHash(this.getSelectedPath());
+					HashHandler.getInstance().replaceHash(this.getSelectedPath());
 					return;
 				}
 				
 				this.selectedFile = file;
 				$(this).trigger("PathSelected",[this.getSelectedPath(), file]);
-				HashHandler.getInstance().setHash(this.getSelectedPath());
+				HashHandler.getInstance().replaceHash(this.getSelectedPath());
 			},
 			
 			optionTriggered : function(event) {

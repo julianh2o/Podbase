@@ -64,7 +64,7 @@ define(
 				Link.setDataMode({projectId:this.project.id, dataMode: mode}).post();
 			},
 			
-			loadHashPath : function(hash) {
+			loadHashPath : function() {
 				var pageParameters = Util.parseLocationHash();
 				var path = pageParameters[" "];
 				var selectedFile = Util.getFileName(path);
@@ -76,7 +76,7 @@ define(
 				}
 				
 				Util.assertPath(path);
-				this.fileBrowser.loadPath(path, selectedFile);
+				this.fileBrowser.loadPath(path, selectedFile,true);
 			},
 			
 			onPathChanged : function(e,path) {
@@ -90,8 +90,6 @@ define(
 					this.imagePreview.loadPreview(file);
 					this.imageDetails.setFile(file);
 				}
-				
-				HashHandler.getInstance().setHash(path);
 			},
 			
 			clear : function() {

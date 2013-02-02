@@ -4,11 +4,9 @@ define(
 		var This = {
 			isPathValid : function(path) {
 				if (!path) return false;
-				if (path == "/") return true;
-				return !!path.match(/^(\/[^\/]+)$/);
+				return !!path.match(/^\//);
 			},
 			assertPath : function(path) {
-				console.log("asserting path",path);
 				if (This.isPathValid(path)) return;
 				throw "Invalid path! '"+path+"'";
 			},
@@ -26,7 +24,9 @@ define(
 					path = path.substr(0, path.length - 2);
 				}
 				var index = path.lastIndexOf("/");
-				return path.substr(0, index);
+				path = path.substr(0, index);
+				if (path == "") path = "/";
+				return path;
 			},
 			parseLocationHash : function() {
 				var result = new Array();
