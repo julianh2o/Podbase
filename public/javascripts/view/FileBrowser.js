@@ -17,7 +17,7 @@ define(
 				this.directoryCache = new Cache();
 				this.selectedFile = null;
 				
-				this.loadPath(this.path);
+				this.loadPath(this.path,null,true);
 			},
 			
 			reload : function() {
@@ -112,17 +112,25 @@ define(
 			optionSelected : function(event) {
 				var $option = $(event.target);
 				var file = $option.data("file");
+				var selected = $option.is(":selected");
 				
-				if (this.selectedFile != file) this.fileSelected(file);
+				if (selected) {
+					if (this.selectedFile != file) this.fileSelected(file);
+				} else {
+					this.fileDeselected();
+				}
+			},
+			
+			fileDeselected : function() {
+				this.selectedFile = null;
+				$(this).trigger("PathDeselected");
+				HashHandler.getInstance().replaceHash(this.getSelectedPath());
+				return;
 			},
 
 			fileSelected : function(file) {
 				if (file.isMagic) {
-					if (this.selectedFile == null) return;
-					
-					this.selectedFile = null;
-					$(this).trigger("PathDeselected");
-					HashHandler.getInstance().replaceHash(this.getSelectedPath());
+					this.fileDeselected();
 					return;
 				}
 				

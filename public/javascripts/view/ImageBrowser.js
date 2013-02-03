@@ -51,7 +51,34 @@ define(
 				
 				Link.getProject({projectId:this.project.id}).dataReady($.proxy(this.projectReloaded,this));
 				
+				$(".import-data",this.el).click($.proxy(this.importDataClicked,this));
+				
 				this.loadHashPath();
+			},
+			
+			importDataClicked : function() {
+				var path = this.fileBrowser.getSelectedPath();
+				Link.findImportables(path).loadOnce($.proxy(this.importDataLoaded,this));
+			},
+			
+			importDataLoaded : function(loader) {
+				var data = loader.getData();
+				if (!data.length) {
+					alert("There is no unimported data to import.");
+					return;
+				}
+				var paths = "";
+				_.each(data,function(image) {
+					paths += image.path+"\n";
+				});
+				var yes = confirm("Really import data?\n\n"+paths);
+				if (yes) {
+					Link.importDirectory(this.project.id,this.fileBrowser.getSelectedPath()).post($.proxy(this.dataImportSuccess,this));
+				}
+			},
+			
+			dataImportSuccess : function() {
+				alert("Data imported!");
 			},
 			
 			projectReloaded : function() {
@@ -67,6 +94,8 @@ define(
 			loadHashPath : function() {
 				var pageParameters = Util.parseLocationHash();
 				var path = pageParameters[" "];
+				
+				
 				var selectedFile = Util.getFileName(path);
 				
 				path = path.substring(0, path.lastIndexOf("/"));

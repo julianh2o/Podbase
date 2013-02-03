@@ -74,6 +74,7 @@ public class ImportExportService {
 
 	public static void importData(Project project, DatabaseImage dbi) throws IOException {
 		Path path = getInputFile(dbi);
+		System.out.println("Importing data from "+path.toString());
 		
 		Map<String,String> data = loadFile(path);
 		for (Entry<String,String> entry : data.entrySet()) {
@@ -93,7 +94,7 @@ public class ImportExportService {
 				public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
 					if (PathService.isImage(path)) {
 						DatabaseImage image = DatabaseImage.forPath(path);
-						if (hasFileToImport(image)) {
+						if (hasFileToImport(image) && !image.imported) {
 							importable.add(image);
 						}
 					}
@@ -109,6 +110,7 @@ public class ImportExportService {
 		
 	public static void importData(Project project, Path path) throws IOException {
 		DatabaseImage dbi = DatabaseImage.forPath(path);
+		
 		importData(project,dbi);
 	}
 	
@@ -136,7 +138,8 @@ public class ImportExportService {
 			@Override
 			public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
 				if (PathService.isImage(path)) {
-					importData(project,DatabaseImage.forPath(path));
+					DatabaseImage image = DatabaseImage.forPath(path);
+					if (!image.imported && hasFileToImport(image)) importData(project,image);
 				}
 				return FileVisitResult.CONTINUE;
 			}

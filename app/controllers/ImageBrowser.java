@@ -82,7 +82,6 @@ public class ImageBrowser extends ParentController {
 		User user = Security.getUser();
 		
 		boolean hasAccess = PermissionService.userCanAccessPath(user,path);
-		System.out.println("has access "+hasAccess);
 		if (!hasAccess) forbidden();
 
 		try {
@@ -193,5 +192,13 @@ public class ImageBrowser extends ParentController {
 	
 	public static void importFromFile(Project project, Path path) throws IOException {
 		ImportExportService.importData(project, path);
+	}
+	
+	public static void findImportables(Path path) {
+		renderJSON(ImportExportService.findImportables(path));
+	}
+	
+	public static void importDirectory(Project project, Path path) throws IOException {
+		ImportExportService.importDirectoryRecursive(project, path);
 	}
 }

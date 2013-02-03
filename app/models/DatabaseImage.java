@@ -19,6 +19,8 @@ public class DatabaseImage extends TimestampModel {
 	
 	@OneToMany(mappedBy="image", cascade=CascadeType.ALL)
 	public List<ImageAttribute> attributes;
+	
+	public boolean imported;
 
 	public DatabaseImage(String path) {
 		super();
@@ -27,6 +29,7 @@ public class DatabaseImage extends TimestampModel {
 		
 		this.path = path;
 		this.attributes = new LinkedList<ImageAttribute>();
+		this.imported = false;
 	}
 	
 	public ImageAttribute addAttribute(Project project, String key, String value, boolean dataMode) {

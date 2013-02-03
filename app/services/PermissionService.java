@@ -159,7 +159,7 @@ public class PermissionService {
     			Project p = (Project)model;
 	    		//System.out.println("project "+p.name);
     			for (Directory dir : p.directories) {
-    				System.out.println("testing "+dir.getPath().toString());
+    				//System.out.println("testing "+dir.getPath().toString());
     				if (image.getPath().startsWith(dir.getPath())) {
     					return true;
     				}
