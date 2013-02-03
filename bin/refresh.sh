@@ -5,6 +5,7 @@ HOSTNAME=`hostname`
 if [ "$HOSTNAME" == "ares" ]; then
     cd /home/julian/podbase
     $PLAY stop
+    rm server.pid
     git pull
     $PLAY dependencies
     $PLAY start --%prod
