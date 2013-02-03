@@ -51,7 +51,34 @@ define(
 				
 				Link.getProject({projectId:this.project.id}).dataReady($.proxy(this.projectReloaded,this));
 				
+				$(".import-data",this.el).click($.proxy(this.importDataClicked,this));
+				
 				this.loadHashPath();
+			},
+			
+			importDataClicked : function() {
+				var path = this.fileBrowser.getSelectedPath();
+				Link.findImportables(path).loadOnce($.proxy(this.importDataLoaded,this));
+			},
+			
+			importDataLoaded : function(loader) {
+				var data = loader.getData();
+				if (!data.length) {
+					alert("There is no unimported data to import.");
+					return;
+				}
+				var paths = "";
+				_.each(data,function(image) {
+					paths += image.path+"\n";
+				});
+				var yes = confirm("Really import data?\n\n"+paths);
+				if (yes) {
+					Link.importDirectory(this.project.id,this.fileBrowser.getSelectedPath()).post($.proxy(this.dataImportSuccess,this));
+				}
+			},
+			
+			dataImportSuccess : function() {
+				alert("Data imported!");
 			},
 			
 			projectReloaded : function() {
@@ -64,15 +91,21 @@ define(
 				Link.setDataMode({projectId:this.project.id, dataMode: mode}).post();
 			},
 			
-			loadHashPath : function(hash) {
+			loadHashPath : function() {
 				var pageParameters = Util.parseLocationHash();
 				var path = pageParameters[" "];
+				
+				
+				var selectedFile = Util.getFileName(path);
+				
+				path = path.substring(0, path.lastIndexOf("/"));
+				
 				if (path == "" || path == undefined) {
 					path = "/";
 				}
-				var selectedFile = Util.getFileName(path);
-				path = path.substring(0, path.lastIndexOf("/"));
-				this.fileBrowser.loadPath(path, selectedFile);
+				
+				Util.assertPath(path);
+				this.fileBrowser.loadPath(path, selectedFile,true);
 			},
 			
 			onPathChanged : function(e,path) {
@@ -80,12 +113,10 @@ define(
 			},
 			
 			onPathSelected : function(e,path,file) {
-				if (!file.isDir) {
-					this.imagePreview.loadPreview(file);
-					this.imageDetails.setFile(file);
-				}
+				Util.assertPath(path);
 				
-				HashHandler.getInstance().setHash(path);
+				this.imagePreview.loadPreview(file);
+				this.imageDetails.setFile(file);
 			},
 			
 			clear : function() {

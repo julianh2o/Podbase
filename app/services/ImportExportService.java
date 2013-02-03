@@ -41,52 +41,76 @@ import models.Project;
 import models.User;
 
 public class ImportExportService {
-	public static File getInputFile(DatabaseImage image) {
-		int dot = image.path.lastIndexOf(".");
-		String trunk = image.path.substring(0,dot);
-		File f = ImageBrowser.getFile(trunk + ".yml");
-		
-		return f;
+	public static Path getInputFile(DatabaseImage image) {
+		return PathService.replaceExtension(image.getPath(),"yml");
 	}
 	
-	public static File getOutputFile(DatabaseImage image) {
-		int dot = image.path.lastIndexOf(".");
-		String trunk = image.path.substring(0,dot);
-		File f = ImageBrowser.getFile(trunk + ".bak.yml");
-		
-		return f;
+	public static Path getOutputFile(DatabaseImage image) {
+		return PathService.replaceExtension(image.getPath(),"bak.yml");
 	}
 	
-	public static Map<String, String> loadFile(File f) throws IOException {
-		return loadYaml(f);
+	public static Path getImportedFile(DatabaseImage image) {
+		return PathService.replaceExtension(image.getPath(),"imported.yml");
 	}
 	
-	private static Map<String, String> loadYaml(File f) throws IOException {
+	public static Map<String, String> loadFile(Path path) throws IOException {
+		return loadYaml(path);
+	}
+	
+	private static Map<String, String> loadYaml(Path path) throws IOException {
 	    Yaml yaml = new Yaml();
-	    String contents = FileUtils.readFileToString(f);
+	    String contents = FileUtils.readFileToString(path.toFile());
 	    return (Map<String,String>)yaml.load(contents);
 	}
 	
-	private static void saveYaml(File f, Map<String, String> data) throws IOException {
+	private static void saveYaml(Path path, Map<String, String> data) throws IOException {
 		DumperOptions options = new DumperOptions();
 	    options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);		
 	    
 		Yaml yaml = new Yaml(options);
 		String contents = yaml.dump(data);
-		FileUtils.writeStringToFile(f, contents);
+		FileUtils.writeStringToFile(path.toFile(), contents);
 	}
 
 	public static void importData(Project project, DatabaseImage dbi) throws IOException {
-		File f = getInputFile(dbi);
+		Path path = getInputFile(dbi);
+		System.out.println("Importing data from "+path.toString());
 		
-		Map<String,String> data = loadFile(f);
+		Map<String,String> data = loadFile(path);
 		for (Entry<String,String> entry : data.entrySet()) {
 			dbi.addAttribute(project, entry.getKey(), entry.getValue(), true);
 		}
 	}
+	
+	public static boolean hasFileToImport(DatabaseImage image) {
+		return getInputFile(image).toFile().exists();
+	}
+	
+	public static List<DatabaseImage> findImportables(Path path) {
+		final List<DatabaseImage> importable = new LinkedList<DatabaseImage>();
+		try {
+			Files.walkFileTree(path,new SimpleFileVisitor<Path>() {
+				@Override
+				public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+					if (PathService.isImage(path)) {
+						DatabaseImage image = DatabaseImage.forPath(path);
+						if (hasFileToImport(image) && !image.imported) {
+							importable.add(image);
+						}
+					}
+					return FileVisitResult.CONTINUE;
+				}
+			});
+		} catch (IOException io) {
+			io.printStackTrace();
+			return importable;
+		}
+		return importable;
+	}
 		
-	public static void importData(Project project, String path) throws IOException {
+	public static void importData(Project project, Path path) throws IOException {
 		DatabaseImage dbi = DatabaseImage.forPath(path);
+		
 		importData(project,dbi);
 	}
 	
@@ -99,22 +123,23 @@ public class ImportExportService {
 	}
 	
 	public static void exportData(DatabaseImage dbi) throws IOException {
-		File f = getOutputFile(dbi);
+		Path path = getOutputFile(dbi);
 		
 		Map<String,String> data = new HashMap<String,String>();
 		for (ImageAttribute attr : dbi.attributes) {
 			data.put(attr.attribute, attr.value);
 		}
 		
-		saveYaml(f,data);
+		saveYaml(path,data);
 	}
 	
-	public static void importDirectoryRecursive(final Project project, File f) throws IOException {
-		Files.walkFileTree(f.toPath(),new SimpleFileVisitor<Path>() {
+	public static void importDirectoryRecursive(final Project project, Path root) throws IOException {
+		Files.walkFileTree(root,new SimpleFileVisitor<Path>() {
 			@Override
-			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-				if (PodbaseUtil.isImage(file.toFile())) {
-					importData(project,PodbaseUtil.imageForFile(file.toFile()));
+			public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
+				if (PathService.isImage(path)) {
+					DatabaseImage image = DatabaseImage.forPath(path);
+					if (!image.imported && hasFileToImport(image)) importData(project,image);
 				}
 				return FileVisitResult.CONTINUE;
 			}

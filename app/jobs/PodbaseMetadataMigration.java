@@ -19,6 +19,7 @@ import org.yaml.snakeyaml.Yaml;
 import play.Play;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
+import services.PathService;
 
 @OnApplicationStart
 public class PodbaseMetadataMigration extends Job {
@@ -32,7 +33,7 @@ public class PodbaseMetadataMigration extends Job {
 		for(Entry entry : entries) {
 			if (Play.id.equals("dev")) System.out.println("Importing metadata: "+entry.path);
 			
-			DatabaseImage image = DatabaseImage.forPath(entry.path);
+			DatabaseImage image = DatabaseImage.forPath(PathService.resolve("/"+entry.path));
 			for(String key : entry.data.keySet()) {
 				image.addAttribute(project, key,entry.data.get(key), true);
 			}

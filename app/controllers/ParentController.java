@@ -1,10 +1,18 @@
 package controllers;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import com.google.gson.Gson;
 
 import play.Play;
 import play.mvc.Before;
 import play.mvc.Controller;
+import play.mvc.Http.Response;
 import play.mvc.Util;
 import util.PodbaseUtil;
 
@@ -37,5 +45,15 @@ public class ParentController extends Controller {
 		}
 		
 		System.out.println("["+frame.getFileName() + ":"+ frame.getLineNumber()+"] "+sb.toString());
+	}
+	
+	@Util
+	public static void renderImage(BufferedImage image) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(image, "png", baos);
+		ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+		Response.current().contentType = "image/png";
+
+		renderBinary(bais);
 	}
 }

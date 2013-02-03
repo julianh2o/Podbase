@@ -1,9 +1,11 @@
 package controllers;
 
+import java.nio.file.Path;
 import java.util.List;
 
 import play.mvc.With;
 
+import services.PathService;
 import services.PermissionService;
 
 import access.Access;
@@ -67,7 +69,7 @@ public class PaperController extends ParentController {
     }
     
 	@PaperAccess(AccessType.EDITOR)
-    public static void addImageToSet(ImageSet imageset, String path) {
+    public static void addImageToSet(ImageSet imageset, Path path) {
     	for (ImageSetMembership mem : imageset.images) {
     		DatabaseImage img = mem.image;
     		if (img.path.equals(path)) {
@@ -82,7 +84,7 @@ public class PaperController extends ParentController {
     }
     
 	@PaperAccess(AccessType.EDITOR)
-    public static void removeImageFromSet(ImageSet imageset, String path) {
+    public static void removeImageFromSet(ImageSet imageset, Path path) {
     	DatabaseImage image = DatabaseImage.forPath(path);
     	
     	ImageSetMembership mem = ImageSetMembership.find("byImageAndImageset", image, imageset).first();

@@ -10,6 +10,7 @@ import access.AccessType;
 import play.*;
 import play.jobs.*;
 import play.test.*;
+import services.PathService;
  
 import models.*;
  
@@ -47,7 +48,7 @@ public class Bootstrap extends Job {
 	        users.add(b);
 	        users.add(c);
 	        
-	        for (File f : ImageBrowser.getRootImageDirectoryFile().listFiles()) {
+	        for (File f : PathService.getRootImageDirectory().toFile().listFiles()) {
 	        	if (f.isDirectory()) {
 			        Project project = new Project(f.getName()).save();
 			        
