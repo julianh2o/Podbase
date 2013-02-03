@@ -1,12 +1,13 @@
 REQUIRED:
-* file system datastore
 * inherited templates
 * change password
 * hidden fields
-* xml data store: original, backup
 
 POLISHING
+* more tests, more clean up, more services
 * smooth over behavior of attributes and templates
+* add EHCache (or other caching solution)
+* add filesystem watching (add upload features)
 
 FIX:
 * fix sending post data via get strings.. @.@

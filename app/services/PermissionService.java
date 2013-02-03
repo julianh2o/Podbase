@@ -1,5 +1,6 @@
 package services;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
@@ -44,10 +45,8 @@ public class PermissionService {
 	public static void togglePermission(User user, PermissionedModel model, AccessType access, boolean value) {
     	Permission perm = getPermission(user,model,access);
     	if (perm == null && value) {
-    		System.out.println("adding permission");
     		addPermission(user, model, access);
     	} else if (perm != null && !value) {
-    		System.out.println("removing permission");
     		perm.delete();
     	}
 	}
@@ -142,15 +141,15 @@ public class PermissionService {
 	
 	//TODO make this more efficient? (caching?)
     @Util
-	public static boolean userCanAccessImage(User user, String imagePath) {
+	public static boolean userCanAccessPath(User user, Path path) {
     	if (user.isRoot()) return true;
     	
-    	DatabaseImage image = DatabaseImage.forPath(imagePath);
-    	
+    	DatabaseImage image = DatabaseImage.forPath(path);
     	List<PermissionedModel> models = getModelsForUser(user,AccessType.VISIBLE);
     	for(PermissionedModel model : models) {
     		if (model instanceof Paper) {
     			Paper p = (Paper)model;
+	    		//System.out.println("paper "+p.name);
     			for (ImageSetMembership entry : p.imageset.images) {
     				if (entry.image.equals(image)) {
     					return true;
@@ -158,8 +157,10 @@ public class PermissionService {
     			}
     		} else if (model instanceof Project){
     			Project p = (Project)model;
+	    		//System.out.println("project "+p.name);
     			for (Directory dir : p.directories) {
-    				if (image.path.startsWith(dir.path)) {
+    				//System.out.println("testing "+dir.getPath().toString());
+    				if (image.getPath().startsWith(dir.getPath())) {
     					return true;
     				}
     			}

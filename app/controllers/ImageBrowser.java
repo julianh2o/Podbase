@@ -4,6 +4,7 @@ import play.*;
 import play.mvc.*;
 import play.mvc.Http.Response;
 
+import groovy.lang.DeprecationException;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.process.ImageStatistics;
@@ -22,8 +23,10 @@ import java.awt.image.WritableRaster;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.nio.file.Path;
 import java.util.*;
 
 import javax.imageio.ImageIO;
@@ -41,101 +44,32 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import models.*;
+import services.ImageService;
 import services.ImportExportService;
+import services.PathService;
 import services.PermissionService;
 import util.*;
 
 @With(Security.class)
 public class ImageBrowser extends ParentController {
-	
 	public static void index() {
 		render();
 	}
 	
-	public static String getRootImageDirectory() {
-		return Play.applicationPath.getAbsolutePath() + "/data";
-	}
-	
-	public static File getRootImageDirectoryFile() {
-		return new File(getRootImageDirectory());
-	}
-	
-	public static boolean canAccessFile(Project project, File f) {
-		String root = getRootImageDirectory();
-		try {
-			String path = f.getCanonicalPath();
-			if (path.startsWith(root)) return true;
-		} catch (Exception e) {
-			return false;
-		}
-		return false;
-	}
-	
-	// If this is passed a path like.. "/foo/bar/baz.png"
-	// It'll return the file for "/foo/bar"
-	public static File getDirectory(Project project, String path) {
-		PodbaseUtil.assertPath(path);
-		
-		File f = new File(PodbaseUtil.concatenatePaths(getRootImageDirectory(),path));
-		while(!f.isDirectory()) f = f.getParentFile();
-		
-		if (!f.exists()) error("File not Found");
-		if (!canAccessFile(project, f)) forbidden();
-	
-		return f;
-	}
-	
-	public static String relativeToRoot(String rel) {
-		return PodbaseUtil.concatenatePaths(getRootImageDirectory(), rel);
-	}
-	
-	public static List<File> getProjectFiles(Project project) {
-		if (project == null) return null;
-		List<File> files = new LinkedList<File>();
-		for (Directory dir : project.directories) {
-			File f = new File(relativeToRoot(dir.path));
-			if (f.exists()) files.add(f);
-		}
-		return files;
-	}
-	
 	@ProjectAccess(AccessType.VISIBLE)
-	public static void fetchProjectPath(Project project, String path) {
-		PodbaseUtil.assertPath(path);
+	public static void fetchProjectPath(Project project, Path path) throws FileNotFoundException {
+		List<Path> paths = PathService.listPaths(path);
 		
-		List<File> projectFiles = getProjectFiles(project);
-		File directory = getDirectory(project, path);
-		final boolean isRootDirectory = directory.equals(getRootImageDirectoryFile());
+		paths = PathService.filterImagesAndDirectories(paths);
 		
-		List<File> files = isRootDirectory ? projectFiles : Arrays.asList(directory.listFiles());
-		
-		List<FileWrapper> wrappedFiles = wrapFiles(project, files);
-		
-		wrappedFiles = visibilityFilter(project, Security.getUser(), wrappedFiles);
-		
+		List<FileWrapper> wrappedFiles = FileWrapper.wrapFiles(project, paths);
+		wrappedFiles = FileWrapper.visibilityFilter(project, Security.getUser(), wrappedFiles);
 		renderJSON(wrappedFiles);
 	}
 	
-	@Util
-	public static List<FileWrapper> visibilityFilter(Project project, User user, List<FileWrapper> files) {
-		if (PermissionService.hasInheritedAccess(user,project,AccessType.EDITOR)) {
-			return files;
-		}
-		
-		List<FileWrapper> filtered = new LinkedList<FileWrapper>();
-		for (FileWrapper f : files) {
-			if (f.visible || f.isDir) filtered.add(f);
-		}
-		
-		return filtered;
-	}
-	
 	@Access(AccessType.ROOT)
-	public static void fetchPath(String path) {
-		PodbaseUtil.assertPath(path);
-		
-		File directory = getDirectory(null, path);
-		renderJSON(wrapFiles(null, Arrays.asList(directory.listFiles())));
+	public static void fetchPath(Path path) throws FileNotFoundException {
+		throw new DeprecationException("fetchPath is deprecated");
 	}
 	
 	@ProjectAccess(AccessType.EDITOR)
@@ -144,114 +78,58 @@ public class ImageBrowser extends ParentController {
 	}
 	
 	@Util
-	public static List<FileWrapper> wrapFiles(Project project, List<File> files) {
-		Collections.sort(files);
-		
-		List<FileWrapper> fileWrappers = new LinkedList<FileWrapper>();
-		for (File f : files) {
-			if (f.getName().startsWith(".")) continue;
-			if (f.getName().endsWith(".yml")) continue;
-			if (f.getName().endsWith(".swp")) continue;
-			fileWrappers.add(new FileWrapper(project, getRootImageDirectory(),f));
-		}
-		
-		return fileWrappers;
-	}
-	
-	@Util
-	public static File getFile(String path) {
-		File imageFile = new File(PodbaseUtil.concatenatePaths(getRootImageDirectory(),path));
-		return imageFile;
-	}
-	
-	@Util
-	public static BufferedImage getImage(String path) {
-		PodbaseUtil.assertPath(path);
-		
+	public static BufferedImage getImage(Path path) {
 		User user = Security.getUser();
-		File imageFile = getFile(path);
 		
-		boolean hasAccess = PermissionService.userCanAccessImage(user,path);
+		boolean hasAccess = PermissionService.userCanAccessPath(user,path);
 		if (!hasAccess) forbidden();
 
 		try {
-			return ImageIO.read(imageFile);
+			return ImageIO.read(path.toFile());
 		} catch (IOException e) {
 			return null;
 		}
 	}
 	
-	public static void resolveFile(String path, String mode, Project project, Float scale, Integer width, Integer height, Float brightness, Float contrast, Boolean histogram) {
-		PodbaseUtil.assertPath(path);
-		
+	public static void resolveFile(Path path, String mode, Project project, Float scale, Integer width, Integer height, Float brightness, Float contrast, Boolean histogram) throws IOException {
 		BufferedImage image = getImage(path);
-		if (image == null) error("Image not found");
 		
-		try {
-			if ("thumb".equals(mode)) {
-				image = PodbaseUtil.scaleImageToFit(image,200,200);
-			} else if ("fit".equals(mode) && width != null && height != null) {
-				image = PodbaseUtil.scaleImageToFit(image,width,height);
-			} else if (width != null && height != null) {
-				image = PodbaseUtil.scaleImage(image,width,height);
-			} else if (width != null || height != null) {
-				image = PodbaseUtil.scaleImageToFit(image,width,height);
-			} else if (scale != null) {
-				image = PodbaseUtil.scaleImage(image, (int)(image.getWidth()*scale), (int)(image.getHeight()*scale));
-			}
-			
-			if (histogram == null) histogram = false;
-			if (brightness == null) brightness = (float)0;
-			if (contrast == null) contrast = (float)1;
-			
-			ImagePlus img = new ImagePlus("image",image);
-			double range = 255;
-			double center = 128;
-			range = range / contrast;
-			center = center - brightness;
-			double min = center-range/2.0;
-			double max = center+range/2.0;
-			img.setDisplayRange(min,max);
-			image = img.getBufferedImage();
-			
-			if (histogram) {
-				int textHeight = 14;
-				BufferedImage hist = PodbaseUtil.makeHistogram(image, image.getWidth(), image.getWidth()/2);
-				
-				BufferedImage imageWithHist = new BufferedImage(image.getWidth(), image.getHeight()+hist.getHeight()+textHeight,image.getType());
-				Graphics g = imageWithHist.getGraphics();
-				g.setColor(Color.WHITE);
-				g.fillRect(0,0,imageWithHist.getWidth(),imageWithHist.getHeight());
-				g.drawImage(image, 0, 0, null);
-				g.drawImage(hist, 0, image.getHeight()+textHeight,null);
-				g.setColor(Color.BLACK);
-				g.drawString("Histogram", 5, image.getHeight()+textHeight-2);
-				image = imageWithHist;
-			}
-			
-			//ImageInputStream is = ImageIO.createImageInputStream(image);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ImageIO.write(image, "png", baos);
-			ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-			Response.current().contentType = "image/png";
-
-			//TODO cache this
-			renderBinary(bais);
-		} catch (IOException e) {
-			error(e);
+		if ("thumb".equals(mode)) {
+			image = ImageService.scaleImageToFit(image,200,200);
+		} else if ("fit".equals(mode) && width != null && height != null) {
+			image = ImageService.scaleImageToFit(image,width,height);
+		} else if (width != null && height != null) {
+			image = ImageService.scaleImage(image,width,height);
+		} else if (width != null || height != null) {
+			image = ImageService.scaleImageToFit(image,width,height);
+		} else if (scale != null) {
+			image = ImageService.scaleImage(image, (int)(image.getWidth()*scale), (int)(image.getHeight()*scale));
 		}
+		
+		if (histogram == null) histogram = false;
+		if (brightness == null) brightness = (float)0;
+		if (contrast == null) contrast = (float)1;
+		
+		image = ImageService.adjustImage(image, brightness, contrast);
+		
+		if (histogram) {
+			BufferedImage hist = ImageService.makeHistogram(image, image.getWidth(), image.getWidth()/2);
+			
+			image = ImageService.appendImages(image,hist);
+		}
+		
+		//TODO cache this
+		renderImage(image);
 	}
 	
-	public static void fetchInfo(Project project, String path, boolean dataMode) {
-		PodbaseUtil.assertPath(path);
-		
+	public static void fetchInfo(Project project, Path path, boolean dataMode) {
 		//TODO fix this by using inherited template assignments
-		String usePath =  path.substring(0,path.lastIndexOf("/")+1);
-		TemplateAssignment assignment = TemplateAssignment.forPath(project,usePath);
+		TemplateAssignment assignment = TemplateAssignment.forPath(project,path.getParent());
+		
 		Template template = assignment==null?null:assignment.template;
 		List<TemplateAttribute> templateAttributes = template==null?null:template.attributes;
 		
-		DatabaseImage image = DatabaseImage.find("path", path).first();
+		DatabaseImage image = DatabaseImage.forPath(path);
 		List<ImageAttribute> attributes = new LinkedList<ImageAttribute>();
 		
 		if (image != null) attributes.addAll(image.attributes);
@@ -303,9 +181,7 @@ public class ImageBrowser extends ParentController {
 		ok();
 	}
 	
-	public static void createAttribute(Project project, String path, String attribute, String value, boolean dataMode) {
-		PodbaseUtil.assertPath(path);
-		
+	public static void createAttribute(Project project, Path path, String attribute, String value, boolean dataMode) {
 		DatabaseImage image = DatabaseImage.forPath(path);
 		ImageAttribute attr = image.addAttribute(project, attribute, value, dataMode);
 		
@@ -314,12 +190,15 @@ public class ImageBrowser extends ParentController {
 		renderJSON(attr);
 	}
 	
-	public static void importFromFile(Project project, String path) throws IOException {
+	public static void importFromFile(Project project, Path path) throws IOException {
 		ImportExportService.importData(project, path);
 	}
 	
-	public static void exportToFile(String path) throws IOException {
-		DatabaseImage image = DatabaseImage.forPath(path);
-		ImportExportService.exportData(image);
+	public static void findImportables(Path path) {
+		renderJSON(ImportExportService.findImportables(path));
+	}
+	
+	public static void importDirectory(Project project, Path path) throws IOException {
+		ImportExportService.importDirectoryRecursive(project, path);
 	}
 }

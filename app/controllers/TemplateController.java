@@ -1,8 +1,10 @@
 package controllers;
 
+import java.nio.file.Path;
 import java.util.List;
 
 import play.mvc.With;
+import services.PathService;
 
 import models.Project;
 import models.Template;
@@ -31,8 +33,8 @@ public class TemplateController extends ParentController {
 		template.save();
 	}
 	
-	public static void setFolderTemplate(Project project, Template template, String path) {
-		TemplateAssignment assignment = TemplateAssignment.find("project = ? AND path = ?", project, path).first();
+	public static void setFolderTemplate(Project project, Template template, Path path) {
+		TemplateAssignment assignment = TemplateAssignment.find("project = ? AND path = ?", project, PathService.getRelativeString(path)).first();
 		if (assignment == null) {
 			assignment = new TemplateAssignment(path, project, template);
 		} else {
@@ -43,7 +45,7 @@ public class TemplateController extends ParentController {
 		renderJSON(assignment);
 	}
 	
-	public static void getTemplateForPath(Project project, String path) {
+	public static void getTemplateForPath(Project project, Path path) {
 		TemplateAssignment assignment = TemplateAssignment.forPath(project, path);
 		if (assignment == null) {
 			ok();

@@ -1,5 +1,6 @@
 package models;
 
+import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.UniqueConstraint;
 
+import services.PathService;
 import util.PodbaseUtil;
 
 @Entity
@@ -17,14 +19,17 @@ public class DatabaseImage extends TimestampModel {
 	
 	@OneToMany(mappedBy="image", cascade=CascadeType.ALL)
 	public List<ImageAttribute> attributes;
+	
+	public boolean imported;
 
 	public DatabaseImage(String path) {
 		super();
 		
-		PodbaseUtil.assertPath(path);
+		PathService.assertPath(path);
 		
 		this.path = path;
 		this.attributes = new LinkedList<ImageAttribute>();
+		this.imported = false;
 	}
 	
 	public ImageAttribute addAttribute(Project project, String key, String value, boolean dataMode) {
@@ -34,13 +39,17 @@ public class DatabaseImage extends TimestampModel {
 		return attr;
 	}
 	
-	public static DatabaseImage forPath(String path) {
-		PodbaseUtil.assertPath(path);
-		
+	public Path getPath() {
+		return PathService.resolve(this.path);
+	}
+	
+	public static DatabaseImage forPath(Path path) {
 		if (path == null) return null;
-		DatabaseImage image = DatabaseImage.find("path",path).first();
+		
+		String rel = PathService.getRelativeString(path);
+		DatabaseImage image = DatabaseImage.find("path",rel).first();
 		if (image == null) {
-			image = new DatabaseImage(path);
+			image = new DatabaseImage(rel);
 			image.save();
 		}
 		return image;

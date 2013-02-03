@@ -77,6 +77,8 @@ define(
 			},
 			
 			setPath : function(path) {
+				Util.assertPath(path);
+				
 				this.path = path;
 				if (this.templateCache.has(path)) {
 					this.setSelectedTemplate(this.templateCache.get(path));

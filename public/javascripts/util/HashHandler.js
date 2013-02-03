@@ -12,8 +12,18 @@ define(
 		
 		$.extend(This.prototype,{
 			setHash : function(hash) {
+				if (this.internalHash == hash) return;
+				
 				this.internalHash = hash;
+				
 				window.location.hash = hash;
+			},
+			
+			replaceHash : function(hash) {
+				if (this.internalHash == hash) return;
+				
+				this.internalHash = hash;
+				window.location.replace("#"+hash);
 			},
 			
 			documentReady : function() {
