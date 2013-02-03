@@ -149,7 +149,7 @@ public class PermissionService {
     	for(PermissionedModel model : models) {
     		if (model instanceof Paper) {
     			Paper p = (Paper)model;
-	    		System.out.println("paper "+p.name);
+	    		//System.out.println("paper "+p.name);
     			for (ImageSetMembership entry : p.imageset.images) {
     				if (entry.image.equals(image)) {
     					return true;
@@ -157,7 +157,7 @@ public class PermissionService {
     			}
     		} else if (model instanceof Project){
     			Project p = (Project)model;
-	    		System.out.println("project "+p.name);
+	    		//System.out.println("project "+p.name);
     			for (Directory dir : p.directories) {
     				System.out.println("testing "+dir.getPath().toString());
     				if (image.getPath().startsWith(dir.getPath())) {

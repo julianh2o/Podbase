@@ -1,6 +1,7 @@
 #!/bin/bash
 
-PROJECT_ROOT=..
+BIN="$( cd "$( dirname "$0" )" && pwd )"
+PROJECT_ROOT=$BIN/..
 
 function main() {
 	SOURCE=`getFiles | generate | entab | entab`
@@ -34,7 +35,7 @@ function loadTemplate() {
 function generate() {
 	while read line
 	do
-		SOURCE=`./generateLink.pl $line`
+		SOURCE=`$BIN/generateLink.pl $line`
 		if [ -n "$SOURCE" ]; then
 			section "${line##*/}"
 			echo "$SOURCE"

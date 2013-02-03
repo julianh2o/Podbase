@@ -1,7 +1,11 @@
 require:
-    - play
+    - play 1.2.4
     - org.apache.commons -> commons-lang3 3.1
     - provided -> ij 1.0
+    - play -> accesslog 1.2
+    - play -> less 0.9.1
+    - play -> secure
+    - play -> crud
 
 repositories:
     - maven:

@@ -86,10 +86,8 @@ define(
 			onPathSelected : function(e,path,file) {
 				Util.assertPath(path);
 				
-				if (!file.isDir) {
-					this.imagePreview.loadPreview(file);
-					this.imageDetails.setFile(file);
-				}
+				this.imagePreview.loadPreview(file);
+				this.imageDetails.setFile(file);
 			},
 			
 			clear : function() {

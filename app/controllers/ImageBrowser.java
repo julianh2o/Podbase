@@ -194,9 +194,4 @@ public class ImageBrowser extends ParentController {
 	public static void importFromFile(Project project, Path path) throws IOException {
 		ImportExportService.importData(project, path);
 	}
-	
-	public static void exportToFile(Path path) throws IOException {
-		DatabaseImage image = DatabaseImage.forPath(path);
-		ImportExportService.exportData(image);
-	}
 }
