@@ -30,6 +30,19 @@ public class UserController extends ParentController {
 		renderJSON(users);
 	}
 	
+	public static void changePassword(String oldpassword, String newpassword) {
+		User u = Security.getUser();
+		if (!u.authenticate(oldpassword)) {
+			error("Incorrect password!");
+		}
+		
+		validatePassword(newpassword,newpassword);
+			
+		u.setCleartextPassword(newpassword);
+		u.save();
+		ok();
+	}
+	
 	public static void createUser(String email) {
 		User user = new User(email,null);
 		user.save();

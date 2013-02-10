@@ -62,6 +62,15 @@ define(
 				
 				var instance = new View(args);
 				return instance;
+			},
+			arrayToMap : function(array,key,value) {
+				map = {};
+				_.each(array,function(item) {
+					var map_key = item[key];
+					var map_val = item[value];
+					map[map_key] = map_val;
+				});
+				return map;
 			}
 		}
 		

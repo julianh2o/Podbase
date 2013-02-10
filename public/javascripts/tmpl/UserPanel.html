@@ -1,5 +1,48 @@
-<% if (user.email != "guest") { %>
-	Logged in as <%= user.email %> <a href="@{Secure.logout('/')}">Log out</a>
-<% } else { %>
-	Viewing as a guest <a href="@{Secure.login}">Log in</a>
-<% } %>
+<div class="user-panel-links">
+	<% if (user.email != "guest") { %>
+		Logged in as <%= user.email %> <a href="@{Secure.logout('/')}">Log out</a>
+		<div>
+			<a href="#" class="show-change-password">Change password</a>
+		</div>
+	<% } else { %>
+		Viewing as a guest <a href="@{Secure.login}">Log in</a>
+	<% } %>
+</div>
+
+<div class="change-password-dialog modal hide fade">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3>Change Password</h3>
+	</div>
+	
+	<div class="modal-body">
+		<form class="form-horizontal">
+			<div class="control-group">
+				<label class="control-label">Current password</label>
+					<div class="controls">
+						<input type="password" name="current" placeholder="Current password">
+					</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="inputPassword">New password</label>
+				<div class="controls">
+					<input type="password" name="new" placeholder="New password">
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="inputPassword">Confirm password</label>
+				<div class="controls">
+					<input type="password" name="confirm" placeholder="Confirm password">
+					<span class="help-inline"></span>
+				</div>
+			</div>
+		</form>
+	</div>
+	
+	<div class="modal-footer">
+		<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+		<a href="#" class="btn btn-primary change-password">Change password</a>
+	</div>
+</div>

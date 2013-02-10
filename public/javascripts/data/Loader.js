@@ -52,12 +52,12 @@ define([], function() {
 			});
 			$.ajax(options);
 		},
-		post : function(cb) {
+		post : function(opt) {
+			if ($.isFunction(opt)) opt = {success:opt};
 			var options = $.extend({}, this.opts, {
 				type : "POST",
 				url : this.url,
-				success: cb
-			});
+			},opt);
 			$.ajax(options);
 		},
 		dataReady : function(callback) {
