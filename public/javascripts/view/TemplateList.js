@@ -11,8 +11,10 @@ define(
 			
 			setProject : function(project) {
 				this.project = project;
-				this.model = {templates:project ? project.templates : null};
-				this.refresh();
+				if (this.project) {
+					this.link = Link.getProject(this.project.id);
+					this.refresh();
+				}
 			},
 			
 			getSelectedTemplate : function() {
@@ -27,7 +29,18 @@ define(
 				}
 			},
 			
+			reload : function() {
+				this.link.loadOnce($.proxy(this.dataReloaded,this));
+				this.link.pull();
+			},
+			
+			dataReloaded : function() {
+				this.project = this.link.getData();
+				this.refresh();
+			},
+			
 			refresh : function() {
+				this.model = {templates:this.project ? this.project.templates : null};
 				this.render();
 				
 				$(".template",this.el).click($.proxy(this.templateClicked,this));
@@ -36,12 +49,12 @@ define(
 			
 			addTemplateClicked : function(event) {
 				var templateName = prompt("Template Name");
-				if (!templateNme) return;
+				if (!templateName) return;
 				Link.addTemplate({projectId:this.project.id, templateName:templateName}).post($.proxy(this.templateAdded,this));
 			},
 			
 			templateAdded : function() {
-				Link.getProjects().pull();
+				this.reload();
 			},
 			
 			templateClicked : function(event) {

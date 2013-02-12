@@ -34,8 +34,8 @@ V2:
 * crop images
 
 CCU:
+* redo javascript so that data is accessed and used in a more consistent fashion
 * redo serialization
-* fix path selection in generateSources.sh
 * sort items in link by their controller.. eg.. ProjectController.getProjects
 * make it so that bin folder is accessible from project root
 * write tests
