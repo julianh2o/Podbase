@@ -1,6 +1,6 @@
 define(
-	['view/RenderedView', 'view/TabModule', 'view/ProjectSelect', 'view/TemplateManager', 'view/Permissions', 'view/ProjectSettings', 'view/Header', 'data/Link', 'util/Util', 'view/ImageBrowser', 'text!tmpl/Main.html'],
-	function (RenderedView, TabModule, ProjectSelect, TemplateManager, Permissions, ProjectSettings, Header, Link, Util, ImageBrowser, tmpl) {
+	['view/RenderedView', 'view/TabModule', 'view/ProjectSelect', 'view/TemplateManager', 'view/Permissions', 'view/ProjectSettings', 'view/Header', 'view/Footer', 'data/Link', 'util/Util', 'view/ImageBrowser', 'text!tmpl/Main.html'],
+	function (RenderedView, TabModule, ProjectSelect, TemplateManager, Permissions, ProjectSettings, Header, Footer, Link, Util, ImageBrowser, tmpl) {
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
 			
@@ -25,6 +25,7 @@ define(
 				var project = projectLink.getData();
 				
 				this.header = Util.createView( $(".header",this.el), Header, {project: project});
+				this.footer = Util.createView( $(".footer",this.el), Footer);
 				
 				var access = accessLink.getData();
 				

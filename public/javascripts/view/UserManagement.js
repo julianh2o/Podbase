@@ -38,7 +38,7 @@ define(
 				
 				Link.createUser({email:email}).post(function(password) {
 					alert("The user has been sent an email with instructions on how to activate their account.");
-					Link.getUsers().pull();
+					Link.getAllUsers().pull();
 				});
 			}
 		});

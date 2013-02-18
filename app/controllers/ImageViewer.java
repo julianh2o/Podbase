@@ -13,7 +13,8 @@ public class ImageViewer extends ParentController {
 		int width = image.getWidth();
 		int height = image.getHeight();
 		
-		render(path.toString(),width,height);
+		String relativePath = PathService.getRelativeString(path);
+		render(relativePath,width,height);
 	}
 	
 	public static void script() {

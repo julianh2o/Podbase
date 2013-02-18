@@ -86,9 +86,11 @@ public class UserController extends ParentController {
 		user.activation = null;
 		user.save();
 		
+		activation.user = null;
+		activation.save();
+		
 		activation.delete();
 		
-		//TODO extract this?
 		session.put("username", user.email);
 		
 		Application.index();

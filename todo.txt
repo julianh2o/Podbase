@@ -3,12 +3,6 @@ REQUIRED:
 * inherited templates
 * hidden fields
 
-POLISHING
-* more tests, more clean up, more services
-* smooth over behavior of attributes and templates
-* add EHCache (or other caching solution)
-* add filesystem watching (add upload features)
-
 FIX:
 * fix sending post data via get strings.. @.@
 * fix logging (on server)
@@ -17,6 +11,12 @@ FIX:
 * after login redirect
 * fix refresh clearing out the related panel (project permissions when list changes)
 * fix link so that null values can be sent for objects
+
+POLISHING
+* more tests, more clean up, more services
+* smooth over behavior of attributes and templates
+* add EHCache (or other caching solution)
+* add filesystem watching (add upload features)
 
 NICE TO HAVE:
 * data mode, analysis mode, paper specific metadata
