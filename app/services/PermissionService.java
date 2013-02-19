@@ -98,6 +98,18 @@ public class PermissionService {
 		return getAccessFromPermissions(getPermissions(user,model));
 	}
 	
+	public static List<AccessType> getVirtualAccess(User user, PermissionedModel model) {
+		List<AccessType> accessList = getAccess(user,model);
+		List<AccessType> virtualAccess = new LinkedList<AccessType>();
+		for (AccessType access : accessList) {
+			virtualAccess.add(access);
+			if (AccessType.IMPLICATIONS.containsKey(access)) {
+				virtualAccess.addAll(AccessType.IMPLICATIONS.get(access));
+			}
+		}
+		return virtualAccess;
+	}
+	
 	public static boolean hasPermission(User user, PermissionedModel model, AccessType access) {
 		Permission perm = Permission.find("byUserAndModelAndAccess", user, model, access).first();
 		return perm != null;

@@ -34,4 +34,10 @@ public enum AccessType {
 	public String[] getTypes() {
 		return types;
 	}
+	
+	public static HashMap<AccessType,List<AccessType>> IMPLICATIONS = new HashMap<AccessType,List<AccessType>>();
+	static {
+		IMPLICATIONS.put(OWNER, Arrays.asList(LISTED,VISIBLE,MANAGE_PERMISSIONS,EDITOR,PROJECT_MANAGE_TEMPLATES,PROJECT_MANAGE_DIRECTORIES));
+	}
+	
 }

@@ -91,7 +91,7 @@ public class PermissionController extends ParentController {
     	if (user.isRoot()) {
     		return Arrays.asList(AccessType.values());
     	}
-    	List<AccessType> access = PermissionService.getAccess(user, model);
+    	List<AccessType> access = PermissionService.getVirtualAccess(user, model);
     	return access;
     }
     
