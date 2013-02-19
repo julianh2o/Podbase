@@ -4,8 +4,6 @@ define(
 		var This = function() {
 			this.internalHash = window.location.hash;
 			
-			this.document
-			
 			$(document).ready($.proxy(this.documentReady,this));
 	
 		};

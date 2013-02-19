@@ -7,13 +7,14 @@ define(
 			
 			initialize: function(options) {
 				this.project = options.project;
+				this.root = options.root;
 				this.showVisibility = options.showVisibility;
 				this.render();
 				
 				this.$browser = $(".file-select",this.el);
 				this.$path = $(".path",this.el);
 				
-				this.path = options.path || "/";
+				this.path = options.path || this.root;
 				this.directoryCache = new Cache();
 				this.selectedFile = null;
 				
@@ -25,11 +26,42 @@ define(
 				this.loadPath(this.path,this.selectedFile);
 			},
 			
+			renderPath : function() {
+				var $container = $("<ul class='pathSegments' />");
+				var pieces = this.path.substring(1).split("/");
+				var pathToCurrent = "";
+				var self = this;
+				_.each(pieces,function(tok,index) {
+					pathToCurrent += "/"+tok;
+					var seg = $("<li />");
+					
+					if (pathToCurrent == self.path) {
+						seg.text(tok);
+					} else {
+						var a = $("<a />");
+						a.text(tok);
+						a.attr("href","#");
+						
+						a.click(function(e) {
+							e.preventDefault();
+							self.loadPath(myPathToCurrent,null,false);
+						});
+					}
+					
+					var myPathToCurrent = pathToCurrent+"";
+					seg.append(a);
+					
+					$container.append(seg);
+				});
+				return $container;
+			},
+			
 			loadPath : function(path, selectedFile,hashUpdate) {
 				Util.assertPath(path);
+				this.selectedFile = null;
 				this.path = path;
 				
-				this.$path.html(this.path);
+				this.$path.empty().append(this.renderPath());
 				$(this).trigger("PathChanged",[this.path]);
 				
 				if (!hashUpdate) {
@@ -85,7 +117,7 @@ define(
 
 				this.$browser.empty();
 				
-				if (path != "/") {
+				if (path != this.root) {
 					renderOption({
 						display: "..",
 						isDir: true,

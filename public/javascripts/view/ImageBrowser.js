@@ -27,7 +27,7 @@ define(
 				this.directoryCache = new Cache();
 				this.selectedFile = null;
 				
-				this.fileBrowser = new FileBrowser({project:this.project, showVisibility: _.contains(this.access,"EDITOR")});
+				this.fileBrowser = new FileBrowser({root:"/"+this.project.name,project:this.project, showVisibility: _.contains(this.access,"EDITOR")});
 				this.$browser.append(this.fileBrowser.el);
 				
 				$(".path",this.fileBrowser.el).remove().appendTo($(".path",this.actionBar.el));
@@ -101,7 +101,7 @@ define(
 				path = path.substring(0, path.lastIndexOf("/"));
 				
 				if (path == "" || path == undefined) {
-					path = "/";
+					return;
 				}
 				
 				Util.assertPath(path);
