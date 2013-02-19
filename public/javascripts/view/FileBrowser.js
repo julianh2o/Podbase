@@ -154,6 +154,7 @@ define(
 			},
 			
 			fileDeselected : function() {
+				if (this.selectedFile == null) return;
 				this.selectedFile = null;
 				$(this).trigger("PathDeselected");
 				HashHandler.getInstance().replaceHash(this.getSelectedPath());

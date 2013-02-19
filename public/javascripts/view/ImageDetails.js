@@ -20,9 +20,8 @@ define(
 				this.dataMode = this.options.dataMode;
 				
 				this.project = this.options.project;
-				this.setFile(this.options.file);
 				
-				this.reload();
+				this.setFile(this.options.file);
 			},
 			
 			setDataMode : function(mode) {
@@ -32,7 +31,7 @@ define(
 			
 			reload : function() {
 				if (!this.file) {
-					this.showEmpty();
+					this.refresh();
 					return;
 				}
 				
@@ -46,31 +45,24 @@ define(
 				this.reload();
 			},
 			
-			showEmpty : function() {
-				var $body = $(".attributes",this.el);
-				
-				$body.empty();
-				$body.append("<div class='no-selection'>This image has no attributes</div>");
-			},
-			
 			imageDetailsLoaded : function() {
 				this.refresh();
 			},
 			
 			refresh : function() {
-				this.attributes = this.link.getData();
+				this.attributes = this.link ? this.link.getData() : null;
 				
 				this.model = {file:this.file,attributes:this.attributes,canEdit:this.canEdit,dataMode:this.dataMode};
 				
 				this.render();
-				this.$body = $(".attributes",this.el);
 				
-				if (this.file) {
-					var self = this;
-					_.each(this.link.getData("byAttribute"),function(value,key) {
-						self.addAttribute(key);
-					});
-				}
+				if (!this.file) return;
+				
+				this.$body = $(".attributes",this.el);
+				var self = this;
+				_.each(this.link.getData("byAttribute"),function(value,key) {
+					self.addAttribute(key);
+				});
 				
 				if (this.attributes && !this.attributes.length) {
 					this.$body.append("<div class='no-selection'>This image has no attributes</div>");

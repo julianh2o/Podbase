@@ -1,4 +1,8 @@
-<% if (file) { %>
+<% if (!file || file.isDir) { %>
+	<div class="no-selection">
+		No image selected.
+	</div>
+<% } else { %>
 	<div class="attributes"></div>
 	
 	<% if (canEdit) { %>
@@ -9,8 +13,4 @@
 		</div>
 	<% } %>
 	
-<% } else { %>
-	<div class="no-selection">
-		No image selected.
-	</div>
 <% } %>

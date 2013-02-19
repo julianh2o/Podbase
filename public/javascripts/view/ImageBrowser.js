@@ -42,6 +42,7 @@ define(
 				
 				$(this.fileBrowser).on("PathChanged",$.proxy(this.onPathChanged,this));
 				$(this.fileBrowser).on("PathSelected",$.proxy(this.onPathSelected,this));
+				$(this.fileBrowser).on("PathDeselected",$.proxy(this.onPathDeselected,this));
 				
 				$(this.fileBrowser).on("PathChanged PathSelected PathDeselected", Util.debugEvent);
 				
@@ -117,6 +118,11 @@ define(
 				
 				this.imagePreview.loadPreview(file);
 				this.imageDetails.setFile(file);
+			},
+			
+			onPathDeselected : function(e) {
+				this.imagePreview.loadPreview(null);
+				this.imageDetails.setFile(null);
 			},
 			
 			clear : function() {
