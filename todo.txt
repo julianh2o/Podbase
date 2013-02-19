@@ -21,7 +21,8 @@ POLISHING
 NICE TO HAVE:
 * access levels "user groups"
 * image groups within papers
-* implied permissions, hidden permissions, permission descriptions
+* hidden permissions
+* permission descriptions
 * messaging system
 
 OTHER:
