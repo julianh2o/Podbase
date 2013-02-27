@@ -16,6 +16,7 @@ public class ImageAttribute extends TimestampModel {
 	
 	public String attribute;
 	public String value;
+	public boolean hidden;
 
 	public boolean data;
 
@@ -27,10 +28,10 @@ public class ImageAttribute extends TimestampModel {
 	public boolean templated = false;
 
 	public ImageAttribute(Project project, DatabaseImage image, String attribute, String value, boolean data) {
-		this(project, image, attribute, value, data, false);
+		this(project, image, attribute, value, data, false, false);
 	}
 
-	public ImageAttribute(Project project, DatabaseImage image, String attribute, String value, boolean data, boolean templated) {
+	public ImageAttribute(Project project, DatabaseImage image, String attribute, String value, boolean data, boolean templated, boolean hidden) {
 		super();
 		this.project = project;
 		this.image = image;
@@ -38,5 +39,6 @@ public class ImageAttribute extends TimestampModel {
 		this.value = value;
 		this.data = data;
 		this.templated = templated;
+		this.hidden = hidden;
 	}
 }

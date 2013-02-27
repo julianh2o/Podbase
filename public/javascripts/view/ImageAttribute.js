@@ -7,6 +7,7 @@ define(
 			
 			initialize: function(options) {
 				this.attributeName = options.attr;
+				this.hidden = options.hidden;
 				this.link = options.link;
 				
 				this.link.asap($.proxy(this.refresh,this));
@@ -19,7 +20,7 @@ define(
 					return;
 				}
 				
-				this.model = {name:this.attributeName, values:values};
+				this.model = {name:this.attributeName,hidden:this.hidden, values:values};
 				this.render();
 				
 				$(".value .delete-attribute",this.el).click($.proxy(this.triggerDeleteAttribute,this));

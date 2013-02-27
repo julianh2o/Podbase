@@ -61,7 +61,8 @@ define(
 				this.$body = $(".attributes",this.el);
 				var self = this;
 				_.each(this.link.getData("byAttribute"),function(value,key) {
-					self.addAttribute(key);
+					var hidden = value[0].hidden;
+					self.addAttribute(key,hidden);
 				});
 				
 				if (this.attributes && !this.attributes.length) {
@@ -70,7 +71,13 @@ define(
 				
 				
 				$(".add",this.el).click($.proxy(this.createAttribute,this));
+				
+				$(".toggle-hidden",this.el).click($.proxy(this.toggleHiddenAttributes,this));
 			},
+			
+			toggleHiddenAttributes : function(e) {
+				this.$body.toggleClass("show-hidden");
+		},
 				
 			createAttribute : function(e) {
 				e.preventDefault();
@@ -94,8 +101,8 @@ define(
 				$el.scrollTop( $el.prop("scrollHeight") );
 			},
 			
-			addAttribute : function(attributeName) {
-				var imageAttribute = new ImageAttribute({attr:attributeName, link:this.link});
+			addAttribute : function(attributeName,hidden) {
+				var imageAttribute = new ImageAttribute({attr:attributeName,hidden:hidden, link:this.link});
 				this.$body.append(imageAttribute.el);
 				
 				$(imageAttribute.el).click($.proxy(this.selectAttribute,this));

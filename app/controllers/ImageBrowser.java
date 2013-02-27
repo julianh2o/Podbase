@@ -147,8 +147,9 @@ public class ImageBrowser extends ParentController {
 				}
 				if (found != null) {
 					found.templated = true;
+					found.hidden = templateAttribute.hidden;
 				} else {
-					attributes.add(new ImageAttribute(project, image,templateAttribute.name,null,dataMode,true));
+					attributes.add(new ImageAttribute(project, image,templateAttribute.name,null,dataMode,true, templateAttribute.hidden));
 				}
 			}
 		}

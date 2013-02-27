@@ -5,12 +5,16 @@
 <% } else { %>
 	<div class="attributes"></div>
 	
-	<% if (canEdit) { %>
-		<div class="row">
-			<a href="#" class="add pull-right">
+	<div class="row-fluid">
+		<a href="#" class="span6 toggle-hidden">
+			Toggle hidden attributes
+		</a>
+			
+		<% if (canEdit) { %>
+			<a href="#" class="span6 add alignRight">
 				Add New Attribute
 			</a>
-		</div>
-	<% } %>
+		<% } %>
+	</div>
 	
 <% } %>

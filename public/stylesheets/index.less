@@ -115,7 +115,22 @@ select.file-select {
 		padding-right: 3px;
 		overflow-y: scroll;
 		overflow-x: hidden;
+		
+		.hidden {
+			display: none;
+			background-color: #D1E0FF;
+		}
 	}
+	
+	.attributes.show-hidden {
+		.hidden {
+			display: block;
+		}
+	}
+}
+
+.alignRight {
+	text-align: right;
 }
 
 .metadata .data-row {
