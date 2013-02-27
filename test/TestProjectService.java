@@ -1,4 +1,6 @@
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import models.Project;
 import models.User;
@@ -41,7 +43,7 @@ public class TestProjectService extends UnitTest {
 		User u1 = User.get("test1@test.com");
 		Security.logUserIn(u1);
 		
-		List<Project> projects = ProjectService.getVisibleProjects();
+		Collection<Project> projects = ProjectService.getVisibleProjects();
 		assertTrue(projects.contains(Project.get("test")));
 		assertFalse(projects.contains(Project.get("rawr")));
 	}
@@ -51,7 +53,7 @@ public class TestProjectService extends UnitTest {
 		User u2 = User.get("test2@test.com");
 		Security.logUserIn(u2);
 		
-		List<Project> projects = ProjectService.getVisibleProjects();
+		Collection<Project> projects = ProjectService.getVisibleProjects();
 		assertTrue(projects.contains(Project.get("test")));
 		assertTrue(projects.contains(Project.get("rawr")));
 	}

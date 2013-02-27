@@ -4,8 +4,10 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import notifiers.Email;
 
@@ -86,12 +88,12 @@ public class PermissionController extends ParentController {
     }
     
     @Util
-    public static List<AccessType> getAccessForUser(PermissionedModel model, User user) {
+    public static Set<AccessType> getAccessForUser(PermissionedModel model, User user) {
     	if (user == null) user = Security.getUser();
     	if (user.isRoot()) {
-    		return Arrays.asList(AccessType.values());
+    		return new HashSet(Arrays.asList(AccessType.values()));
     	}
-    	List<AccessType> access = PermissionService.getVirtualAccess(user, model);
+    	Set<AccessType> access = PermissionService.getVirtualAccess(user, model);
     	return access;
     }
     

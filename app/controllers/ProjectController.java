@@ -2,6 +2,7 @@ package controllers;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import access.Access;
 import access.AccessType;
@@ -20,7 +21,7 @@ import models.User;
 @With(Security.class)
 public class ProjectController extends ParentController {
     public static void getProjects() {
-    	List<Project> projects = ProjectService.getVisibleProjects();
+    	Set<Project> projects = ProjectService.getVisibleProjects();
     	renderJSON(projects);
     }
     

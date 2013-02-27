@@ -2,6 +2,7 @@ package controllers;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 
 import play.mvc.With;
 
@@ -34,7 +35,7 @@ public class PaperController extends ParentController {
     	
     	if (user.isRoot()) renderJSON(Paper.findAll());
     	
-    	List<Paper> papers = PermissionService.filter(PermissionService.getModelsForUser(user, AccessType.VISIBLE), Paper.class);
+    	Set<Paper> papers = PermissionService.filter(PermissionService.getModelsForUser(user, AccessType.VISIBLE), Paper.class);
     	
     	renderJSON(papers);
     }

@@ -1,6 +1,8 @@
 package services;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import access.AccessType;
 import controllers.Security;
@@ -8,9 +10,9 @@ import models.Project;
 import models.User;
 
 public class ProjectService {
-	public static List<Project> getVisibleProjects() {
+	public static Set<Project> getVisibleProjects() {
     	User user = Security.getUser();
-    	if (user.isRoot()) return Project.findAll();
+    	if (user.isRoot()) return new HashSet(Project.findAll());
     	
     	return PermissionService.filter(PermissionService.getModelsForUser(user, AccessType.VISIBLE), Project.class);
 	}

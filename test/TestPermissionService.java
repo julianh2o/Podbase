@@ -1,3 +1,4 @@
+import java.util.Collection;
 import java.util.List;
 
 import models.Permission;
@@ -33,7 +34,7 @@ public class TestPermissionService extends UnitTest {
 	}
 	
 	public boolean hasPermission(User u, Project p, AccessType type) {
-		List<AccessType> perms = PermissionService.getAccess(u, p);
+		Collection<AccessType> perms = PermissionService.getAccess(u, p);
 		return perms.contains(type);
 	}
 

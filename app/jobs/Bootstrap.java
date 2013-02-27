@@ -11,6 +11,7 @@ import play.*;
 import play.jobs.*;
 import play.test.*;
 import services.PathService;
+import services.PermissionService;
  
 import models.*;
  
@@ -62,6 +63,15 @@ public class Bootstrap extends Job {
 	        	}
 	        }
 	        
+	        Project sandbox = Project.find("byName", "GuestSandbox").first();
+	        PermissionService.addPermission(guest, sandbox, AccessType.OWNER);
+	        PermissionService.addPermission(guest, sandbox, AccessType.LISTED);
+	        PermissionService.addPermission(guest, sandbox, AccessType.VISIBLE);
+	        PermissionService.addPermission(guest, sandbox, AccessType.EDITOR);
+	        
+	        Project pub = Project.find("byName", "Public").first();
+	        PermissionService.addPermission(guest, sandbox, AccessType.LISTED);
+	        PermissionService.addPermission(guest, sandbox, AccessType.VISIBLE);
     	} else {
 	        // Check if the database is empty
 	        if(Project.count() == 0) {
