@@ -10,6 +10,11 @@ define(
 				this.hidden = options.hidden;
 				this.link = options.link;
 				
+				//TODO come up with a better way of doing this (this is required only for createAttribute
+				this.projectId = options.projectId;
+				this.path = options.path;
+				this.dataMode = options.dataMode;
+				
 				this.link.asap($.proxy(this.refresh,this));
 			},
 			
@@ -87,19 +92,12 @@ define(
 				
 				var id = $el.data("id");
 				
-				var link = this.link;
-				Link.updateImageAttribute(id,value).post(function() {
-					link.pull();
-				});
-			},
-				
-			saveAttribute : function(event) {
-//					Link.createAttribute({path:browser.selectedFile.path,attribute:this.dbo.attribute,value:this.value}).post(function(attribute) {
-//						var templated = that.dbo.templated;
-//						that.dbo = attribute;
-//						that.dbo.templated = templated;
-//						that.refresh();
-//					});
+				if (id) {
+					Link.updateImageAttribute(id,value).post(link.pull);
+				} else {
+					Link.createAttribute(this.projectId,this.path,this.attributeName,value,this.dataMode).post(link.pull);
+					
+				}
 			}
 		});
 		

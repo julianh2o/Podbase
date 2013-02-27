@@ -17,7 +17,6 @@ POLISHING
 * smooth over behavior of attributes and templates
 * add EHCache (or other caching solution)
 * add filesystem watching (add upload features)
-* improve template editor (refactor code, enhance interface)
 
 NICE TO HAVE:
 * access levels "user groups"
@@ -36,6 +35,8 @@ V2:
 * crop images
 
 CCU:
+* refactor image details to be more elegant
+* improve template editor (refactor code, enhance interface)
 * redo javascript so that data is accessed and used in a more consistent fashion
 * redo serialization
 * sort items in link by their controller.. eg.. ProjectController.getProjects

@@ -77,7 +77,7 @@ define(
 			
 			toggleHiddenAttributes : function(e) {
 				this.$body.toggleClass("show-hidden");
-		},
+			},
 				
 			createAttribute : function(e) {
 				e.preventDefault();
@@ -102,7 +102,15 @@ define(
 			},
 			
 			addAttribute : function(attributeName,hidden) {
-				var imageAttribute = new ImageAttribute({attr:attributeName,hidden:hidden, link:this.link});
+				var imageAttribute = new ImageAttribute({
+					attr:attributeName,
+					hidden:hidden,
+					link:this.link,
+					projectId: this.project.id,
+					path: this.file.path,
+					dataMode: this.dataMode
+				});
+				
 				this.$body.append(imageAttribute.el);
 				
 				$(imageAttribute.el).click($.proxy(this.selectAttribute,this));
