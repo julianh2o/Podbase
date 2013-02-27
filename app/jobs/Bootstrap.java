@@ -70,8 +70,8 @@ public class Bootstrap extends Job {
 	        PermissionService.addPermission(guest, sandbox, AccessType.EDITOR);
 	        
 	        Project pub = Project.find("byName", "Public").first();
-	        PermissionService.addPermission(guest, sandbox, AccessType.LISTED);
-	        PermissionService.addPermission(guest, sandbox, AccessType.VISIBLE);
+	        PermissionService.addPermission(guest, pub, AccessType.LISTED);
+	        PermissionService.addPermission(guest, pub, AccessType.VISIBLE);
     	} else {
 	        // Check if the database is empty
 	        if(Project.count() == 0) {

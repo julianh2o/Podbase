@@ -33,16 +33,31 @@ public class TemplateController extends ParentController {
 		template.save();
 	}
 	
+	//TODO clean me up
 	public static void setFolderTemplate(Project project, Template template, Path path) {
 		TemplateAssignment assignment = TemplateAssignment.find("project = ? AND path = ?", project, PathService.getRelativeString(path)).first();
 		if (assignment == null) {
-			assignment = new TemplateAssignment(path, project, template);
+			assignment = new TemplateAssignment(path, project, template).save();
 		} else {
+			if (template == null) {
+				assignment.delete();
+				ok();
+				return;
+			}
+			
 			assignment.template = template;
 		}
 		
 		assignment.save();
 		renderJSON(assignment);
+	}
+	
+	public static void clearFolderTemplate(Project project, Path path) {
+		TemplateAssignment assignment = TemplateAssignment.find("project = ? AND path = ?", project, PathService.getRelativeString(path)).first();
+		
+		if (assignment != null) assignment.delete();
+		
+		ok();
 	}
 	
 	public static void getTemplateForPath(Project project, Path path) {
@@ -64,8 +79,9 @@ public class TemplateController extends ParentController {
 		renderJSON(attr);
 	}
 	
-	public static void updateAttribute(TemplateAttribute attribute, String name) {
+	public static void updateAttribute(TemplateAttribute attribute, String name, boolean hidden) {
 		attribute.name = name;
+		attribute.hidden = hidden;
 		attribute.save();
 		renderJSON(attribute);
 	}

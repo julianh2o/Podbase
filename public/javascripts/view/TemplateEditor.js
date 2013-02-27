@@ -26,6 +26,8 @@ define(
 				this.render();
 				
 				$(".template-entry input",this.el).on("blur",$.proxy(this.onFieldBlur,this));
+				$(".template-entry input[type=checkbox]",this.el).click($.proxy(this.onFieldBlur,this));
+				
 				$(".remove",this.el).on("click",$.proxy(this.onDeleteClicked,this));
 				$(".add",this.el).on("click",$.proxy(this.addAttribute,this));
 				
@@ -47,17 +49,19 @@ define(
 				this.refresh();
 			},
 			
-			getAttributeForElement : function($el) {
-				return this.editTemplate.attributes[$el.closest(".template-entry").data("index")];
+			getAttributeForElement : function($row) {
+				return this.editTemplate.attributes[$row.data("index")];
 			},
 			
 			onFieldBlur : function(event) {
-				var $el = $(event.target);
-				var attr = this.getAttributeForElement($el);
+				var $row = $(event.target).closest(".template-entry");
 				
-				attr.name = $el.val();
+				var attr = this.getAttributeForElement($row);
 				
-				Link.updateAttribute({attributeId:attr.id,name:attr.name}).post($.proxy(this.returnStatus,this));
+				attr.name = $row.find("[name=name]").val();
+				attr.hidden = $row.find("[name=hidden]").prop("checked");
+				
+				Link.updateAttribute({attributeId:attr.id,name:attr.name,hidden:attr.hidden}).post($.proxy(this.returnStatus,this));
 			},
 			
 			onSortStop : function(event,ui) {

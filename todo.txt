@@ -17,6 +17,7 @@ POLISHING
 * smooth over behavior of attributes and templates
 * add EHCache (or other caching solution)
 * add filesystem watching (add upload features)
+* improve template editor (refactor code, enhance interface)
 
 NICE TO HAVE:
 * access levels "user groups"

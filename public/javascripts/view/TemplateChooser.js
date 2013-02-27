@@ -71,7 +71,11 @@ define(
 				var templateId = event.currentTarget.value;
 				var templateAssignment = this.templateCache.get(this.path);
 				
-				Link.setFolderTemplate({projectId:this.project.id,templateId:templateId,path:this.path}).post($.proxy(this.handleTemplateForPath,this));
+				if (templateId) {
+					Link.setFolderTemplate({projectId:this.project.id,templateId:templateId,path:this.path}).post($.proxy(this.handleTemplateForPath,this));
+				} else {
+					Link.clearFolderTemplate({projectId:this.project.id,path:this.path}).post($.proxy(this.handleTemplateForPath,this));
+				}
 				
 				$(this).trigger("TemplateChanged",[templateId]);
 			},

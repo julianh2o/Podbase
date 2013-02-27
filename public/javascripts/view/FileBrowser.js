@@ -100,7 +100,7 @@ define(
 				function renderOption(file) {
 					var option = new Option();
 
-					option.text = (file.visible && that.showVisibility?"(visible) ":"") + file.display + (file.isDir ? "/" : "");
+					option.text = (file.visible && that.showVisibility?"[V] ":"") + file.display + (file.isDir ? "/" : "");
 
 					option.value = file.path;
 					option.title = file.path;
