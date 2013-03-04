@@ -3,6 +3,7 @@ package controllers;
 import java.nio.file.Path;
 import java.util.List;
 
+import play.mvc.Util;
 import play.mvc.With;
 import services.PathService;
 
@@ -60,8 +61,26 @@ public class TemplateController extends ParentController {
 		ok();
 	}
 	
+	//TODO move to template service
+	@Util
+	public static TemplateAssignment templateForPath(Project project, Path path) {
+		Path cpath = path;
+		while(true) {
+			
+			TemplateAssignment assignment = TemplateAssignment.forPath(project, cpath);
+			if (assignment != null) return assignment;
+			
+			if (PathService.getRelativeString(cpath).equals("/")) {
+				return null;
+			}
+			
+			cpath = cpath.getParent();
+		}
+	}
+	
 	public static void getTemplateForPath(Project project, Path path) {
-		TemplateAssignment assignment = TemplateAssignment.forPath(project, path);
+		TemplateAssignment assignment = templateForPath(project,path);
+			
 		if (assignment == null) {
 			ok();
 		}

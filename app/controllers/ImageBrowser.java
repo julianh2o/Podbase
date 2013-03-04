@@ -124,7 +124,7 @@ public class ImageBrowser extends ParentController {
 	
 	public static void fetchInfo(Project project, Path path, boolean dataMode) {
 		//TODO fix this by using inherited template assignments
-		TemplateAssignment assignment = TemplateAssignment.forPath(project,path.getParent());
+		TemplateAssignment assignment = TemplateController.templateForPath(project, path);
 		
 		Template template = assignment==null?null:assignment.template;
 		List<TemplateAttribute> templateAttributes = template==null?null:template.attributes;

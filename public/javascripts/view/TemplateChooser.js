@@ -60,7 +60,7 @@ define(
 			templatesLoaded : function() {
 				this.templates = Link.getTemplates({projectId:this.project.id}).getData();
 				this.access = Link.getAccess({modelId:this.project.id}).getData();
-				this.canChooseTemplate = $.inArray("PROJECT_SET_TEMPLATE",this.access) >= 0;
+				this.canChooseTemplate = $.inArray("PROJECT_MANAGE_TEMPLATES",this.access) >= 0;
 				
 				this.refresh();
 				
