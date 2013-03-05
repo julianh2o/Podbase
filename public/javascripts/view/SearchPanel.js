@@ -23,6 +23,13 @@ define(
 				if (this.query == val) return;
 				
 				this.query = val;
+				
+				if (val == "") {
+					this.results = [];
+					this.closeResults();
+					return;
+				}
+				
 				Link.doSearch(val).post($.proxy(this.resultsReceived,this));
 			},
 			
