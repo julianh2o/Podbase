@@ -1,0 +1,19 @@
+<%
+function getName(path) {
+	var split = path.split("/");
+	return split[split.length-1];
+}
+%>
+
+<span class="close-panel"><i class="icon-remove"></i></span>
+
+<% if (results.length) { %>
+	<span class="results-heading">Results</span>
+	<% _.each(results,function(result) { %>
+		<div class="search-result">
+			<a href="#<%= result.path %>"><%= getName(result.path) %></a>
+		</div>
+	<% }); %> 
+<% } else { %>
+	No results.. 
+<% } %>

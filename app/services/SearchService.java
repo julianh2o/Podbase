@@ -34,7 +34,7 @@ public class SearchService {
 	public static Set<DatabaseImage> performSimpleSearch(String query) {
 		Set<DatabaseImage> results = new HashSet<DatabaseImage>();
 		
-		List<ImageAttribute> found = ImageAttribute.find("byValue", query).fetch();
+		List<ImageAttribute> found = ImageAttribute.find("byValueLike", "%"+query.toLowerCase()+"%").fetch();
 		for (ImageAttribute attr : found) {
 			results.add(attr.image);
 		}

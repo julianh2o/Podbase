@@ -68,6 +68,8 @@
 .main {
 	.panel;
 	width: 70em;
+	margin: 5px auto;
+	padding: 5px;
 }
 
 //Image Browser Sizing
@@ -238,5 +240,48 @@ select.file-select {
 	
 	li:before {
 		content: '/';
+	}
+}
+
+
+// search panel
+
+.search-panel {
+	position: relative;
+}
+
+input.image-search-field {
+	height: 9px;
+	width: 95%;
+	padding: 5px 5px;
+	border-radius: 15px;
+}
+
+.search-icon {
+	width: 0;
+	height: 0;
+	position: relative;
+	left: -20px;
+	top: -11px;
+	display: inline-block;
+}
+
+.results-panel {
+	display: block;
+	position: absolute;
+	top: 19px;
+	left: 0;
+	right: 0;
+	margin: 0;
+	background: white;
+	min-height: 40px;
+	-webkit-box-shadow: -2px 2px 5px rgba(50, 50, 50, 0.75);
+	-moz-box-shadow:    -2px 2px 5px rgba(50, 50, 50, 0.75);
+	box-shadow:         -2px 2px 5px rgba(50, 50, 50, 0.75);
+	
+	.close-panel {
+		position: absolute;
+		top: 0;
+		right: 0;
 	}
 }

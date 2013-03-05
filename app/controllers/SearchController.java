@@ -21,4 +21,9 @@ public class SearchController extends ParentController {
     	Set<DatabaseImage> results = SearchService.performSimpleSearch(query);
     	render(results);
     }
+    
+    public static void doSearch(String query) {
+    	Set<DatabaseImage> results = SearchService.performSimpleSearch(query);
+    	renderJSON(results);
+    }
 }

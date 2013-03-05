@@ -1,6 +1,6 @@
 define(
-	['view/RenderedView', 'util/HashHandler', 'util/Util', 'data/Link', 'util/Cache', 'view/TemplateChooser', 'view/ImageBrowserActionBar', 'view/ImageDetails', 'view/FileBrowser', 'view/ImagePreview', 'text!tmpl/ImageBrowser.html'],
-	function (RenderedView, HashHandler, Util, Link, Cache, TemplateChooser, ImageBrowserActionBar, ImageDetails, FileBrowser, ImagePreview, tmpl) {
+	['view/RenderedView', 'util/HashHandler', 'util/Util', 'data/Link', 'util/Cache', 'view/TemplateChooser', 'view/ImageBrowserActionBar', 'view/ImageDetails', 'view/FileBrowser', 'view/ImagePreview', 'view/SearchPanel', 'text!tmpl/ImageBrowser.html'],
+	function (RenderedView, HashHandler, Util, Link, Cache, TemplateChooser, ImageBrowserActionBar, ImageDetails, FileBrowser, ImagePreview, SearchPanel, tmpl) {
 		
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
@@ -16,6 +16,8 @@ define(
 				$(this.actionBar).on("DataModeChanged",Util.debugEvent);
 				$(this.actionBar).on("DataModeChanged",$.proxy(this.dataModeChanged,this));
 				
+				this.searchPanel = Util.createView( $(".image-search",this.el), SearchPanel);
+				
 				this.$browser = $(".filebrowser",this.el);
 				this.$preview = $(".preview",this.el);
 				this.$metadata = $(".metadata",this.el);
@@ -30,7 +32,7 @@ define(
 				this.fileBrowser = new FileBrowser({root:"/"+this.project.name,project:this.project, showVisibility: _.contains(this.access,"EDITOR")});
 				this.$browser.append(this.fileBrowser.el);
 				
-				$(".path",this.fileBrowser.el).remove().appendTo($(".path",this.actionBar.el));
+				$(".path",this.actionBar.el).replaceWith($(".path",this.fileBrowser.el));
 				
 				this.templateChooser.setPath("/");
 				

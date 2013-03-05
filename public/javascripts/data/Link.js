@@ -102,6 +102,13 @@ define(['data/Loader'],function(Loader) {
 		
 		
 		// ############################################
+		// SearchController.java
+		// ############################################
+		this.index = new Loader("@{SearchController.index}?query={query}");
+		this.doSearch = new Loader("@{SearchController.doSearch}?query={query}");
+		
+		
+		// ############################################
 		// TemplateController.java
 		// ############################################
 		this.getTemplates = new Loader("@{TemplateController.getTemplates}?project.id={projectId}");

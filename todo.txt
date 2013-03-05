@@ -1,6 +1,6 @@
 REQUIRED:
 * fix image adjustments so that client side matches server side and you have an easy link to use
-* search functionality
+* add some simple templates to bootstrap for demo/testing purposes
 
 FIX:
 * fix sending post data via get strings.. @.@
