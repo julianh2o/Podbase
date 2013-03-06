@@ -30,10 +30,19 @@ define(
 					return;
 				}
 				
-				Link.doSearch(val).post($.proxy(this.resultsReceived,this));
+				Link.doSearch(val).post({
+					success:$.proxy(this.resultsReceived,this),
+					error:$.proxy(this.searchError,this)
+				});
+			},
+			
+			searchError : function() {
+				this.$searchField.css("color","red");
 			},
 			
 			resultsReceived : function(results) {
+				this.$searchField.css("color","black");
+				
 				this.results = results;
 				
 				this.$resultsPanel.show();

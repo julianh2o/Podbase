@@ -17,12 +17,12 @@ import models.TemplateAttribute;
 
 @With(Security.class)
 public class SearchController extends ParentController {
-    public static void index(String query) {
+    public static void index(String query) throws Exception {
     	Set<DatabaseImage> results = SearchService.performSimpleSearch(query);
     	render(results);
     }
     
-    public static void doSearch(String query) {
+    public static void doSearch(String query) throws Exception {
     	Set<DatabaseImage> results = SearchService.performSimpleSearch(query);
     	renderJSON(results);
     }

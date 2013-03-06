@@ -6,21 +6,20 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
-import play.modules.elasticsearch.annotations.ElasticSearchIgnore;
-import play.modules.elasticsearch.annotations.ElasticSearchable;
+import play.modules.search.Field;
+import play.modules.search.Indexed;
 
 import com.google.gson.annotations.Expose;
 
-@ElasticSearchable
 @Entity
+@Indexed
 public class ImageAttribute extends TimestampModel {
 	@ManyToOne
 	@GsonTransient
-	@ElasticSearchIgnore
 	Project project;
 	
 	public String attribute;
-	
+	@Field
 	public String value;
 	public boolean hidden;
 
@@ -28,7 +27,6 @@ public class ImageAttribute extends TimestampModel {
 
 	@ManyToOne
 	@GsonTransient
-	@ElasticSearchIgnore
 	public DatabaseImage image;
 
 	@Transient

@@ -6,8 +6,7 @@ require:
     - play -> less 0.9.1
     - play -> secure
     - play -> crud
-    - play -> elasticsearch 0.4
-    - se.scalablesolutions.akka -> akka-amqp 1.2
+    - play -> search 2.0
     
 
 repositories:
@@ -21,9 +20,3 @@ repositories:
         artifact:   "${application.path}/lib/[module]-[revision].jar"
         contains:
             - provided -> *
-    
-    - akka:
-        type: iBiblio
-        root: "http://repo.akka.io/releases"
-        contains:
-        - se.scalablesolutions.akka -> *
