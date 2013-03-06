@@ -20,11 +20,14 @@ import play.Play;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import play.modules.search.Search;
+import play.modules.search.store.FilesystemStore;
 import services.PathService;
 
 @OnApplicationStart
 public class PodbaseMetadataMigration extends Job {
 	public void doJob() throws Exception {
+		((FilesystemStore)Search.getCurrentStore()).sync = false;
+		
 		File f = new File("./migrate/data.yaml");
 		
 		List<Entry> entries = parseFile(f);
@@ -43,7 +46,7 @@ public class PodbaseMetadataMigration extends Job {
 			if ("dev".equals(Play.configuration.get("application.mode")) && i++ > 5) return; //cut off after 5 in dev mode
 		}
 		
-		Search.getCurrentStore().reopen("ImageAttribute"); //Causes indexing of all of the recently added image attributes
+		((FilesystemStore)Search.getCurrentStore()).sync = true;
 	}
 	
 	public List<Entry> parseFile(File f) throws IOException {

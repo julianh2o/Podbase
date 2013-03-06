@@ -1,6 +1,7 @@
 package controllers;
 
 import play.*;
+import play.modules.search.Search;
 import play.mvc.*;
 import play.mvc.Http.Response;
 

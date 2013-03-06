@@ -17,6 +17,7 @@ import controllers.ParentController;
 
 import access.AccessType;
 
+import play.modules.search.Query.SearchException;
 import play.modules.search.Search;
 import play.mvc.Util;
 
@@ -33,16 +34,21 @@ import models.User;
 
 public class SearchService {
 	public static Set<DatabaseImage> performSimpleSearch(String query) throws Exception {
-		Set<DatabaseImage> results = new HashSet<DatabaseImage>();
-		
-		String lucene = "value:"+query+"*";
-		List<ImageAttribute> found = Search.search(lucene, ImageAttribute.class).fetch();
-
-		for (ImageAttribute attr : found) {
-			results.add(attr.image);
+		try {
+			Set<DatabaseImage> results = new HashSet<DatabaseImage>();
+			
+			String lucene = "value:"+query+"*";
+			List<ImageAttribute> found = Search.search(lucene, ImageAttribute.class).fetch();
+	
+			for (ImageAttribute attr : found) {
+				results.add(attr.image);
+			}
+			
+			return results;
+		} catch (SearchException se) {
+			Search.getCurrentStore().rebuild(ImageAttribute.class.getName());
+			throw se;
 		}
-		
-		return results;
 	}
 
 }

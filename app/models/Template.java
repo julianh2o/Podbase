@@ -1,5 +1,6 @@
 package models;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -22,6 +23,7 @@ public class Template extends TimestampModel {
 		super();
 		this.project = project;
 		this.name = name;
+		this.attributes = new LinkedList<TemplateAttribute>();
 	}
 
 	public TemplateAttribute addAttribute(String name) {

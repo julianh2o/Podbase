@@ -57,6 +57,11 @@ public class Bootstrap extends Job {
 			        new Permission(authenticated,project,AccessType.VISIBLE).save();
 			        new Permission(authenticated,project,AccessType.LISTED).save();
 			        
+			        Template template = new Template(project, f.getName()+"_demo_template").save();
+			        template.addAttribute("Image Name");
+			        template.addAttribute("Species");
+			        template.addAttribute("Magnification");
+			        
 			        addUsersToProject(project, users);
 			        
 		        	project.addDirectory("/"+f.getName());
