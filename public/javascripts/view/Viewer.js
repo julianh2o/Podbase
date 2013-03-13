@@ -31,7 +31,6 @@ define(
 						}
 				});
 				
-				
 				this.render();
 				
 				var ctx = $(".test",this.el).get(0).getContext("2d");

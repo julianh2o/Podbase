@@ -15,26 +15,73 @@ define(
 				
 				this.render();
 				
+				this.$brightnessSlider = $(".brightness-slider",this.el).slider({
+					min: -100,
+					max: 100,
+					step: 1,
+					slide: $.proxy(this.sliderUpdated,this)
+				});
+				
+				this.$contrastSlider = $(".contrast-slider",this.el).slider({
+					min: -1,
+					max: 5,
+					step: .1,
+					slide: $.proxy(this.sliderUpdated,this)
+				});
+				
 				this.$brightness = $(".brightness",this.el);
 				this.$contrast = $(".contrast",this.el);
 				
 				this.$brightness.change($.proxy(this.valuesUpdated,this));
 				this.$contrast.change($.proxy(this.valuesUpdated,this));
 				
-				this.update(viewer.state);
+				this.updateUI(viewer.state);
 			},
 			
-			update : function() {
+			sliderUpdated : function(e,slider) {
+				if (this.disableUpdates) return;
+				
+				this.viewer.state.brightness = this.$brightnessSlider.slider("value")
+				this.viewer.state.contrast = this.$contrastSlider.slider("value");
+				
+				this.updateUI();
+				
+				this.considerProcess();
+			},
+			
+			updateUI : function() {
+				this.disableUpdates = true;
+				
 				var state = this.viewer.state;
 				this.$brightness.val(state.brightness);
 				this.$contrast.val(state.contrast);
+				
+				this.$brightnessSlider.slider("value",state.brightness);
+				this.$contrastSlider.slider("value",state.contrast);
+				
+				this.disableUpdates = false;
 			},
 			
 			valuesUpdated : function() {
+				if (this.disableUpdates) return;
+				
 				this.viewer.state.brightness = this.$brightness.val();
 				this.viewer.state.contrast = this.$contrast.val();
 				
-				this.viewer.doProcess();
+				this.updateUI();
+				
+				this.considerProcess();
+			},
+			
+			considerProcess : function() {
+				if (this.t) {
+					clearInterval(this.t);
+				}
+				
+				var self = this;
+				this.t = setTimeout(function() {
+					self.viewer.doProcess();
+				},200)
 			},
 			
 			deactivate : function() {
@@ -62,7 +109,7 @@ define(
 				state.brightness = round(scaleRange(pos.y,0,state.canvasDim.y,-150,150),0);
 				state.contrast = round(scaleRange(pos.x,0,state.canvasDim.x,-1,5),2);
 				
-				this.update(state);
+				this.updateUI(state);
 				
 				return "process";
 			},
