@@ -109,7 +109,7 @@ public class ImageBrowser extends ParentController {
 		
 		if (histogram == null) histogram = false;
 		if (brightness == null) brightness = (float)0;
-		if (contrast == null) contrast = (float)1;
+		if (contrast == null) contrast = (float)0;
 		
 		image = ImageService.adjustImage(image, brightness, contrast);
 		

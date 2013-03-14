@@ -88,6 +88,8 @@ define(
 					g.stroke();
 				}
 				
+				$(".measured-length",this.el).html("");
+				
 				if (this.measure) {
 					var start = this.measure.start.boxToAbsolute(state.pan,state.effectiveDim());
 					var end = this.measure.end.boxToAbsolute(state.pan,state.effectiveDim());
@@ -104,11 +106,13 @@ define(
 					var lpx = length / this.calibrationLength;
 					
 					var dist = this.measure.start.dist(this.measure.end);
-					var unitsDist = (dist / lpx).toFixed(1);
+					var unitsDist = (dist / lpx).toFixed(2);
 					
 					g.font="20px Arial";
 					g.fillStyle = "#00f";
 					g.fillText(unitsDist,end.x + 30, end.y + 30);
+					
+					$(".measured-length",this.el).html(unitsDist);
 				}
 			}
 		});

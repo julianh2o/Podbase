@@ -1,6 +1,7 @@
 package services;
 
 import ij.ImagePlus;
+import ij.process.ImageProcessor;
 import ij.process.ImageStatistics;
 
 import java.awt.Color;
@@ -8,6 +9,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
+import java.awt.image.DataBufferByte;
+import java.awt.image.DataBufferInt;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Date;
@@ -61,7 +65,7 @@ public class ImageService {
 	}
 
 	public static BufferedImage scaleImage(BufferedImage image, int width, int height) {
-		BufferedImage scaled = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage scaled = new BufferedImage(width, height, image.getType());
 
 		Graphics2D graphics2D = scaled.createGraphics();
 		graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BILINEAR);
@@ -121,16 +125,28 @@ public class ImageService {
 		return full;
 	}
 
+	// Brightness between -150 and 150
+	// Contrast between -1 and infinity
 	public static BufferedImage adjustImage(BufferedImage image, double brightness, double contrast) {
-		ImagePlus img = new ImagePlus("image",image);
-		double range = 255;
-		double center = 128;
-		range = range / contrast;
-		center = center - brightness;
-		double min = center-range/2.0;
-		double max = center+range/2.0;
-		img.setDisplayRange(min,max);
-		return img.getBufferedImage();
+		DataBuffer dataBuffer = image.getRaster().getDataBuffer();
+		int size = dataBuffer.getDataTypeSize(dataBuffer.getDataType());
+		
+		brightness = Math.min(150, Math.max(-150,brightness));
+		contrast = Math.max(0,contrast+1);
+		
+		double mul = (1 + brightness / 150.0) * contrast;
+		double add = -128*contrast + 128;
+		
+		for (int i=0; i<dataBuffer.getSize(); i++) {
+			int pixel = dataBuffer.getElem(i);
+			
+			pixel = (int)(pixel * mul + add);
+			pixel = Math.min(255, Math.max(0,pixel));
+			
+			dataBuffer.setElem(i, pixel);
+		}
+		
+		return image;
 	}
 
 }

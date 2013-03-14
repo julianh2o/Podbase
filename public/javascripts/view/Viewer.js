@@ -33,6 +33,9 @@ define(
 				
 				this.render();
 				
+				this.$url = $(".url-field",this.el);
+				this.updateUrl();
+				
 				var ctx = $(".test",this.el).get(0).getContext("2d");
 				ctx.moveTo(0,100);
 				ctx.lineTo(100,0);
@@ -76,13 +79,30 @@ define(
 				this.stateUpdated();
 			},
 			
+			updateUrl : function() {
+				var url = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ":" + window.location.port : "")
+				url += this.path;
+				
+				map = {
+						brightness: this.state.brightness,
+						contrast: this.state.contrast
+				}
+				
+				url += "?" + $.param(map);;
+				
+				this.$url.text(url);
+				this.$url.attr("href",url);
+			},
+			
 			copyImageToProcess : function() {
 				var g = this.$processed.get(0).getContext("2d");
 				g.drawImage(this.$original.get(0),0,0);
 			},
 			
 			stateUpdated : function() {
-				if (this.tool) this.tool.update();
+				if (this.tool && this.tool.update) this.tool.update();
+				
+				this.updateUrl();
 			},
 			
 			addTool : function(name,display,object) {
@@ -209,7 +229,7 @@ define(
 				
 				this.state.pan = this.state.pan.minus(newPos.minus(this.mouse));
 				
-				this.tool.update();
+				this.stateUpdated();
 				this.updateCanvas();
 				
 				event.preventDefault();
@@ -236,13 +256,16 @@ define(
 			},
 			
 			doResize : function() {
-				var remaining = $(window).height() - this.$toolbar.height() - 30
+				var remaining = $(window).height() - this.$toolbar.height() - 50
+				var width = $(window).width()-10;
+				
+				this.$viewport.width(width);
 				this.$viewport.height(remaining);
-				this.$viewport.width(remaining);
-				this.$viewport.attr("width",remaining);
+				
+				this.$viewport.attr("width",width);
 				this.$viewport.attr("height",remaining);
 				
-				this.state.canvasDim = new Point2d(remaining,remaining);
+				this.state.canvasDim = new Point2d(width,remaining);
 				
 				this.updateCanvas();
 			}

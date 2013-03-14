@@ -47,7 +47,7 @@ define(
 				
 				state.pan = originState.pan.plus(delta);
 				
-				this.update();
+				this.viewer.stateUpdated();
 				
 				return true;
 			},

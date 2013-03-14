@@ -1,33 +1,28 @@
 REQUIRED:
-* fix image adjustments so that client side matches server side and you have an easy link to use
-* use sliders for image adjustments
 
-FIX:
-* fix sending post data via get strings.. @.@
-* image file hash data
+NICE TO HAVE:
 * after login redirect
 * fix refresh clearing out the related panel (project permissions when list changes)
-* fix link so that null values can be sent for objects
 
 POLISHING
 * more tests, more clean up, more services
-* smooth over behavior of attributes and templates
 * add EHCache (or other caching solution)
-* add filesystem watching (add upload features)
-
-NICE TO HAVE:
-* access levels "user groups"
-* image groups within papers
-* hidden permissions
-* permission descriptions
-* messaging system
 
 OTHER:
+* hidden permissions
+* fix link so that null values can be sent for objects
+* image file hash data
 * background task to index the filesystem
+* fix sending post data via get strings.. @.@
 * multiple image sets per paper (and management UI)
 
 V2:
-* data mode, analysis mode, paper specific metadata
+* add filesystem watching (add upload features)
+* image groups within papers
+* permission descriptions
+* access levels "user groups"
+* messaging system
+* paper specific metadata
 * image annotations
 * crop images
 
