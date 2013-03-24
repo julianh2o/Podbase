@@ -78,6 +78,15 @@ public class ImageBrowser extends ParentController {
 		ProjectVisibleImage.setVisible(project,image,visible);
 	}
 	
+	@ProjectAccess(AccessType.EDITOR)
+	public static void setMultipleVisible(Project project, String ids, boolean visible) {
+		for (String id : ids.split(",")) {
+			long longid = Long.parseLong(id);
+			DatabaseImage image = DatabaseImage.findById(longid);
+			ProjectVisibleImage.setVisible(project,image,visible);
+		}
+	}
+	
 	@Util
 	public static BufferedImage getImage(Path path) {
 		User user = Security.getUser();

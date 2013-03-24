@@ -137,20 +137,35 @@ define(
 
 			getSelectedPath : function() {
 				if (!this.selectedFile) return this.path;
+				if (this.selectedFile.length) return this.path + "/";
 				
 				return this.selectedFile.path;
 			},
 			
 			optionSelected : function(event) {
 				var $option = $(event.target);
-				var file = $option.data("file");
-				var selected = $option.is(":selected");
 				
-				if (selected) {
+				var selectedElements = this.$browser.children(":selected");
+				var files = [];
+				selectedElements.each(function() {
+					files.push($(this).data("file"))
+				});
+				
+				if (selectedElements.length == 1) {
+					var file = files[0];
 					if (this.selectedFile != file) this.fileSelected(file);
+				} else if (selectedElements.length > 1){
+					this.multipleSelected(files);
 				} else {
 					this.fileDeselected();
 				}
+			},
+			
+			multipleSelected : function(files) {
+				this.selectedFile = files;
+				HashHandler.getInstance().replaceHash(this.getSelectedPath());
+				
+				$(this).trigger("MultipleSelected",[this.getSelectedPath(), files]);
 			},
 			
 			fileDeselected : function() {

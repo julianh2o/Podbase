@@ -83,6 +83,17 @@ public class PathService {
 		return files;
 	}
 	
+	public static boolean isPathInProject(Path path, Project project) {
+		for (Directory dir : project.directories) {
+			System.out.println(path.toString() + " starts with? " + dir.getPath().toString());
+			if (path.startsWith(dir.getPath())) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	public static List<Path> filterImagesAndDirectories(List<Path> in) {
 		List<Path> out = new LinkedList<Path>();
 		for (Path path : in) {

@@ -16,7 +16,7 @@ define(
 				$(this.actionBar).on("DataModeChanged",Util.debugEvent);
 				$(this.actionBar).on("DataModeChanged",$.proxy(this.dataModeChanged,this));
 				
-				this.searchPanel = Util.createView( $(".image-search",this.el), SearchPanel);
+				this.searchPanel = Util.createView( $(".image-search",this.el), SearchPanel, {project:this.project});
 				
 				this.$browser = $(".filebrowser",this.el);
 				this.$preview = $(".preview",this.el);
@@ -44,6 +44,7 @@ define(
 				
 				$(this.fileBrowser).on("PathChanged",$.proxy(this.onPathChanged,this));
 				$(this.fileBrowser).on("PathSelected",$.proxy(this.onPathSelected,this));
+				$(this.fileBrowser).on("MultipleSelected",$.proxy(this.onMultipleSelected,this));
 				$(this.fileBrowser).on("PathDeselected",$.proxy(this.onPathDeselected,this));
 				
 				$(this.fileBrowser).on("PathChanged PathSelected PathDeselected", Util.debugEvent);
@@ -120,6 +121,11 @@ define(
 				
 				this.imagePreview.loadPreview(file);
 				this.imageDetails.setFile(file);
+			},
+			
+			onMultipleSelected : function(e,path,files) {
+				this.imagePreview.loadPreview(files);
+				this.imageDetails.setFile(null);
 			},
 			
 			onPathDeselected : function(e) {

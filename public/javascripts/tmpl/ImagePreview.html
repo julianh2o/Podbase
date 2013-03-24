@@ -1,8 +1,10 @@
 <div class="row-fluid">
 	<div class="preview-image span5">
-		<% if (!file) { %>
+		<% if (!file && !files) { %>
 			<img src='http://placehold.it/200x200'>
-		<% } else if (file.isDir){ %>
+		<% } else if (file && file.isDir){ %>
+			<img src='http://placehold.it/200x200'>
+		<% } else if (files){ %>
 			<img src='http://placehold.it/200x200'>
 		<% } else { %>
 			<a href='@{ImageViewer.index()}<%= file.path %>'>
@@ -12,17 +14,24 @@
 	</div>
 	
 	<div class="image-info span7">
-		<% if (!file) { %>
+		<% if (!file && !files) { %>
 			<div class="no-selection faint">
 				No selection
 			</div>
-		<% } else if (file.isDir){ %>
+		<% } else if (file && file.isDir){ %>
 			<div class="directory faint">
 				Directory Selected
 			</div>
+		<% } else if (files) { %>
+			<div class="directory faint">
+				Multiple files selected
+			</div>
+			<% if (fileCount) { %>
+				<a href="#" class="toggle-visible"></a>
+			<% } %>
 		<% } else { %>
 			<a href="#" class="toggle-visible"></a> <br/>
-			<%= file.display %>
+				<%= file.display %>
 			<br/>
 			<a href="#" class="add-to-image-set image-set-mode">
 				Add to image set

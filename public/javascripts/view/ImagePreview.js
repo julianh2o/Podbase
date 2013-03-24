@@ -11,8 +11,20 @@ define(
 			},
 			
 			loadPreview : function(file) {
-				this.file = file;
-				this.model = {file:file};
+				this.fileCount = null;
+				
+				if (file && file.length) {
+					this.file = null;
+					this.files = file;
+					this.fileCount = _.chain(this.files).pluck("isDir").filter(function(val) {return !val;}).value().length
+				} else if (file) {
+					this.file = file;
+					this.files = [file];
+				} else {
+					this.file = null;
+				}
+				
+				this.model = {file:this.file,files:this.files,fileCount:this.fileCount};
 				
 				this.render();
 				
@@ -43,11 +55,25 @@ define(
 			},
 			
 			updateVisibleText : function() {
-				if (!this.file) return;
+				if (!this.file && !this.files) return;
 				
-				if (this.file.visible) {
+				var visible = false;
+				if (this.file) {
+					visible = this.file.visible;
+				} else if (this.files && this.fileCount) {
+					var visibleCount = 0;
+					_.each(this.files,function(file) {
+						if (file.visible) visibleCount ++;
+					});
+					
+					visible = visibleCount > this.files.length/2;
+				}
+				
+				if (visible) {
+					this.toggleStatus = false;
 					this.$toggleVisible.text("Set invisible");
 				} else {
+					this.toggleStatus = true;
 					this.$toggleVisible.text("Set visible");
 				}
 			},
@@ -58,6 +84,22 @@ define(
 					this.browser.fileBrowser.reload();
 					
 					this.file.visible = !this.file.visible;
+					this.updateVisibleText();
+				} else if (this.files) {
+					var ids = [];
+					var project = null;
+					_.each(this.files,function(file) {
+						if (file.isDir) return;
+						
+						if (file.project) project = file.project;
+						
+						file.visible = this.toggleStatus;
+						ids.push(file.image.id);
+					});
+					
+					Link.setMultipleVisible(project.id,ids,this.toggleStatus).post();
+					this.browser.fileBrowser.reload();
+					
 					this.updateVisibleText();
 				}
 				e.preventDefault();

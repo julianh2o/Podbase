@@ -6,6 +6,8 @@ define(
 			resultsTemplate: _.template( resultsTmpl ),
 			
 			initialize: function(options){
+				this.project = options.project;
+				
 				this.render();
 				
 				this.$searchField = $(".image-search-field",this.el).on("keyup keydown keypress",$.proxy(this.queryUpdated,this));
@@ -30,7 +32,7 @@ define(
 					return;
 				}
 				
-				Link.doSearch(val).post({
+				Link.doSearch(this.project.id,val).post({
 					success:$.proxy(this.resultsReceived,this),
 					error:$.proxy(this.searchError,this)
 				});

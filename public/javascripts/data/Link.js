@@ -36,6 +36,7 @@ define(['data/Loader'],function(Loader) {
 		this.fetchProjectPath = new Loader("@{ImageBrowser.fetchProjectPath}?project.id={projectId}&path={path}");
 		this.fetchPath = new Loader("@{ImageBrowser.fetchPath}?path={path}");
 		this.setVisible = new Loader("@{ImageBrowser.setVisible}?project.id={projectId}&image.id={imageId}&visible={visible}");
+		this.setMultipleVisible = new Loader("@{ImageBrowser.setMultipleVisible}?project.id={projectId}&ids={ids}&visible={visible}");
 		this.resolveFile = new Loader("@{ImageBrowser.resolveFile}?path={path}&mode={mode}&project.id={projectId}&scale={scale}&width={width}&height={height}&brightness={brightness}&contrast={contrast}&histogram={histogram}");
 		this.fetchInfo = new Loader("@{ImageBrowser.fetchInfo}?project.id={projectId}&path={path}&dataMode={dataMode}");
 		this.updateImageAttribute = new Loader("@{ImageBrowser.updateImageAttribute}?attribute.id={attributeId}&value={value}");
@@ -105,7 +106,7 @@ define(['data/Loader'],function(Loader) {
 		// SearchController.java
 		// ############################################
 		this.index = new Loader("@{SearchController.index}?query={query}");
-		this.doSearch = new Loader("@{SearchController.doSearch}?query={query}");
+		this.doSearch = new Loader("@{SearchController.doSearch}?project.id={projectId}&query={query}");
 		
 		
 		// ############################################
