@@ -28,6 +28,18 @@ define(
 				
 				this.render();
 				
+				this.$hoverImage = $(".full-image",this.el).hide();
+				
+				$(".html-textarea",this.el).focus(function() {
+					var self = this;
+					setTimeout(function() {
+						$(self).select();
+					},100);
+				});
+				
+				this.overs = 0;
+				$(".preview-image img",this.el).hover($.proxy(this.imageHoverIn,this),$.proxy(this.imageHoverOut,this));
+				
 				this.$toggleVisible = $(".toggle-visible",this.el);
 				this.$toggleVisible.click($.proxy(this.toggleVisible,this));
 				
@@ -40,6 +52,23 @@ define(
 				this.updateVisibleText();
 				
 				$(".add-to-image-set",this.el).unbind('click').click($.proxy(this.addToImageSet,this));
+				
+			},
+			
+			imageHoverIn : function() {
+				if (this.overs == 0) {
+					var src = this.$hoverImage.data("src");
+					if (!this.$hoverImage.attr("src")) this.$hoverImage.attr("src",src);
+					this.$hoverImage.show();
+				}
+				this.overs++;
+			},
+			
+			imageHoverOut : function() {
+				this.overs--;
+				if (this.overs == 0) {
+					this.$hoverImage.hide();
+				}
 			},
 			
 			importData : function() {

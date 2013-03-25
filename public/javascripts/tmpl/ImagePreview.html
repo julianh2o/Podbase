@@ -4,9 +4,10 @@
 			<img src='http://placehold.it/200x200'>
 		<% } else if (file && file.isDir){ %>
 			<img src='http://placehold.it/200x200'>
-		<% } else if (files){ %>
+		<% } else if (files.length > 1) { %>
 			<img src='http://placehold.it/200x200'>
 		<% } else { %>
+			<img class="full-image" data-src="/data<%= file.path %>?mode=fit&width=500&height=500">
 			<a href='@{ImageViewer.index()}<%= file.path %>'>
 				<img src='/data<%= file.path %>?mode=thumb'>
 			</a>
@@ -14,6 +15,7 @@
 	</div>
 	
 	<div class="image-info span7">
+	<% console.log(file,files); %>
 		<% if (!file && !files) { %>
 			<div class="no-selection faint">
 				No selection
@@ -22,7 +24,7 @@
 			<div class="directory faint">
 				Directory Selected
 			</div>
-		<% } else if (files) { %>
+		<% } else if (files.length > 1) { %>
 			<div class="directory faint">
 				Multiple files selected
 			</div>
@@ -36,6 +38,10 @@
 			<a href="#" class="add-to-image-set image-set-mode">
 				Add to image set
 			</a>
+			
+			<br/>
+			<b>Linked thumbnail:</b>
+			<textarea class="html-textarea"><a href='${serverUrl}/data<%= file.path %>'><img src='${serverUrl}/data<%= file.path %>?mode=thumb'></a></textarea>
 		<% } %>
 	</div>
 </div>

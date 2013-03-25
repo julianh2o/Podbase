@@ -21,6 +21,7 @@ public class ParentController extends Controller {
     static void setPageAttributes() {
 		renderArgs.put("user", Security.getUser());
 	    renderArgs.put("frameworkId", Play.id);
+	    renderArgs.put("serverUrl", request.getBase());
     }
 	
 	@Util
