@@ -2,6 +2,13 @@ define(
 	['view/RenderedView', 'util/Util', 'data/Link', 'text!tmpl/ImageAttribute.html'],
 	function (RenderedView, Util, Link, tmpl) {
 		
+		function attributesById(attributes) {
+			return _.reduce(attributes,function(memo,attribute) {
+				memo[attribute.id] = attribute;
+				return memo;
+			},{});
+		}
+		
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
 			
@@ -15,11 +22,13 @@ define(
 				this.path = options.path;
 				this.dataMode = options.dataMode;
 				
+				this.attributesById = attributesById(options.attrs);
+				
 				this.link.asap($.proxy(this.refresh,this));
 			},
 			
 			refresh : function() {
-				var values = this.link.getData("byAttribute")[this.attributeName];
+				var values = this.attributesById;
 				if (!values) {
 					$(this.el).remove();
 					return;
@@ -91,12 +100,12 @@ define(
 				};
 				
 				var id = $el.data("id");
+				var attribute = this.attributesById[id];
 				
 				if (id) {
-					Link.updateImageAttribute(id,value).post(link.pull);
+					Link.updateImageAttribute(id,value,this.dataMode).post(link.pull);
 				} else {
 					Link.createAttribute(this.projectId,this.path,this.attributeName,value,this.dataMode).post(link.pull);
-					
 				}
 			}
 		});

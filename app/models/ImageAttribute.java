@@ -3,7 +3,9 @@ package models;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import play.modules.search.Field;
@@ -16,18 +18,24 @@ import com.google.gson.annotations.Expose;
 public class ImageAttribute extends TimestampModel {
 	@ManyToOne
 	@GsonTransient
-	Project project;
+	public Project project;
 	
 	public String attribute;
+	
 	@Field
 	public String value;
-	public boolean hidden;
-
+	
 	public boolean data;
+	
+	public boolean hidden;
 
 	@ManyToOne
 	@GsonTransient
 	public DatabaseImage image;
+	
+	@OneToOne
+	@GsonTransient
+	public ImageAttribute linkedAttribute;
 
 	@Transient
 	public boolean templated = false;

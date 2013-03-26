@@ -60,15 +60,13 @@ define(
 				
 				this.$body = $(".attributes",this.el);
 				var self = this;
-				_.each(this.link.getData("byAttribute"),function(value,key) {
-					var hidden = value[0].hidden;
-					self.addAttribute(key,hidden);
+				_.each(this.link.getData("byAttribute"),function(attributes,key) {
+					self.addAttribute(key,attributes);
 				});
 				
 				if (this.attributes && !this.attributes.length) {
 					this.$body.append("<div class='no-selection'>This image has no attributes</div>");
 				}
-				
 				
 				$(".add",this.el).click($.proxy(this.createAttribute,this));
 				
@@ -101,9 +99,18 @@ define(
 				$el.scrollTop( $el.prop("scrollHeight") );
 			},
 			
-			addAttribute : function(attributeName,hidden) {
+			addAttribute : function(attributeName,attributes) {
+				if (!this.dataMode) {
+					attributes = _.reject(attributes,function(item) {
+						var res = item.data && item.linkedAttribute !== undefined;
+						return res;
+					});
+				}
+				if (attributes.length == 0) return;
+				var hidden = attributes[0].hidden;
 				var imageAttribute = new ImageAttribute({
 					attr:attributeName,
+					attrs:attributes,
 					hidden:hidden,
 					link:this.link,
 					projectId: this.project.id,

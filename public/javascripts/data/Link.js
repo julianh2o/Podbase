@@ -39,7 +39,7 @@ define(['data/Loader'],function(Loader) {
 		this.setMultipleVisible = new Loader("@{ImageBrowser.setMultipleVisible}?project.id={projectId}&ids={ids}&visible={visible}");
 		this.resolveFile = new Loader("@{ImageBrowser.resolveFile}?path={path}&mode={mode}&project.id={projectId}&scale={scale}&width={width}&height={height}&brightness={brightness}&contrast={contrast}&histogram={histogram}");
 		this.fetchInfo = new Loader("@{ImageBrowser.fetchInfo}?project.id={projectId}&path={path}&dataMode={dataMode}");
-		this.updateImageAttribute = new Loader("@{ImageBrowser.updateImageAttribute}?attribute.id={attributeId}&value={value}");
+		this.updateImageAttribute = new Loader("@{ImageBrowser.updateImageAttribute}?attribute.id={attributeId}&value={value}&dataMode={dataMode}");
 		this.deleteImageAttribute = new Loader("@{ImageBrowser.deleteImageAttribute}?attribute.id={attributeId}");
 		this.createAttribute = new Loader("@{ImageBrowser.createAttribute}?project.id={projectId}&path={path}&attribute={attribute}&value={value}&dataMode={dataMode}");
 		this.importFromFile = new Loader("@{ImageBrowser.importFromFile}?project.id={projectId}&path={path}");

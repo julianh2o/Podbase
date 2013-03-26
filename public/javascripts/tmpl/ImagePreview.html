@@ -15,7 +15,6 @@
 	</div>
 	
 	<div class="image-info span7">
-	<% console.log(file,files); %>
 		<% if (!file && !files) { %>
 			<div class="no-selection faint">
 				No selection
@@ -40,8 +39,10 @@
 			</a>
 			
 			<br/>
-			<b>Linked thumbnail:</b>
-			<textarea class="html-textarea"><a href='${serverUrl}/data<%= file.path %>'><img src='${serverUrl}/data<%= file.path %>?mode=thumb'></a></textarea>
+			<b>Browser link and thumbnail:</b>
+<textarea class="html-textarea"><a href='${serverUrl}/entry/<%= file.project.id %>#<%= file.path %>'><%= file.display %></a>
+<br/>
+<a href='${serverUrl}/data<%= file.path %>'><img src='${serverUrl}/data<%= file.path %>?mode=thumb'></a></textarea>
 		<% } %>
 	</div>
 </div>

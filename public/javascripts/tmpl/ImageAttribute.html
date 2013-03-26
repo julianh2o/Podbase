@@ -3,7 +3,7 @@
 		<%= name %>
 	</div>
 	<div class="span9 values">
-		<% _.each(values,function(item) { %>
+		<% _.each(values,function(item,id) { %>
 			<div class="value" data-value="<%= item.value %>" data-id="<%= item.id %>">
 				<%= item.value %>
 				<span class="delete-attribute"><i class="icon-remove"/></span>

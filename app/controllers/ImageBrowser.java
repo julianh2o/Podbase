@@ -175,7 +175,20 @@ public class ImageBrowser extends ParentController {
 	    renderJSON(attributes);  
 	}
 	
-	public static void updateImageAttribute(ImageAttribute attribute, String value) {
+	public static void updateImageAttribute(ImageAttribute attribute, String value, boolean dataMode) {
+		if (attribute.value == value) return;
+		
+		if (dataMode != attribute.data) {
+			ImageAttribute newAttribute = new ImageAttribute(attribute.project,attribute.image,attribute.attribute,value,dataMode);
+			
+			newAttribute.linkedAttribute = attribute;
+			newAttribute.save();
+			
+			attribute.linkedAttribute = newAttribute;
+			attribute.save();
+			
+			attribute = newAttribute;
+		}
 		attribute.value = value;
 		attribute.save();
 		
