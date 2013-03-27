@@ -6,15 +6,13 @@ define(
 			template: _.template( tmpl ),
 			
 			initialize: function() {
-				this.setProject(this.options.project);
+				this.project = this.options.project;
+				this.link = Link.getTemplates(this.project.id);
+				this.link.asap($.proxy(this.refresh,this))
 			},
 			
-			setProject : function(project) {
-				this.project = project;
-				if (this.project) {
-					this.link = Link.getProject(this.project.id);
-					this.refresh();
-				}
+			reload : function() {
+				Link.getTemplates(this.project.id).pull();
 			},
 			
 			getSelectedTemplate : function() {
@@ -29,18 +27,10 @@ define(
 				}
 			},
 			
-			reload : function() {
-				this.link.loadOnce($.proxy(this.dataReloaded,this));
-				this.link.pull();
-			},
-			
-			dataReloaded : function() {
-				this.project = this.link.getData();
-				this.refresh();
-			},
-			
 			refresh : function() {
-				this.model = {templates:this.project ? this.project.templates : null};
+				$(this).trigger("TemplateDeselected");
+				
+				this.model = {templates:Link.getTemplates(this.project.id).getData()};
 				this.render();
 				
 				$(".template",this.el).click($.proxy(this.templateClicked,this));

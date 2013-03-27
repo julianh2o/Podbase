@@ -5,8 +5,9 @@ define(
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
 			
-			initialize: function() {
-				this.setTemplate(this.options.template);
+			initialize: function(opts) {
+				this.project = opts.project;
+				this.setTemplate(opts.template);
 			},
 			
 			setTemplate : function(template) {
@@ -15,7 +16,10 @@ define(
 			},
 			
 			refresh : function() {
-				if (!this.editTemplate) return;
+				if (!this.editTemplate) {
+					$(this.el).empty();
+					return;
+				}
 				
 				function sortAttributes(a,b) {
 					return a.sort - b.sort
@@ -28,12 +32,30 @@ define(
 				$(".template-entry input",this.el).on("blur",$.proxy(this.onFieldBlur,this));
 				$(".template-entry input[type=checkbox]",this.el).click($.proxy(this.onFieldBlur,this));
 				
+				$(".delete-template",this.el).click($.proxy(this.deleteTemplateClicked,this));
+				
 				$(".remove",this.el).on("click",$.proxy(this.onDeleteClicked,this));
 				$(".add",this.el).on("click",$.proxy(this.addAttribute,this));
 				
 				var $container = $(".template-editor",this.el);
 				$container.sortable({ handle: '.handle',stop: $.proxy(this.onSortStop,this)});
-				$container.disableSelection();
+			},
+			
+			deleteTemplateClicked : function(e) {
+				e.preventDefault();
+				
+				var yes = confirm("Really delete " + this.editTemplate.name + "?");
+				if (yes) {
+					this.deleteTemplate();
+				}
+			},
+			
+			deleteTemplate : function() {
+				Link.deleteTemplate(this.editTemplate.id).post($.proxy(this.templateDeleted,this));
+			},
+			
+			templateDeleted : function() {
+				Link.getTemplates(this.project.id).pull();
 			},
 			
 			returnStatus : function(response) {

@@ -19,7 +19,8 @@ define(
 			},
 			
 			userClicked : function(e) {
-				var $el = $(event.target);
+				e.preventDefault();
+				var $el = $(e.target);
 				this.userSelected($el);
 			},
 			

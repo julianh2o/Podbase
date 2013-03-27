@@ -7,8 +7,8 @@
 		<% } else if (files.length > 1) { %>
 			<img src='http://placehold.it/200x200'>
 		<% } else { %>
-			<img class="full-image" data-src="/data<%= file.path %>?mode=fit&width=500&height=500">
 			<a href='@{ImageViewer.index()}<%= file.path %>'>
+				<img class="full-image" data-src="/data<%= file.path %>?mode=fit&width=500&height=500">
 				<img src='/data<%= file.path %>?mode=thumb'>
 			</a>
 		<% } %>

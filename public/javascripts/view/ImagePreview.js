@@ -22,6 +22,7 @@ define(
 					this.files = [file];
 				} else {
 					this.file = null;
+					this.files = null;
 				}
 				
 				this.model = {file:this.file,files:this.files,fileCount:this.fileCount};

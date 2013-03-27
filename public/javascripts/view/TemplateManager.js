@@ -6,12 +6,14 @@ define(
 			template: _.template( tmpl ),
 			
 			initialize: function() {
+				this.project = this.options.project;
+				
 				this.render();
 				
 				this.$templates = $(".templates",this.el);
 				this.$editor = $(".editor",this.el);
 				
-				this.templateList = new TemplateList();
+				this.templateList = new TemplateList({project:this.project});
 				this.$templates.append(this.templateList.el);
 				
 				// SELECT FIRST TEMPLATE
@@ -22,14 +24,16 @@ define(
 				this.templateEditor = new TemplateEditor({project:this.project});
 				this.$editor.append(this.templateEditor.el);
 				
-				$(this.templateList).on("TemplateSelected",$.proxy(this.templateSelected,this))
+				$(this.templateList)
+					.on("TemplateSelected",$.proxy(this.templateSelected,this))
+					.on("TemplateDeselected",$.proxy(this.templateDeselected,this))
+					
+					.on("TemplateDeselected",Util.debugEvent)
 					.on("TemplateSelected",Util.debugEvent);
-				
-				this.setProject(this.options.project);
 			},
 			
-			setProject : function(project) {
-				this.templateList.setProject(project);
+			templateDeselected : function(e) {
+				this.templateEditor.setTemplate(null);
 			},
 			
 			templateSelected : function(e,templateId,template) {

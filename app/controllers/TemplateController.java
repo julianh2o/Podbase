@@ -34,6 +34,10 @@ public class TemplateController extends ParentController {
 		template.save();
 	}
 	
+	public static void deleteTemplate(Template template) {
+		template.delete();
+	}
+	
 	//TODO clean me up
 	public static void setFolderTemplate(Project project, Template template, Path path) {
 		TemplateAssignment assignment = TemplateAssignment.find("project = ? AND path = ?", project, PathService.getRelativeString(path)).first();

@@ -1,3 +1,9 @@
+<div>
+	<b>Template: </b><%= template.name %>
+	(<a href="#" class="delete-template">delete</a>)
+</div>
+<br/>
+
 <div class="template-editor">
 	<% _.each(template.attributes,function(attr,index) { %>
 		<div class='row template-entry' data-index="<%= index %>">

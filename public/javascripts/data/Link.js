@@ -114,6 +114,7 @@ define(['data/Loader'],function(Loader) {
 		// ############################################
 		this.getTemplates = new Loader("@{TemplateController.getTemplates}?project.id={projectId}");
 		this.addTemplate = new Loader("@{TemplateController.addTemplate}?project.id={projectId}&templateName={templateName}");
+		this.deleteTemplate = new Loader("@{TemplateController.deleteTemplate}?template.id={templateId}");
 		this.setFolderTemplate = new Loader("@{TemplateController.setFolderTemplate}?project.id={projectId}&template.id={templateId}&path={path}");
 		this.clearFolderTemplate = new Loader("@{TemplateController.clearFolderTemplate}?project.id={projectId}&path={path}");
 		this.getTemplateForPath = new Loader("@{TemplateController.getTemplateForPath}?project.id={projectId}&path={path}");

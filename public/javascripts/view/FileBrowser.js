@@ -14,6 +14,10 @@ define(
 				this.$browser = $(".file-select",this.el);
 				this.$path = $(".path",this.el);
 				
+				this.$browser.on("change",$.proxy(this.onBrowserChange,this));
+				this.$browser.on("keydown",$.proxy(this.onBrowserKeydown,this));
+				this.$browser.on("dblclick",$.proxy(this.onBrowserTrigger,this));
+				
 				this.path = options.path || this.root;
 				this.directoryCache = new Cache();
 				this.selectedFile = null;
@@ -110,8 +114,8 @@ define(
 						selectedOption = option;
 					}
 					$(option).data("file", file)
-					$(option).on("click",$.proxy(that.optionSelected,that));
-					$(option).bind('dblclick', {browser:that}, $.proxy(that.optionTriggered,that));
+					//$(option).on("click",$.proxy(that.optionSelected,that));
+					//$(option).bind('dblclick', $.proxy(that.optionTriggered,that));
 					that.$browser.append(option);
 				}
 
@@ -130,7 +134,11 @@ define(
 					renderOption(this);
 				});
 				
-				if (selectedFileObject) this.fileSelected(selectedFileObject);
+				if (selectedFileObject) {
+					this.fileSelected(selectedFileObject);
+				} else {
+					this.$browser.get(0).selectedIndex = 0;
+				}
 				
 				this.$browser.scrollTop(0);
 			},
@@ -142,14 +150,33 @@ define(
 				return this.selectedFile.path;
 			},
 			
-			optionSelected : function(event) {
-				var $option = $(event.target);
+			onBrowserKeydown : function(e) {
+				if (e.keyCode == 39 || e.keyCode == 13) {
+					this.onBrowserTrigger();
+				}
 				
+				if (e.keyCode == 37) {
+					//left arrow
+					this.loadPath(Util.getParentDirectory(this.path),null);
+				}
+			},
+			
+			onBrowserTrigger : function() {
+				if (this.selectedFiles.length != 1) return;
+				
+				var file = this.selectedFiles[0];
+				if (file.isDir) {
+					this.loadPath(file.path, null);
+				}
+			},
+			
+			onBrowserChange : function(e) {
 				var selectedElements = this.$browser.children(":selected");
 				var files = [];
 				selectedElements.each(function() {
 					files.push($(this).data("file"))
 				});
+				this.selectedFiles = files;
 				
 				if (selectedElements.length == 1) {
 					var file = files[0];
@@ -188,12 +215,8 @@ define(
 			},
 			
 			optionTriggered : function(event) {
-				var that = event.data.browser;
 				var option = event.target;
 				var file = $(option).data("file");
-				if (file.isDir) {
-					that.loadPath(file.path, null);
-				}
 			}
 		});
 		
