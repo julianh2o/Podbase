@@ -23,8 +23,6 @@ define(
 				this.directoryCache = new Cache();
 				
 				this.selectedFiles = [];
-				
-				this.loadPath(this.path,true);
 			},
 			
 			reload : function() {
@@ -34,6 +32,10 @@ define(
 			
 			loadDirectory : function(directoryPath, hashUpdate) {
 				this.loadPath(directoryPath.chopEnd("/") + "/",hashUpdate);
+			},
+			
+			loadRoot : function(hashUpdate) {
+				this.loadPath(this.root,hashUpdate);
 			},
 			
 			loadPath : function(path, selectedFile, hashUpdate) {
@@ -125,7 +127,7 @@ define(
 					var file = this.$browser.children().eq(0).data("file");
 				}
 				
-				this.updateSelectionFromBrowser();
+				this.handleSelectionUpdate();
 				
 				this.$browser.scrollTop(0);
 			},
@@ -181,6 +183,10 @@ define(
 			},
 			
 			onBrowserChange : function(e) {
+				this.handleSelectionUpdate();
+			},
+			
+			handleSelectionUpdate : function() {
 				var previouslySelectedFiles = this.selectedFiles;
 				this.updateSelectionFromBrowser();
 				

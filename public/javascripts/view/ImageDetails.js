@@ -16,7 +16,7 @@ define(
 			
 			initialize: function() {
 				this.access = this.options.access;
-				this.canEdit = $.inArray("EDITOR",this.access) >= 0;
+				this.canEdit = this.access["EDITOR"];
 				this.dataMode = this.options.dataMode;
 				
 				this.project = this.options.project;

@@ -40,7 +40,7 @@ define(
 						content: this.imageBrowser
 					});
 					
-					if (_.contains(access,"MANAGE_PERMISSIONS")) {
+					if (Util.permits(access,"MANAGE_PERMISSIONS")) {
 						tabs.push({
 							id: "permissions",
 							label: "Permissions Manager",

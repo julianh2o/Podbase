@@ -19,7 +19,7 @@ define(
 			refresh : function() {
 				var access = Link.getCurrentUserPermissions().getData();
 				
-				if (_.contains(access,"MANAGE_USERS")) {
+				if (Util.permits(access,"MANAGE_USERS")) {
 					this.userManagement = Util.createView( $(".management",this.el), UserManagement);
 				}
 			}

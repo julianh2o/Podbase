@@ -16,7 +16,7 @@ define(
 				
 				
 				this.doDataModeSelection();
-				if (!_.contains(this.access,"EDITOR")) {
+				if (!this.access["EDITOR"]) {
 					$(".data-mode li",this.el).addClass("disabled");
 				} else {
 					$(".data-mode a",this.el).click($.proxy(this.dataModeClicked,this));

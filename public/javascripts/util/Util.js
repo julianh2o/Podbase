@@ -83,6 +83,9 @@ define(
 					}
 				});
 				return map;
+			},
+			permits : function(access,permission) {
+				return This.permissionsAsMap(access)[permission];
 			}
 		}
 		
