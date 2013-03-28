@@ -23,9 +23,9 @@ define(
 				});
 				
 				this.$contrastSlider = $(".contrast-slider",this.el).slider({
-					min: -1,
-					max: 5,
-					step: .1,
+					min: -150,
+					max: 150,
+					step: 1,
 					slide: $.proxy(this.sliderUpdated,this)
 				});
 				

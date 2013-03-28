@@ -133,9 +133,8 @@ define(
 			},
 			
 			doProcess : function() {
-				//this.state.brightness and contrast between -100 and 100
 				var brightness = this.state.brightness;
-				var contrast = this.state.contrast;
+				var contrast = Math.pow(2,this.state.contrast/30) - 1;
 				this.$processed.attr("width",this.state.imageDim.x);
 				this.$processed.attr("height",this.state.imageDim.y);
 				Pixastic.process(this.$original.get(0), "brightness", {brightness:brightness,contrast:contrast},$.proxy(this.imageProcessingComplete,this));

@@ -131,6 +131,8 @@ public class ImageService {
 		DataBuffer dataBuffer = image.getRaster().getDataBuffer();
 		int size = dataBuffer.getDataTypeSize(dataBuffer.getDataType());
 		
+		contrast = Math.pow(2, contrast/30) - 1;
+		
 		brightness = Math.min(150, Math.max(-150,brightness));
 		contrast = Math.max(0,contrast+1);
 		
