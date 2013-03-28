@@ -58,11 +58,13 @@ define(
 				
 				if (!this.file) return;
 				
-				this.$body = $(".attributes",this.el);
-				var self = this;
-				_.each(this.link.getData("byAttribute"),function(attributes,key) {
-					self.addAttribute(key,attributes);
-				});
+				if (this.link) {
+					this.$body = $(".attributes",this.el);
+					var self = this;
+					_.each(this.link.getData("byAttribute"),function(attributes,key) {
+						self.addAttribute(key,attributes);
+					});
+				}
 				
 				if (this.attributes && !this.attributes.length) {
 					this.$body.append("<div class='no-selection'>This image has no attributes</div>");

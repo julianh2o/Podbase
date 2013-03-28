@@ -15,6 +15,9 @@ define(
 				file = file.chopStart("/");
 				return path + "/" + file;
 			},
+			isDirectoryPath : function(path) {
+				return path.endsWith("/");
+			},
 			getFileName : function(path) {
 				var tokens = path.split("/");
 				return tokens[tokens.length - 1];

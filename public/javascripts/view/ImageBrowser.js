@@ -29,7 +29,7 @@ define(
 				this.directoryCache = new Cache();
 				this.selectedFile = null;
 				
-				this.fileBrowser = new FileBrowser({root:"/"+this.project.name,project:this.project, showVisibility: _.contains(this.access,"EDITOR")});
+				this.fileBrowser = new FileBrowser({root:"/"+this.project.name+"/",project:this.project, showVisibility: _.contains(this.access,"EDITOR")});
 				this.$browser.append(this.fileBrowser.el);
 				
 				$(".path",this.actionBar.el).replaceWith($(".path",this.fileBrowser.el));
@@ -99,17 +99,11 @@ define(
 				var pageParameters = Util.parseLocationHash();
 				var path = pageParameters[" "];
 				
-				
-				var selectedFile = Util.getFileName(path);
-				
-				path = path.substring(0, path.lastIndexOf("/"));
-				
 				if (path == "" || path == undefined) {
 					return;
 				}
 				
-				Util.assertPath(path);
-				this.fileBrowser.loadPath(path, selectedFile,true);
+				this.fileBrowser.loadPath(path,true);
 			},
 			
 			onPathChanged : function(e,path) {
