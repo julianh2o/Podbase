@@ -27,7 +27,7 @@ define(
 				this.header = Util.createView( $(".header",this.el), Header, {project: project});
 				this.footer = Util.createView( $(".footer",this.el), Footer);
 				
-				var access = accessLink.getData();
+				var access = Util.permissionsAsMap(accessLink.getData());
 				
 				this.imageBrowser = new ImageBrowser({project:project,access:access});
 				this.templateManager = new TemplateManager({project:project,access:access});
@@ -40,7 +40,7 @@ define(
 					content: this.imageBrowser
 				});
 				
-				if (_.include(access,"PROJECT_MANAGE_TEMPLATES")) {
+				if (access["PROJECT_MANAGE_TEMPLATES"]) {
 					tabs.push({
 						id: "templates",
 						label: "Template Manager",
@@ -48,7 +48,7 @@ define(
 					});
 				}
 				
-				if (_.include(access,"MANAGE_PERMISSIONS")) {
+				if (access["MANAGE_PERMISSIONS"]) {
 					tabs.push({
 						id: "permissions",
 						label: "Project Permissions",

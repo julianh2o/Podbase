@@ -13,6 +13,16 @@ define(['data/Loader'],function(Loader) {
 		this.fetchInfo.addTransformer("byAttribute", function(data) {
 			return _.groupBy(data,"attribute");
 		});
+		
+		this.getAccessTypes.addTransformer("byType",function(data) {
+			return _.reduce(data,function(memo,accessInfo) {
+				_.each(accessInfo.type,function(type) {
+					if (!memo[type]) memo[type] = [];
+					memo[type].unshift(accessInfo);
+				});
+				return memo;
+			},{});
+		});
 	};
 	
 	$.extend(This.prototype,{

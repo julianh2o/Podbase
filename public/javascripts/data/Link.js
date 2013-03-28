@@ -81,8 +81,6 @@ define(['data/Loader'],function(Loader) {
 		this.createProject = new Loader("@{ProjectController.createProject}?name={name}");
 		this.setDataMode = new Loader("@{ProjectController.setDataMode}?project.id={projectId}&dataMode={dataMode}");
 		this.deleteProject = new Loader("@{ProjectController.deleteProject}?project.id={projectId}");
-		this.addDirectory = new Loader("@{ProjectController.addDirectory}?project.id={projectId}&path={path}");
-		this.removeDirectory = new Loader("@{ProjectController.removeDirectory}?directory.id={directoryId}");
 		
 		
 		// ############################################
@@ -136,6 +134,16 @@ define(['data/Loader'],function(Loader) {
 		
 		this.fetchInfo.addTransformer("byAttribute", function(data) {
 			return _.groupBy(data,"attribute");
+		});
+		
+		this.getAccessTypes.addTransformer("byType",function(data) {
+			return _.reduce(data,function(memo,accessInfo) {
+				_.each(accessInfo.type,function(type) {
+					if (!memo[type]) memo[type] = [];
+					memo[type].unshift(accessInfo);
+				});
+				return memo;
+			},{});
 		});
 	};
 	

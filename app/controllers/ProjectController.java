@@ -47,17 +47,4 @@ public class ProjectController extends ParentController {
     	project.delete();
     	ok();
     }
-    
-    @ProjectAccess(AccessType.PROJECT_MANAGE_DIRECTORIES)
-    public static void addDirectory(Project project, String path) {
-    	project.addDirectory(path);
-    	ok();
-    }
-    
-    @ProjectAccess(AccessType.PROJECT_MANAGE_DIRECTORIES)
-    public static void removeDirectory(Directory directory) {
-    	directory.delete();
-    	ok();
-    }
-    
 }

@@ -1,15 +1,6 @@
 define(
 	['view/RenderedView', 'util/Util', 'data/Link', 'text!tmpl/UserPermissionsEditor.html'],
 	function (RenderedView, Util, Link, tmpl) {
-	
-		function permissionsAsMap(permissions) {
-			var map = {}
-			_.each(permissions,function(perm) {
-				map[perm] = true;
-			});
-			return map;
-		}
-		
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
 			
@@ -47,17 +38,11 @@ define(
 			
 			refresh : function() {
 				var access = Link.getUserAccess(this.modelObject.id,this.user.id).getData();
-				var permissionMap = permissionsAsMap(access);
+				var permissionMap = Util.permissionsAsMap(access);
 				
-				var permOfType = _.reduce(Link.getAccessTypes().getData(),function(memo,types,perm) {
-					_.each(types,function(type) {
-						if (!memo[type]) memo[type] = [];
-						memo[type].unshift(perm);
-					});
-					return memo;
-				},{});
+				var possiblePermissions = Link.getAccessTypes().getData("byType")[this.type]
 				
-				this.model = {user:this.user, userPermissionMap:permissionMap, permissions:permOfType[this.type], showRemove:this.model != null};
+				this.model = {user:this.user, userPermissionMap:permissionMap, permissions:possiblePermissions, showRemove:this.model != null};
 				
 				this.render();
 				

@@ -114,8 +114,6 @@ define(
 						selectedOption = option;
 					}
 					$(option).data("file", file)
-					//$(option).on("click",$.proxy(that.optionSelected,that));
-					//$(option).bind('dblclick', $.proxy(that.optionTriggered,that));
 					that.$browser.append(option);
 				}
 

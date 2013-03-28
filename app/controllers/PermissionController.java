@@ -98,11 +98,7 @@ public class PermissionController extends ParentController {
     }
     
     public static void getAccessTypes() {
-    	HashMap<String,String[]> accessTypes = new HashMap<String, String[]>();
-    	for (AccessType type : AccessType.values()) {
-    		accessTypes.put(type.name(),type.getTypes());
-    	}
-    	renderJSON(accessTypes);
+    	renderJSON(AccessType.values());
     }
     
 }

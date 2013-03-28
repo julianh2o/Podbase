@@ -17,6 +17,8 @@ import models.DatabaseImage;
 import models.GsonTransient;
 import models.ImageAttribute;
 
+import access.AccessType;
+
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -46,6 +48,17 @@ public class PodbaseUtil {
 			return obj;
 		}
 	}
+	
+	private static class AccessTypeAdaptor implements JsonSerializer<AccessType> {
+		@Override
+		public JsonElement serialize(AccessType obj, Type type, JsonSerializationContext context) {
+			JsonObject json = new JsonObject();
+			json.addProperty("name", obj.name());
+			json.addProperty("description", obj.description);
+			json.add("type", context.serialize(obj.types));
+			return json;
+		}
+	}
 
 	public static Gson getGsonExcludesGsonTransient() {
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
@@ -58,7 +71,10 @@ public class PodbaseUtil {
 			public boolean shouldSkipField(FieldAttributes field) {
 				GsonTransient annotation = field.getAnnotation(GsonTransient.class);
 				return annotation != null;
-			}}).registerTypeAdapter(ImageAttribute.class, new ImageAttributeAdaptor()).create();
+			}})
+			.registerTypeAdapter(ImageAttribute.class, new ImageAttributeAdaptor())
+			.registerTypeAdapter(AccessType.class, new AccessTypeAdaptor())
+			.create();
 		return gson;
 	}
 

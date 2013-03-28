@@ -71,6 +71,15 @@ define(
 					map[map_key] = map_val;
 				});
 				return map;
+			},
+			permissionsAsMap : function(permissions,type) {
+				var map = {}
+				_.each(permissions,function(perm) {
+					if (!type || _.contains(perm.type,type)) {
+						map[perm.name] = perm;
+					}
+				});
+				return map;
 			}
 		}
 		
