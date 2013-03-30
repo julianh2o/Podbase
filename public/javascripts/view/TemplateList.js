@@ -33,6 +33,8 @@ define(
 				this.model = {templates:Link.getTemplates(this.project.id).getData()};
 				this.render();
 				
+				if (this.selected) this.templateSelected($("a[data-id="+this.selected.id+"]",this.el));
+				
 				$(".template",this.el).click($.proxy(this.templateClicked,this));
 				$(".add",this.el).click($.proxy(this.addTemplateClicked,this));
 			},

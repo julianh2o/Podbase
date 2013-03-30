@@ -32,10 +32,17 @@ public class TemplateController extends ParentController {
 		Template template = new Template(project,templateName);
 		project.templates.add(template);
 		template.save();
+		template.addAttribute("","");
 	}
 	
 	public static void deleteTemplate(Template template) {
 		template.delete();
+	}
+	
+	public static void duplicateTemplate(Template template, String newName) {
+		Template newTemplate = new Template(template);
+		newTemplate.name = newName;
+		newTemplate.save();
 	}
 	
 	//TODO clean me up
@@ -97,13 +104,14 @@ public class TemplateController extends ParentController {
 		renderJSON(template);
 	}
 	
-	public static void addAttribute(Template template, String name) {
-		TemplateAttribute attr = template.addAttribute(name);
+	public static void addAttribute(Template template, String name, String description) {
+		TemplateAttribute attr = template.addAttribute(name,description);
 		renderJSON(attr);
 	}
 	
-	public static void updateAttribute(TemplateAttribute attribute, String name, boolean hidden) {
+	public static void updateAttribute(TemplateAttribute attribute, String name, String description, boolean hidden) {
 		attribute.name = name;
+		attribute.description = description;
 		attribute.hidden = hidden;
 		attribute.save();
 		renderJSON(attribute);

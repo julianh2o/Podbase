@@ -1,6 +1,7 @@
 <div>
 	<b>Template: </b><%= template.name %>
-	(<a href="#" class="delete-template">delete</a>)
+	( <a href="#" class="delete-template">delete</a> )
+	( <a href="#" class="duplicate-template">duplicate</a> )
 </div>
 <br/>
 
@@ -18,7 +19,11 @@
 			</div>
 			
 			<div class='pull-left field'>
-				<input type='text' name='name' class='seamless' value="<%= attr.name %>"/>
+				<input type='text' name='name' class='seamless' placeholder="Field" value="<%= attr.name %>"/>
+			</div>
+			
+			<div class='pull-left field'>
+				<textarea name='description' class="description-textarea" placeholder="Description"><%= attr.description %></textarea>
 			</div>
 			
 			<div clas="pull-left">

@@ -2,7 +2,7 @@
 	<ul class="nav nav-pills nav-stacked">
 		<% _.each(templates,function(template,index) { %>
 			<li>
-				<a class="template" href="#" data-index="<%=index%>">
+				<a class="template" href="#" data-index="<%=index%>" data-id="<%= template.id %>">
 					<%= template.name %>
 				</a>
 			</li>
