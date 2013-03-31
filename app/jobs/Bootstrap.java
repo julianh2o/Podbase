@@ -18,9 +18,8 @@ import models.*;
 @OnApplicationStart
 public class Bootstrap extends Job {
     public void doJob() {
-    	if (true) {
+        if(Project.count() == 0) {
 	        Fixtures.deleteDatabase();
-	        //Fixtures.loadModels("initial.yml");
 	        
 	        new Podbase().save();
 	        
@@ -77,14 +76,6 @@ public class Bootstrap extends Job {
 	        Project pub = Project.find("byName", "Public").first();
 	        PermissionService.addPermission(guest, pub, AccessType.LISTED);
 	        PermissionService.addPermission(guest, pub, AccessType.VISIBLE);
-	        
-    	} else {
-	        // Check if the database is empty
-	        if(Project.count() == 0) {
-	            System.out.println("Loading initial.yml");
-		        Fixtures.loadModels("initial.yml");
-		        new User("julianh2o@gmail.com", "secret").save();
-	        }
     	}
     }
     

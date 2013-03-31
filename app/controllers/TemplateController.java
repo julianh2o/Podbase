@@ -6,6 +6,7 @@ import java.util.List;
 import play.mvc.Util;
 import play.mvc.With;
 import services.PathService;
+import services.YamlService;
 
 import models.Project;
 import models.Template;
@@ -131,5 +132,11 @@ public class TemplateController extends ParentController {
 			}
 			attribute.save();
 		}
+	}
+	
+	public static void downloadTemplates() {
+		List<Template> templates = Template.all().fetch();
+		response.setHeader("Content-Disposition", "attachment; filename=templates.yml");
+		renderText(YamlService.toYaml(templates));
 	}
 }
