@@ -123,9 +123,10 @@ public class TemplateController extends ParentController {
 		ok();
 	}
 	
-	public static void updateAttributeOrder(Template template, long[] ids) {
+	public static void updateAttributeOrder(Template template, String ids) {
 		int i = 0;
-		for (long id : ids) {
+		for (String strid : ids.split(",")) {
+			long id = Long.parseLong(strid);
 			TemplateAttribute attribute = TemplateAttribute.findById(id);
 			if (attribute.template == template) {
 				attribute.sort = i++;
