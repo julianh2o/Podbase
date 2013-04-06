@@ -68,11 +68,6 @@ public class ImageBrowser extends ParentController {
 		renderJSON(wrappedFiles);
 	}
 	
-	@Access(AccessType.ROOT)
-	public static void fetchPath(Path path) throws FileNotFoundException {
-		throw new DeprecationException("fetchPath is deprecated");
-	}
-	
 	@ProjectAccess(AccessType.EDITOR)
 	public static void setVisible(Project project, DatabaseImage image, boolean visible) {
 		ProjectVisibleImage.setVisible(project,image,visible);
@@ -102,6 +97,11 @@ public class ImageBrowser extends ParentController {
 	}
 	
 	public static void resolveFile(Path path, String mode, Project project, Float scale, Integer width, Integer height, Float brightness, Float contrast, Boolean histogram) throws IOException {
+		if (!PathService.isImage(path)) {
+			renderBinary(path.toFile());
+			return;
+		}
+		
 		BufferedImage image = getImage(path);
 		
 		if ("thumb".equals(mode)) {

@@ -6,10 +6,14 @@
 			<img src='http://placehold.it/200x200'>
 		<% } else if (files.length > 1) { %>
 			<img src='http://placehold.it/200x200'>
-		<% } else { %>
+		<% } else if (file.isImage) { %>
 			<a href='@{ImageViewer.index()}<%= file.path %>'>
 				<img class="full-image" data-src="/data<%= file.path %>?mode=fit&width=500&height=500">
 				<img src='/data<%= file.path %>?mode=thumb'>
+			</a>
+		<% } else { %>
+			<a href='/data<%= file.path %>'>
+				<img src='/public/images/document.png' height="200px">
 			</a>
 		<% } %>
 	</div>
@@ -40,9 +44,13 @@
 			
 			<br/>
 			<b>Browser link and thumbnail:</b>
+			<% if (file.isImage) { %>
 <textarea class="html-textarea"><a href='${serverUrl}/entry/<%= file.project.id %>#<%= file.path %>'><%= file.display %></a>
 <br/>
 <a href='${serverUrl}/data<%= file.path %>'><img src='${serverUrl}/data<%= file.path %>?mode=fit&width=300&brightness=0&contrast=0'></a></textarea>
+			<% } else { %>
+<textarea class="html-textarea"><a href='/data<%= file.path %>'><%= file.display %></a></textarea>
+			<% } %>
 		<% } %>
 	</div>
 </div>

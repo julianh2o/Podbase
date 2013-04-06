@@ -85,7 +85,6 @@ public class PathService {
 	
 	public static boolean isPathInProject(Path path, Project project) {
 		for (Directory dir : project.directories) {
-			System.out.println(path.toString() + " starts with? " + dir.getPath().toString());
 			if (path.startsWith(dir.getPath())) {
 				return true;
 			}
@@ -97,7 +96,7 @@ public class PathService {
 	public static List<Path> filterImagesAndDirectories(List<Path> in) {
 		List<Path> out = new LinkedList<Path>();
 		for (Path path : in) {
-			if (isImage(path) || path.toFile().isDirectory()) {
+			if (!isYaml(path) || path.toFile().isDirectory()) {
 				out.add(path);
 			}
 		}
@@ -106,6 +105,10 @@ public class PathService {
 	
 	public static boolean isImage(Path path) {
 		return isImage(path.getFileName().toString());
+	}
+	
+	public static boolean isYaml(Path path) {
+		return path.getFileName().toString().toLowerCase().endsWith("yml");
 	}
 	
 	public static boolean isImage(String name) {

@@ -23,6 +23,7 @@ public class FileWrapper {
 	public DatabaseImage image;
 	public Project project;
 	public boolean isDir;
+	public boolean isImage;
 	public boolean visible;
 	
 	public FileWrapper(Project project, String display, Path path) {
@@ -39,6 +40,8 @@ public class FileWrapper {
 				this.visible = true;
 			}
 		}
+		
+		this.isImage = PathService.isImage(path);
 		this.isDir = path.toFile().isDirectory();
 	}
 	

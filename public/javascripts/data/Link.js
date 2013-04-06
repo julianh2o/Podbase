@@ -34,7 +34,6 @@ define(['data/Loader'],function(Loader) {
 		// ############################################
 		this.index = new Loader("@{ImageBrowser.index}");
 		this.fetchProjectPath = new Loader("@{ImageBrowser.fetchProjectPath}?project.id={projectId}&path={path}");
-		this.fetchPath = new Loader("@{ImageBrowser.fetchPath}?path={path}");
 		this.setVisible = new Loader("@{ImageBrowser.setVisible}?project.id={projectId}&image.id={imageId}&visible={visible}");
 		this.setMultipleVisible = new Loader("@{ImageBrowser.setMultipleVisible}?project.id={projectId}&ids={ids}&visible={visible}");
 		this.resolveFile = new Loader("@{ImageBrowser.resolveFile}?path={path}&mode={mode}&project.id={projectId}&scale={scale}&width={width}&height={height}&brightness={brightness}&contrast={contrast}&histogram={histogram}");
@@ -122,6 +121,7 @@ define(['data/Loader'],function(Loader) {
 		this.updateAttribute = new Loader("@{TemplateController.updateAttribute}?attribute.id={attributeId}&name={name}&description={description}&hidden={hidden}");
 		this.removeAttribute = new Loader("@{TemplateController.removeAttribute}?attribute.id={attributeId}");
 		this.updateAttributeOrder = new Loader("@{TemplateController.updateAttributeOrder}?template.id={templateId}&ids={ids}");
+		this.downloadTemplates = new Loader("@{TemplateController.downloadTemplates}");
 		
 		
 		
