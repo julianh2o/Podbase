@@ -35,14 +35,22 @@
 				<a href="#" class="toggle-visible"></a>
 			<% } %>
 		<% } else { %>
-			<a href="#" class="toggle-visible"></a> <br/>
-				<%= file.display %>
+			<%= file.display %>
 			<br/>
+			
+			<a href="/data<%= file.path %>" class="open-file">
+				View <%= file.isImage ? "image" : "document" %>
+			</a>
+			<br/>
+			
+			<a href="#" class="toggle-visible"></a>
+			<br/>
+			
 			<a href="#" class="add-to-image-set image-set-mode">
 				Add to image set
 			</a>
-			
 			<br/>
+			
 			<b>Browser link and thumbnail:</b>
 			<% if (file.isImage) { %>
 <textarea class="html-textarea"><a href='${serverUrl}/entry/<%= file.project.id %>#<%= file.path %>'><%= file.display %></a>

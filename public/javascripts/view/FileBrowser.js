@@ -139,7 +139,7 @@ define(
 			},
 
 			getSelectedPath : function() {
-				if (!this.selectedFiles) return this.path;
+				if (!this.selectedFiles || !this.selectedFiles.length) return this.path;
 				if (this.selectedFiles.length > 1) return Util.appendPaths(this.path,"/");
 				
 				return this.selectedFiles[0].path;
@@ -194,7 +194,7 @@ define(
 					
 					$(this).trigger("PathSelected",[this.getSelectedPath(), file]);
 					HashHandler.getInstance().replaceHash(this.getSelectedPath());
-				} else if (selectedFiles.length > 1){
+				} else if (this.selectedFiles.length > 1){
 					HashHandler.getInstance().replaceHash(this.getSelectedPath());
 					$(this).trigger("MultipleSelected",[this.getSelectedPath(), this.selectedFiles]);
 				} else {

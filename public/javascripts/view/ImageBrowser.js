@@ -12,7 +12,6 @@ define(
 				
 				this.render();
 				
-				console.log(this.access,this.access.PROJECT_FILE_UPLOAD,this.access.PROJECT_FILE_DELETE);
 				if (!(this.access.PROJECT_FILE_UPLOAD || this.access.PROJECT_FILE_DELETE)) {
 					$(".upload-files",this.el).hide();
 				}
@@ -52,7 +51,7 @@ define(
 				$(this.fileBrowser).on("MultipleSelected",$.proxy(this.onMultipleSelected,this));
 				$(this.fileBrowser).on("PathDeselected",$.proxy(this.onPathDeselected,this));
 				
-				$(this.fileBrowser).on("PathChanged PathSelected PathDeselected", Util.debugEvent);
+				$(this.fileBrowser).on("PathChanged PathSelected PathDeselected MultipleSelected", Util.debugEvent);
 				
 				$(HashHandler.getInstance()).bind('HashUpdate', $.proxy(this.loadHashPath,this));
 				
