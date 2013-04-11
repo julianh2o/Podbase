@@ -44,6 +44,8 @@ define(['data/Loader'],function(Loader) {
 		this.importFromFile = new Loader("@{ImageBrowser.importFromFile}?project.id={projectId}&path={path}");
 		this.findImportables = new Loader("@{ImageBrowser.findImportables}?path={path}");
 		this.importDirectory = new Loader("@{ImageBrowser.importDirectory}?project.id={projectId}&path={path}");
+		this.upload = new Loader("@{ImageBrowser.upload}?file={file}&path={path}");
+		this.deleteFile = new Loader("@{ImageBrowser.deleteFile}?path={path}");
 		
 		
 		// ############################################

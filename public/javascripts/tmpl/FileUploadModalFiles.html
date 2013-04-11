@@ -1,0 +1,22 @@
+<table class="file-list">
+	<tr>
+		<th>Name</th>
+		<th>Size</th>
+		<th></th>
+	</tr>
+	<% _.each(files,function(file) { %>
+		<% if (!file.isDir) { %>
+			<tr class="file" data-path="<%= file.path %>">
+				<td>
+					<%= file.display %>
+				</td>
+				<td>
+					<%= Util.formatFileSize(file.size) %>
+				</td>
+				<td>
+					<a href="#" class="delete-file">Delete</a>
+				</td>
+			</tr>
+		<% } %>
+	<% }); %>
+	</table>

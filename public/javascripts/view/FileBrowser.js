@@ -22,6 +22,8 @@ define(
 				this.path = options.path || this.root;
 				this.directoryCache = new Cache();
 				
+				$("html").on("FileSystemUpdated",$.proxy(this.reload,this));
+				
 				this.selectedFiles = [];
 			},
 			
@@ -36,11 +38,6 @@ define(
 			
 			loadRoot : function(hashUpdate) {
 				this.loadPath(this.root,hashUpdate);
-			},
-			
-			loadPath : function(path, selectedFile, hashUpdate) {
-				console.log("USING OLD LOAD PATH!");
-				this.loadPath(path,hashUpdate);
 			},
 			
 			loadPath : function(path, hashUpdate) {

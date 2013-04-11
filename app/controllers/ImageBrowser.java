@@ -28,12 +28,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
+
+import org.apache.commons.io.FileUtils;
 
 import access.Access;
 import access.AccessType;
@@ -96,6 +99,7 @@ public class ImageBrowser extends ParentController {
 		}
 	}
 	
+	@ProjectAccess(AccessType.VISIBLE)
 	public static void resolveFile(Path path, String mode, Project project, Float scale, Integer width, Integer height, Float brightness, Float contrast, Boolean histogram) throws IOException {
 		if (!PathService.isImage(path)) {
 			renderBinary(path.toFile());
@@ -132,6 +136,7 @@ public class ImageBrowser extends ParentController {
 		renderImage(image);
 	}
 	
+	@ProjectAccess(AccessType.VISIBLE)
 	public static void fetchInfo(Project project, Path path, boolean dataMode) {
 		//TODO fix this by using inherited template assignments
 		TemplateAssignment assignment = TemplateController.templateForPath(project, path);
@@ -175,6 +180,7 @@ public class ImageBrowser extends ParentController {
 	    renderJSON(attributes);  
 	}
 	
+	@ProjectAccess(AccessType.EDITOR)
 	public static void updateImageAttribute(ImageAttribute attribute, String value, boolean dataMode) {
 		if (attribute.value == value) return;
 		
@@ -197,6 +203,7 @@ public class ImageBrowser extends ParentController {
 		renderJSON(attribute);
 	}
 	
+	@ProjectAccess(AccessType.EDITOR)
 	public static void deleteImageAttribute(ImageAttribute attribute) {
 		attribute.delete();
 		
@@ -205,6 +212,7 @@ public class ImageBrowser extends ParentController {
 		ok();
 	}
 	
+	@ProjectAccess(AccessType.EDITOR)
 	public static void createAttribute(Project project, Path path, String attribute, String value, boolean dataMode) {
 		DatabaseImage image = DatabaseImage.forPath(path);
 		ImageAttribute attr = image.addAttribute(project, attribute, value, dataMode);
@@ -214,15 +222,35 @@ public class ImageBrowser extends ParentController {
 		renderJSON(attr);
 	}
 	
+	@ProjectAccess(AccessType.OWNER)
 	public static void importFromFile(Project project, Path path) throws IOException {
 		ImportExportService.importData(project, path);
 	}
 	
+	@ProjectAccess(AccessType.VISIBLE)
 	public static void findImportables(Path path) {
 		renderJSON(ImportExportService.findImportables(path));
 	}
 	
+	@ProjectAccess(AccessType.OWNER)
 	public static void importDirectory(Project project, Path path) throws IOException {
 		ImportExportService.importDirectoryRecursive(project, path);
+	}
+	
+	@ProjectAccess(AccessType.PROJECT_FILE_UPLOAD)
+	public static void upload(File file, Path path) {
+		File destination = path.resolve(file.getName()).toFile();
+		try {
+			FileUtils.copyFile(file, destination);
+		} catch (IOException e) {
+			error(e);
+		}
+		ok();
+	}
+	
+	@ProjectAccess(AccessType.PROJECT_FILE_DELETE)
+	public static void deleteFile(Path path) {
+		path.toFile().delete();
+		ok();
 	}
 }

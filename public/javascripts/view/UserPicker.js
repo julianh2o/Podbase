@@ -24,7 +24,7 @@ define(
 			userSelected : function(e) {
 				var $el = $(e.target);
 				var userId = $el.val();
-				Link.mimicUser(userId).post(function() {
+				Link.mimicUser(userId).post().always(function(data) {
 					window.location.reload(true);
 				});
 			}

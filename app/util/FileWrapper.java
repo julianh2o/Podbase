@@ -25,6 +25,7 @@ public class FileWrapper {
 	public boolean isDir;
 	public boolean isImage;
 	public boolean visible;
+	public long size;
 	
 	public FileWrapper(Project project, String display, Path path) {
 		this.display = display;
@@ -33,6 +34,7 @@ public class FileWrapper {
 		DatabaseImage image = DatabaseImage.forPath(path);
 		this.image = image;
 		this.visible = false;
+		this.size = path.toFile().length();
 		
 		if (this.project != null) {
 			ProjectVisibleImage pvi = ProjectVisibleImage.get(project,image);

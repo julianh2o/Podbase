@@ -53,12 +53,16 @@ define([], function() {
 			$.ajax(options);
 		},
 		post : function(opt) {
-			if ($.isFunction(opt)) opt = {success:opt};
+			if (opt) {
+				console.log("Using deprecated options to post");
+			}
+			if (opt && $.isFunction(opt)) opt = {complete:opt};
 			var options = $.extend({}, this.opts, {
 				type : "POST",
 				url : this.url,
 			},opt);
-			$.ajax(options);
+			var jqxhr = $.ajax(options);
+			return jqxhr;
 		},
 		dataReady : function(callback) {
 			var self = this;

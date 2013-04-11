@@ -1,6 +1,8 @@
 package controllers;
 
+import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 
 import access.Access;
 import access.AccessType;
@@ -9,6 +11,7 @@ import access.ProjectAccess;
 
 import play.mvc.Before;
 import play.mvc.Util;
+import services.PathService;
 import services.PermissionService;
 
 import models.ImageSet;
@@ -34,10 +37,19 @@ public class Security extends Secure.Security {
         ProjectAccess projectAccess = getActionAnnotation(ProjectAccess.class);
         if (projectAccess != null) {
         	Project project = params.get("project",Project.class);
+        	if (!project.isPersistent()) project = null;
+        
+        	if (project == null) {
+	        	Path path = params.get("path",Path.class);
+	        	project = PathService.projectForPath(path);
+        	}
+	        	
         	if (project == null) forbidden();
         	
+        	Set<AccessType> projectAccessSet = PermissionService.getVirtualAccess(u,project);
+        	
 	        for (AccessType a : projectAccess.value()) {
-	        	boolean hasPermission = PermissionService.hasPermission(u, project, a);
+	        	boolean hasPermission = projectAccessSet.contains(a);
 	        	if (!hasPermission) forbidden();
 	        }
         }

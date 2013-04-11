@@ -22,7 +22,9 @@ public enum AccessType {
 	EDITOR("The user is an editor of this entity","paper","project"),
 	
 	PROJECT_SET_TEMPLATE("The user can change the template associated with directories","project"),
-	PROJECT_MANAGE_TEMPLATES("The user can edit templates associated with this project","project");
+	PROJECT_MANAGE_TEMPLATES("The user can edit templates associated with this project","project"),
+	PROJECT_FILE_UPLOAD("The user can upload files to this project","project"),
+	PROJECT_FILE_DELETE("The user can delete files from this project","project");
 	//PROJECT_MANAGE_DIRECTORIES("The user can manage what directories are part of this project","project");
 	
 	public String description;
@@ -39,7 +41,7 @@ public enum AccessType {
 	
 	public static HashMap<AccessType,List<AccessType>> IMPLICATIONS = new HashMap<AccessType,List<AccessType>>();
 	static {
-		IMPLICATIONS.put(OWNER, Arrays.asList(LISTED,VISIBLE,MANAGE_PERMISSIONS,EDITOR,PROJECT_MANAGE_TEMPLATES));
+		IMPLICATIONS.put(OWNER, Arrays.asList(LISTED,VISIBLE,MANAGE_PERMISSIONS,EDITOR,PROJECT_MANAGE_TEMPLATES,PROJECT_FILE_UPLOAD,PROJECT_FILE_DELETE));
 	}
 	
 }

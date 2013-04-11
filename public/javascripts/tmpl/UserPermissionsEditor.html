@@ -15,11 +15,11 @@
 	<% _.each(permissions,function(perm) { %>
 		<tr>
 			<td>
-				<input id="<%= user.email+perm %>" type="checkbox" <%= user.root ? 'disabled' : '' %> name="permission" value="<%= perm %>" <%= userPermissionMap[perm]?"checked":"" %> >
+				<input id="<%= user.email+perm.name %>" type="checkbox" <%= user.root ? 'disabled' : '' %> name="permission" value="<%= perm.name %>" <%= userPermissionMap[perm.name]?"checked":"" %> >
 				</input>
 			</td>
 			<td>
-				<label for="<%= user.email+perm %>">
+				<label for="<%= user.email+perm.name %>">
 					<%= perm.name %> <span class="permission-description"><%= perm.description %></span>
 				</label>
 			</td>

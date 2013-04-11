@@ -1,6 +1,6 @@
 define(
-	['view/RenderedView', 'util/HashHandler', 'util/Util', 'data/Link', 'util/Cache', 'view/TemplateChooser', 'view/ImageBrowserActionBar', 'view/ImageDetails', 'view/FileBrowser', 'view/ImagePreview', 'view/SearchPanel', 'text!tmpl/ImageBrowser.html'],
-	function (RenderedView, HashHandler, Util, Link, Cache, TemplateChooser, ImageBrowserActionBar, ImageDetails, FileBrowser, ImagePreview, SearchPanel, tmpl) {
+	['view/RenderedView', 'util/HashHandler', 'util/Util', 'data/Link', 'util/Cache', 'view/TemplateChooser', 'view/ImageBrowserActionBar', 'view/ImageDetails', 'view/FileBrowser', 'view/ImagePreview', 'view/SearchPanel', 'view/FileUploadModal', 'text!tmpl/ImageBrowser.html'],
+	function (RenderedView, HashHandler, Util, Link, Cache, TemplateChooser, ImageBrowserActionBar, ImageDetails, FileBrowser, ImagePreview, SearchPanel, FileUploadModal, tmpl) {
 		
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
@@ -11,6 +11,11 @@ define(
 				this.dataMode = this.project.dataMode;
 				
 				this.render();
+				
+				console.log(this.access,this.access.PROJECT_FILE_UPLOAD,this.access.PROJECT_FILE_DELETE);
+				if (!(this.access.PROJECT_FILE_UPLOAD || this.access.PROJECT_FILE_DELETE)) {
+					$(".upload-files",this.el).hide();
+				}
 				
 				this.actionBar = Util.createView( $(".actions",this.el), ImageBrowserActionBar, {dataMode: this.dataMode, access:this.access});
 				$(this.actionBar).on("DataModeChanged",Util.debugEvent);
@@ -57,7 +62,18 @@ define(
 				
 				$(".import-data",this.el).click($.proxy(this.importDataClicked,this));
 				
+				$(".upload-files",this.el).click($.proxy(this.uploadFilesClicked,this));
+				
 				this.loadHashPath();
+			},
+			
+			uploadFilesClicked : function(e) {
+				e.preventDefault();
+				if (!this.fileUploadModal) {
+					this.fileUploadModal = new FileUploadModal({project: this.project, access: this.access});
+				}
+				this.fileUploadModal.setPath(this.fileBrowser.path);
+				this.fileUploadModal.show();
 			},
 			
 			importDataClicked : function() {

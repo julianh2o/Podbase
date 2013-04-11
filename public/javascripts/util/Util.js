@@ -2,6 +2,16 @@ define(
 	[],
 	function () {
 		var This = {
+			formatFileSize : function(size) {
+				var sizes = [" bytes","k","mb","gb","tb"]
+				var index = 0;
+				while(size > 1024 && index < sizes.length) {
+					size = size / 1024;
+					index++;
+				}
+				size = Math.round(size);
+				return size + sizes[index];
+			},
 			isPathValid : function(path) {
 				if (!path) return false;
 				return !!path.match(/^\//);

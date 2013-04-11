@@ -93,6 +93,16 @@ public class PathService {
 		return false;
 	}
 	
+	//TODO make this more efficient
+	public static Project projectForPath(Path path) {
+		List<Project> projects = Project.all().fetch();
+		for(Project project : projects) {
+			if (isPathInProject(path,project)) return project;
+		}
+		
+		return null;
+	}
+	
 	public static List<Path> filterImagesAndDirectories(List<Path> in) {
 		List<Path> out = new LinkedList<Path>();
 		for (Path path : in) {
