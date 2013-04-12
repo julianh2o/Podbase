@@ -101,6 +101,8 @@ public class ImageBrowser extends ParentController {
 	
 	@ProjectAccess(AccessType.VISIBLE)
 	public static void resolveFile(Path path, String mode, Project project, Float scale, Integer width, Integer height, Float brightness, Float contrast, Boolean histogram) throws IOException {
+		if (params._contains("download")) response.setHeader("Content-Disposition", "attachment; filename="+path.getFileName());
+		
 		if (!PathService.isImage(path)) {
 			renderBinary(path.toFile());
 			return;
@@ -245,6 +247,12 @@ public class ImageBrowser extends ParentController {
 		} catch (IOException e) {
 			error(e);
 		}
+		ok();
+	}
+	
+	@ProjectAccess(AccessType.PROJECT_FILE_DELETE)
+	public static void createDirectory(Path path) {
+		path.toFile().mkdir();
 		ok();
 	}
 	

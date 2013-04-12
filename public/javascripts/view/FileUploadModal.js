@@ -58,9 +58,9 @@ define(
 				
 				this.render();
 				
-				
 				if (!this.access.PROJECT_FILE_UPLOAD) {
 					$(".file-upload-widget",this.el).hide();
+					$(".new-directory",this.el).hide();
 				} else {
 					var $dropzone = $(".file-upload-widget",this.el);
 				    $('.file-upload',this.el).fileupload({
@@ -80,8 +80,23 @@ define(
 				    $dropzone.bind("dragleave drop",function(e) {
 				    	$dropzone.removeClass("hover");
 				    });
+				    
+					$(".new-directory",this.el).click($.proxy(this.createDirectoryClicked,this));
 				}
-			    
+			},
+			
+			createDirectoryClicked : function() {
+				var name = prompt("Enter a name for the directory");
+				if (name && name != "") {
+					this.createdDirectory = this.path + "/" + name;
+					Link.createDirectory(this.createdDirectory).post().always($.proxy(this.directoryCreated,this));
+				}
+			},
+			
+			directoryCreated : function() {
+				this.setPath(this.createdDirectory);
+				this.createdDirectory = null;
+				this.reloadFiles(true);
 			},
 			
 			uploadComplete : function() {
