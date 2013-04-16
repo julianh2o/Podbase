@@ -54,6 +54,7 @@ public class FileWrapper {
 	public static List<FileWrapper> wrapFiles(Project project, List<Path> paths) {
 		List<FileWrapper> fileWrappers = new LinkedList<FileWrapper>();
 		for (Path path : paths) {
+			if (path.getFileName().startsWith(".")) continue;
 			fileWrappers.add(new FileWrapper(project, path));
 		}
 		
