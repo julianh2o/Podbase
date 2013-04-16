@@ -79,11 +79,6 @@ public class PermissionService {
 	
 	public static Set<PermissionedModel> getModelsForUser(User user, AccessType access) {
 		List<Permission> permissions = Permission.find("byUserAndAccess", user, access).fetch();
-		for (Permission perm : permissions) {
-			System.out.println("model: "+perm.model);
-			System.out.println("access: "+perm.access);
-			System.out.println("user: "+perm.user);
-		}
 		return getModelsFromPermissions(permissions);
 	}
 	
