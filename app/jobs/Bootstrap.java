@@ -69,14 +69,22 @@ public class Bootstrap extends Job {
 	        }
 	        
 	        Project sandbox = Project.find("byName", "GuestSandbox").first();
-	        PermissionService.addPermission(guest, sandbox, AccessType.OWNER);
-	        PermissionService.addPermission(guest, sandbox, AccessType.LISTED);
-	        PermissionService.addPermission(guest, sandbox, AccessType.VISIBLE);
-	        PermissionService.addPermission(guest, sandbox, AccessType.EDITOR);
+	        if (sandbox != null) {
+		        PermissionService.addPermission(guest, sandbox, AccessType.OWNER);
+		        PermissionService.addPermission(guest, sandbox, AccessType.LISTED);
+		        PermissionService.addPermission(guest, sandbox, AccessType.VISIBLE);
+		        PermissionService.addPermission(guest, sandbox, AccessType.EDITOR);
+	        } else {
+	        	System.out.println("Sandbox project not found!");
+	        }
 	        
 	        Project pub = Project.find("byName", "Public").first();
-	        PermissionService.addPermission(guest, pub, AccessType.LISTED);
-	        PermissionService.addPermission(guest, pub, AccessType.VISIBLE);
+	        if (pub != null) {
+		        PermissionService.addPermission(guest, pub, AccessType.LISTED);
+		        PermissionService.addPermission(guest, pub, AccessType.VISIBLE);
+	        } else {
+	        	System.out.println("Public project not found!");
+	        }
     	}
     }
     
