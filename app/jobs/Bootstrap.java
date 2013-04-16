@@ -50,6 +50,7 @@ public class Bootstrap extends Job {
 	        
 	        for (File f : PathService.getRootImageDirectory().toFile().listFiles()) {
 	        	if (f.isDirectory()) {
+		        	System.out.println("Creating project: "+f.getName());
 			        Project project = new Project(f.getName()).save();
 			        
 			        new Permission(c,project,AccessType.OWNER).save();
