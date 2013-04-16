@@ -32,6 +32,10 @@ import models.User;
 public class PermissionService {
 	// Editing permissions
 	public static Permission addPermission(User user, PermissionedModel model, AccessType access) {
+		if (user == null) throw new IllegalArgumentException("User can't be null!");
+		if (model == null) throw new IllegalArgumentException("Model can't be null!");
+		if (access == null) throw new IllegalArgumentException("Access can't be null!");
+		
 		Permission permission = new Permission(user,model,access);
 		permission.save();
 		return permission;
@@ -75,6 +79,11 @@ public class PermissionService {
 	
 	public static Set<PermissionedModel> getModelsForUser(User user, AccessType access) {
 		List<Permission> permissions = Permission.find("byUserAndAccess", user, access).fetch();
+		for (Permission perm : permissions) {
+			System.out.println("model: "+perm.model);
+			System.out.println("access: "+perm.access);
+			System.out.println("user: "+perm.user);
+		}
 		return getModelsFromPermissions(permissions);
 	}
 	
