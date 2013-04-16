@@ -23,12 +23,12 @@ import play.modules.search.Search;
 import play.modules.search.store.FilesystemStore;
 import services.PathService;
 
-@OnApplicationStart
 public class PodbaseMetadataMigration extends Job {
 	public void doJob() throws Exception {
 		((FilesystemStore)Search.getCurrentStore()).sync = false;
 		
 		File f = new File("./migrate/data.yaml");
+		if (!f.exists()) return;
 		
 		List<Entry> entries = parseFile(f);
 		Project project = null; //Project.findById(new Long(1));
