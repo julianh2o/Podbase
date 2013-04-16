@@ -1,6 +1,6 @@
 <div class="user-panel-links">
 	<% if (user.email != "guest") { %>
-		Logged in as <%= user.email %> <a href="@{Secure.logout('/')}">Log out</a>
+		Logged in as <%= user.email %> <a href="@{Secure.logout()}">Log out</a>
 		<div>
 			<a href="#" class="show-change-password">Change password</a>
 		</div>
