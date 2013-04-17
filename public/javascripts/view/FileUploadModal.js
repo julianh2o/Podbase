@@ -1,6 +1,6 @@
 define(
-	['view/RenderedView', 'util/HashHandler', 'data/Link', 'util/Util', 'text!tmpl/FileUploadModal.html', 'text!tmpl/FileUploadModalFiles.html'],
-	function (RenderedView, HashHandler, Link, Util, tmpl, tmpl_files) {
+	['view/RenderedView', 'util/HashHandler', 'data/Link', 'util/Util', 'util/Messages', 'text!tmpl/FileUploadModal.html', 'text!tmpl/FileUploadModalFiles.html'],
+	function (RenderedView, HashHandler, Link, Util, Messages, tmpl, tmpl_files) {
 		
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
@@ -47,7 +47,7 @@ define(
 				var yes = confirm("Are you sure you want to delete this file?\n"+path);
 				
 				if (yes) {
-					Link.deleteFile(path).post().always($.proxy(this.uploadComplete,this));
+					Link.deleteFile(path).post().always($.proxy(this.fileDeleted,this));
 				}
 			},
 			
@@ -71,6 +71,8 @@ define(
 				        	data.submit();
 				        },
 				        complete: $.proxy(this.uploadComplete,this)
+				    }).on("fileuploadprogress",function(e,data) {
+				    	console.log("progress",data.loaded,data.total);
 				    });
 				    
 				    $dropzone.bind("dragover",function(e) {
@@ -96,10 +98,17 @@ define(
 			directoryCreated : function() {
 				this.setPath(this.createdDirectory);
 				this.createdDirectory = null;
+				Messages.success("Directory created!");
+				this.reloadFiles(true);
+			},
+			
+			fileDeleted : function() {
+				Messages.success("File deleted!");
 				this.reloadFiles(true);
 			},
 			
 			uploadComplete : function() {
+				Messages.success("File upload complete!");
 				this.reloadFiles(true);
 			},
 			

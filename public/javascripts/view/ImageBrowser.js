@@ -16,6 +16,7 @@ define(
 					$(".upload-files",this.el).hide();
 				}
 				
+				
 				this.actionBar = Util.createView( $(".actions",this.el), ImageBrowserActionBar, {dataMode: this.dataMode, access:this.access});
 				$(this.actionBar).on("DataModeChanged",Util.debugEvent);
 				$(this.actionBar).on("DataModeChanged",$.proxy(this.dataModeChanged,this));

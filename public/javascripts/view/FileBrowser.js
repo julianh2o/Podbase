@@ -139,8 +139,7 @@ define(
 			},
 
 			getSelectedPath : function() {
-				if (!this.selectedFiles || !this.selectedFiles.length) return this.path;
-				if (this.selectedFiles.length > 1) return Util.appendPaths(this.path,"/");
+				if (!this.selectedFiles || !this.selectedFiles.length || this.selectedFiles.length > 1) return Util.appendPaths(this.path,"/");
 				
 				return this.selectedFiles[0].path;
 			},
