@@ -1,11 +1,22 @@
-To complete your activation, please choose a new password:
+<html>
+	<head>
+		<title>User Activation - Podbase</title>
+	</head>
 
-<form action="@{UserController.completeActivation}" method=POST>
-	<input type="hidden" name="user.id" value="${user.id}" />
-	<input type="hidden" name="activationCode" value="${activation.activationCode}" />
-	New Password: <input type="password" name="password" />
-	<br/>
-	Confirm Password: <input type="password" name="confirm" />
-	<br/>
-	<input type="submit" />
-</form>
+	<body>
+	
+		To complete your activation, please choose a new password:
+		
+		<form action="@{UserController.completeActivation}" method=POST>
+			<input type="hidden" name="user.id" value="${user.id}" />
+			<input type="hidden" name="activationCode" value="${activation.activationCode}" />
+			New Password: <input type="password" name="password" />
+			<br/>
+			Confirm Password: <input type="password" name="confirm" />
+			<br/>
+			<input type="submit" />
+		</form>
+	
+	</body>
+
+</html>

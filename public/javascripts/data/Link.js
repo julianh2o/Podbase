@@ -100,12 +100,12 @@ define(['data/Loader'],function(Loader) {
 		this.paper = new Loader("@{Application.paper}?paperId={paperId}");
 		this.loadJavascript = new Loader("@{Application.loadJavascript}?path={path}");
 		this.getCurrentUser = new Loader("@{Application.getCurrentUser}");
+		this.migrateData = new Loader("@{Application.migrateData}");
 		
 		
 		// ############################################
 		// SearchController.java
 		// ############################################
-		this.index = new Loader("@{SearchController.index}?query={query}");
 		this.doSearch = new Loader("@{SearchController.doSearch}?project.id={projectId}&query={query}");
 		
 		

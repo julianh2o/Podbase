@@ -20,11 +20,6 @@ import models.User;
 
 @With(Security.class)
 public class SearchController extends ParentController {
-    public static void index(String query) throws Exception {
-    	Set<DatabaseImage> results = SearchService.performSimpleSearch(query);
-    	render(results);
-    }
-    
     public static void doSearch(Project project, String query) throws Exception {
     	Set<DatabaseImage> results = SearchService.performSimpleSearch(query);
     	results = filterSearchResults(project, results);
