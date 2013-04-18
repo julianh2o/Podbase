@@ -20,6 +20,7 @@ public enum AccessType {
 	OWNER("The user is considered an owner of this entity","paper","project"),
 	MANAGE_PERMISSIONS("The user is allowed to manage permissions for this entity","paper","project"),
 	EDITOR("The user is an editor of this entity","paper","project"),
+	DATA_EDITOR("The user is an data editor of this entity","paper","project"),
 	
 	PROJECT_SET_TEMPLATE("The user can change the template associated with directories","project"),
 	PROJECT_MANAGE_TEMPLATES("The user can edit templates associated with this project","project"),

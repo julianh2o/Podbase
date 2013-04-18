@@ -89,7 +89,7 @@ define(
 			},
 			
 			handleValueBlur : function(arg) {
-				var $el = arg.target ? $(event.target).closest(".value") : arg;
+				var $el = arg.target ? $(arg.target).closest(".value") : arg;
 				
 				var value = $("textarea",this.el).val();
 				var oldValue = $el.data("value");
@@ -103,10 +103,14 @@ define(
 				var attribute = this.attributesById[id];
 				
 				if (id) {
-					Link.updateImageAttribute(id,value,this.dataMode).post(link.pull);
+					Link.updateImageAttribute(id,value,this.dataMode).post().always($.proxy(this.updateAttributeComplete,this));
 				} else {
-					Link.createAttribute(this.projectId,this.path,this.attributeName,value,this.dataMode).post(link.pull);
+					Link.createAttribute(this.projectId,this.path,this.attributeName,value,this.dataMode).post().always($.proxy(this.updateAttributeComplete,this));
 				}
+			},
+			
+			updateAttributeComplete : function() {
+				this.link.pull();
 			}
 		});
 		

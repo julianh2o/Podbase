@@ -9,6 +9,8 @@ import access.AccessType;
 
 import javax.persistence.Query;
 
+import jobs.PodbaseMetadataMigration;
+
 import models.*;
 
 @With(Security.class)
@@ -37,5 +39,10 @@ public class Application extends ParentController {
 	public static void getCurrentUser() {
 		User user = Security.getUser();
 		renderJSON(user);
+	}
+	
+	public static void migrateData() {
+		new PodbaseMetadataMigration().now();
+		renderText("Metadata migration begun.");
 	}
 }

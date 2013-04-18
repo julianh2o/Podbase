@@ -10,12 +10,13 @@ define(
 				this.access = this.options.access;
 				this.dataMode = this.project.dataMode;
 				
+				this.dataMode = this.dataMode && this.access["DATA_EDITOR"] !== undefined;
+				
 				this.render();
 				
 				if (!(this.access.PROJECT_FILE_UPLOAD || this.access.PROJECT_FILE_DELETE)) {
 					$(".upload-files",this.el).hide();
 				}
-				
 				
 				this.actionBar = Util.createView( $(".actions",this.el), ImageBrowserActionBar, {dataMode: this.dataMode, access:this.access});
 				$(this.actionBar).on("DataModeChanged",Util.debugEvent);

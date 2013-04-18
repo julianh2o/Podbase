@@ -36,7 +36,7 @@ define(
 				}
 				
 				this.link = Link.fetchInfo({projectId:this.project.id,path:this.file.path,dataMode:this.dataMode});
-				this.link.invalidate().loadOnce( $.proxy(this.imageDetailsLoaded,this));
+				this.link.invalidate().asap( $.proxy(this.imageDetailsLoaded,this));
 			},
 			
 			setFile : function(file) {

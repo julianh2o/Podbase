@@ -182,8 +182,13 @@ public class ImageBrowser extends ParentController {
 	    renderJSON(attributes);  
 	}
 	
-	@ProjectAccess(AccessType.EDITOR)
+	//TODO Access control is done in the method.. maybe this could be enhanced?
 	public static void updateImageAttribute(ImageAttribute attribute, String value, boolean dataMode) {
+		User user = Security.getUser();
+		
+		if (!PermissionService.hasPermission(user,attribute.project,AccessType.EDITOR)) forbidden();
+		if (dataMode && !PermissionService.hasPermission(user,attribute.project,AccessType.DATA_EDITOR)) forbidden();
+		
 		if (attribute.value == value) return;
 		
 		if (dataMode != attribute.data) {

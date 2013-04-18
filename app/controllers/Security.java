@@ -41,7 +41,7 @@ public class Security extends Secure.Security {
         
         	if (project == null) {
 	        	Path path = params.get("path",Path.class);
-	        	project = PathService.projectForPath(path);
+	        	if (path != null) project = PathService.projectForPath(path);
         	}
 	        	
         	if (project == null) forbidden();
@@ -67,7 +67,6 @@ public class Security extends Secure.Security {
         	
         	if (paper == null) forbidden();
 	        for (AccessType a : paperAccess.value()) {
-	        	System.out.println("Checking access: "+a);
 	        	boolean hasPermission = PermissionService.hasPermission(u, paper, a);
 	        	if (!hasPermission) forbidden();
 	        }

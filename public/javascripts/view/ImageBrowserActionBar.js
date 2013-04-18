@@ -11,15 +11,21 @@ define(
 				this.model = {access:this.access};
 				this.render();
 				
-				this.dataMode = true;
-				if (this.options.dataMode != undefined) this.dataMode = this.options.dataMode
+				this.dataMode = this.options.dataMode
 				
 				
-				this.doDataModeSelection();
-				if (!this.access["EDITOR"]) {
+				if (this.dataMode === undefined || !(this.access["EDITOR"] || this.access["DATA_EDITOR"])) {
+					$(".data-mode",this.el).hide();
+				} else if (!this.access["DATA_EDITOR"]){
 					$(".data-mode li",this.el).addClass("disabled");
+					
+					$(".data-mode a",this.el).click(function(e) {e.preventDefault();});
+					
+					this.doDataModeSelection();
 				} else {
 					$(".data-mode a",this.el).click($.proxy(this.dataModeClicked,this));
+					
+					this.doDataModeSelection();
 				}
 			},
 			
