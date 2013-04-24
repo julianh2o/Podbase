@@ -1,15 +1,18 @@
 package controllers;
 
 import play.*;
+import play.cache.Cache;
 import play.db.jpa.JPA;
 import play.mvc.*;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import access.AccessType;
 
 import javax.persistence.Query;
 
 import jobs.PodbaseMetadataMigration;
+import jobs.PodbaseMetadataMigration2;
 
 import models.*;
 
@@ -42,7 +45,14 @@ public class Application extends ParentController {
 	}
 	
 	public static void migrateData() {
-		new PodbaseMetadataMigration().now();
-		renderText("Metadata migration begun.");
+		String progressKey = new PodbaseMetadataMigration2().getMonitorKey();
+		Float migrationProgress = Cache.get(progressKey,Float.class);
+		if (migrationProgress == null) {
+			new PodbaseMetadataMigration2().now();
+			renderText("Metadata migration begun..");
+		} else {
+			DecimalFormat df = new DecimalFormat("#.##");
+			renderText("Progress: "+df.format(migrationProgress*100)+"%");
+		}
 	}
 }

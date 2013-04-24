@@ -17,13 +17,14 @@ import org.apache.commons.lang.CharSet;
 import org.yaml.snakeyaml.Yaml;
 
 import play.Play;
+import play.cache.Cache;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import play.modules.search.Search;
 import play.modules.search.store.FilesystemStore;
 import services.PathService;
 
-public class PodbaseMetadataMigration extends Job {
+public class PodbaseMetadataMigration extends MonitoredJob {
 	public void doJob() throws Exception {
 		((FilesystemStore)Search.getCurrentStore()).sync = false;
 		
@@ -42,8 +43,10 @@ public class PodbaseMetadataMigration extends Job {
 				image.addAttribute(project, key,entry.data.get(key), true);
 			}
 			
+			setProgress(i, entries.size());
 			
-			if ("dev".equals(Play.configuration.get("application.mode")) && i++ > 5) return; //cut off after 5 in dev mode
+			i++;
+			//if ("dev".equals(Play.configuration.get("application.mode")) && i > 5) return; //cut off after 5 in dev mode
 		}
 		
 		((FilesystemStore)Search.getCurrentStore()).sync = true;
