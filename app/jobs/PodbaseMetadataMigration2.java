@@ -1,8 +1,12 @@
 package jobs;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -28,51 +32,64 @@ public class PodbaseMetadataMigration2 extends MonitoredJob {
 	public void doJob() throws Exception {
 		((FilesystemStore)Search.getCurrentStore()).sync = false;
 		
-		File f = new File("./migrate/tagdump.csv");
-		if (!f.exists()) return;
+		List<TagEntry> tags = dataFromFile("./migrate/tags.data",TagEntry.class);
+		printEntries(tags);
 		
-		List<Entry> entries = parseFile(f);
-		Project project = null;
+		List<ProjectEntry> projects = dataFromFile("./migrate/projects.data",ProjectEntry.class);
+		printEntries(projects);
 		
-		int i=0;
-		System.out.println("Read "+entries.size()+" entries!");
-		for(Entry entry : entries) {
-			//if (Play.id.equals("dev")) System.out.println("Importing metadata: "+entry.path);
+		List<TemplateEntry> templates = dataFromFile("./migrate/templates.data",TemplateEntry.class);
+		printEntries(templates);
+		
+		List<TemplateFieldEntry> templatefields = dataFromFile("./migrate/template_fields.data",TemplateFieldEntry.class);
+		printEntries(templatefields);
+		
+//		int i=0;
+//		for(AbstractEntry entry : entries) {
+//			System.out.println(entry.toString());
+//			setProgress(i, entries.size());
 			
-			//System.out.println("Entry: "+entry.toString());
-			
-			//DatabaseImage image = DatabaseImage.forPath(PathService.resolve("/"+entry.path));
-			//for(String key : entry.data.keySet()) {
-				//image.addAttribute(project, key,entry.data.get(key), true);
-			//}
-			
-			setProgress(i, entries.size());
-			
-			i++;
-			//if ("dev".equals(Play.configuration.get("application.mode")) && i > 5) return; //cut off after 5 in dev mode
-		}
+//			i++;
+//		}
 		
 		((FilesystemStore)Search.getCurrentStore()).sync = true;
 	}
 	
-	public List<Entry> parseFile(File f) throws IOException {
+	public void printEntries(List<? extends AbstractEntry> entries) {
+		System.out.println("Printing "+entries.size()+" entries!");
+		for(AbstractEntry entry : entries) {
+			System.out.println(entry.toString());
+		}
+	}
+	
+	public <T extends AbstractEntry> List<T> dataFromFile(String path, Class<T> klass) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, SecurityException, IOException {
+		File f = new File(path);
+		if (!f.exists()) throw new FileNotFoundException(path);
+		
+		List<T> entries = parseFile(f, klass);
+		return entries;
+	}
+	
+	public <T extends AbstractEntry> List<T> parseFile(File f, Class<T> klass) throws IOException, InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, SecurityException {
 		String fileContents = FileUtils.readFileToString(f);
 		fileContents = fixFileContents(fileContents);
 		
-		List<Entry> entries = new LinkedList<Entry>();
+		List<T> entries = new LinkedList<T>();
 		int i = 0;
-		for (String line : fileContents.split("\n")) {
+		for (String line : fileContents.split("\0\0")) {
 			i++;
 			if (line.trim().length() == 0) continue;
 			if (line.contains("Fatal error")) {
 				System.out.println("Found 'Fatal Error' in line: "+i);
 			}
 			try {
-				Entry entry = new Entry(line);
+				T entry = klass.getConstructor(PodbaseMetadataMigration2.class, String.class).newInstance(PodbaseMetadataMigration2.this,line);
 				entries.add(entry);
 			} catch (IllegalArgumentException e) {
 				System.out.println("Illegal entry on line: "+i);
 			}
+			
+			if (i > 5) return entries; //TODO remove me
 		}
 		
 		return entries;
@@ -82,37 +99,106 @@ public class PodbaseMetadataMigration2 extends MonitoredJob {
 		return new String(contents.getBytes("US-ASCII"));
 	}
 	
-	private class Entry {
-		int projectId;
-		String tagtype;
-		String path;
-		
-		String key;
-		String value;
-		
-		public Entry(String line) {
-			String[] fields = line.split("\\|");
-			if (fields.length != 4) {
-				throw new IllegalArgumentException("Expected 4 fields! Found "+fields.length);
+	private abstract class AbstractEntry {
+		protected String[] getFields() {
+			Field[] fields = this.getClass().getFields();
+			String[] stringFields = new String[fields.length];
+			
+			for(int i=0; i<fields.length; i++) {
+				stringFields[i] = fields[i].getName();
 			}
 			
-			this.projectId = Integer.parseInt(fields[0]);
-			this.tagtype = fields[1];
-			this.path = fields[2];
-			String rawValue = fields[3];
+			return stringFields;
+		}
+		
+		public AbstractEntry(String line) {
+			setFields(line);
+		}
+		
+		public void setFields(String line) {
+			String[] fields = getFields();
+			String[] lineFields = line.split("\0");
 			
-			String[] valueSplit = rawValue.split(":");
-			if (valueSplit.length == 2) {
-				this.key = valueSplit[0];
-				this.value = valueSplit[1];
-			} else {
-				this.key = "tag";
-				this.value = rawValue;
+			if (fields.length != lineFields.length) throw new IllegalArgumentException("Length mismatch: "+fields.length + " vs " + lineFields.length); 
+			
+			for(int i=0; i< fields.length; i++) {
+				setAttribute(fields[i],lineFields[i]);
+			}
+		}
+		
+		private void setAttribute(String attribute, String value)  {
+			try {
+				Field field = this.getClass().getField(attribute);
+				if (field.getType() == Integer.TYPE) {
+					field.setInt(this, Integer.parseInt(value));
+				} else if (field.getType() == Boolean.class){
+					field.setBoolean(this, Boolean.parseBoolean(value));
+				} else if (field.getType() == String.class){
+					field.set(this, value);
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e);
 			}
 		}
 		
 		public String toString() {
-			return projectId+", "+tagtype+", "+path+", "+key+", "+value;
+			String out = "";
+			String[] fields = getFields();
+			for (String fieldName : fields) {
+				try {
+					if (out != "") out += ", ";
+					Field field = this.getClass().getField(fieldName);
+					String value = field.get(this).toString();
+					
+					out += fieldName +" = " + value;
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			return "["+this.getClass().getSimpleName()+": "+out+"]";
+		}
+	}
+	
+	public class TagEntry extends AbstractEntry {
+		public int projectId;
+		public String tagtype;
+		public String path;
+		public String tagContents;
+		
+		public TagEntry(String line) {
+			super(line);
+		}
+	}
+	
+	public class ProjectEntry extends AbstractEntry {
+		public int projectId;
+		public String name;
+		
+		public ProjectEntry(String line) {
+			super(line);
+		}
+	}
+	
+	public class TemplateEntry extends AbstractEntry {
+		public int templateId;
+		public int projectId;
+		public String name;
+		
+		public TemplateEntry(String line) {
+			super(line);
+		}
+	}
+	
+	public class TemplateFieldEntry extends AbstractEntry {
+		public int templateId;
+		public int ordering;
+		public boolean show;
+		public String name;
+		public String description;
+		
+		public TemplateFieldEntry(String line) {
+			super(line);
 		}
 	}
 }
