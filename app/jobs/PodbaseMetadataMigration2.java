@@ -15,6 +15,7 @@ import java.util.List;
 
 import models.DatabaseImage;
 import models.Project;
+import models.Template;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.CharSet;
@@ -22,6 +23,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import play.Play;
 import play.cache.Cache;
+import play.exceptions.JavaExecutionException;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import play.modules.search.Search;
@@ -29,30 +31,120 @@ import play.modules.search.store.FilesystemStore;
 import services.PathService;
 
 public class PodbaseMetadataMigration2 extends MonitoredJob {
+	ProgressCounter pc;
+	
 	public void doJob() throws Exception {
 		((FilesystemStore)Search.getCurrentStore()).sync = false;
 		
-		List<TagEntry> tags = dataFromFile("./migrate/tags.data",TagEntry.class);
-		printEntries(tags);
-		
 		List<ProjectEntry> projects = dataFromFile("./migrate/projects.data",ProjectEntry.class);
-		printEntries(projects);
+		HashMap<Integer,String> projectMap = parseProjectMap(projects);
+		
+		List<TagEntry> tags = dataFromFile("./migrate/tags.data",TagEntry.class);
 		
 		List<TemplateEntry> templates = dataFromFile("./migrate/templates.data",TemplateEntry.class);
-		printEntries(templates);
+		List<TemplateFieldEntry> templateFields = dataFromFile("./migrate/template_fields.data",TemplateFieldEntry.class);
 		
-		List<TemplateFieldEntry> templatefields = dataFromFile("./migrate/template_fields.data",TemplateFieldEntry.class);
-		printEntries(templatefields);
+		int entryCount = tags.size() + templates.size() + templateFields.size();
+		pc = new ProgressCounter(entryCount);
 		
-//		int i=0;
-//		for(AbstractEntry entry : entries) {
-//			System.out.println(entry.toString());
-//			setProgress(i, entries.size());
+		importTemplates(projectMap, templates,templateFields);
+		
+		for (TagEntry tag : tags) {
+			pc.inc();
+			String projectName = projectMap.get(tag.projectId);
+			Project project = Project.get(projectName);
+			if (project == null) {
+				System.out.println("No project found! : "+projectName);
+				continue;
+			}
 			
-//			i++;
-//		}
+			String key = "tags";
+			String value = tag.tagContents;
+			
+			if (value.contains(":")) {
+				String[] split = value.split(":",2);
+				key = split[0];
+				value = split[1];
+			}
+			
+			try {
+				DatabaseImage image = DatabaseImage.forPath(PathService.fixCaseResolve(tag.path));
+				image.addAttribute(project, key, value, true);
+			} catch (FileNotFoundException fnf) {
+				System.out.println("!! "+fnf.getMessage());
+			}
+		}
 		
+//		printEntries(tags);
+//		printEntries(templates);
+//		printEntries(templateFields);
 		((FilesystemStore)Search.getCurrentStore()).sync = true;
+	}
+	
+	class ProgressCounter {
+		int current;
+		int total;
+		
+		public ProgressCounter(int total) {
+			this.total = total;
+		}
+		
+		public void inc() {
+			current++;
+			setProgress(current, total);
+		}
+	}
+	
+	private void importTemplates(HashMap<Integer,String> projectMap, List<TemplateEntry> templates, List<TemplateFieldEntry> templateFields) {
+		HashMap<Integer,Template> map = new HashMap<Integer,Template>();
+		for (TemplateEntry template : templates) {
+			pc.inc();
+			String projectName = projectMap.get(template.projectId);
+			Project project = Project.get(projectName);
+			if (project == null) {
+				System.out.println("No project found! : "+project);
+				continue;
+			}
+			
+			Template newTemplate = null;
+			newTemplate = Template.find("byName", template.name).first();
+			
+			if (newTemplate != null) {
+				newTemplate.delete();
+			}
+			
+			newTemplate = new Template(project,template.name);
+			newTemplate.save();
+			
+			map.put(template.templateId, newTemplate);
+		}
+		
+		for (TemplateFieldEntry field : templateFields) {
+			pc.inc();
+			Template template = map.get(field.templateId);
+			if (template == null) {
+				System.out.println("Template is null! "+field.templateId);
+				continue;
+			}
+			template.addAttribute(field.name, field.description, !field.show);
+		}
+	}
+	
+	public static void print(Object...objects) {
+		String out = "";
+		for (Object o : objects) {
+			if (out.length() > 0) out += " ";
+			out += o == null ? null : o.toString();
+		}
+		System.out.println(out);
+	}
+
+	public HashMap<Integer,String> parseProjectMap(List<ProjectEntry> entries) {
+		HashMap<Integer,String> projectMap = new HashMap<Integer,String>();
+		for(ProjectEntry entry : entries) {
+			projectMap.put(entry.projectId, entry.name);
+		}
+		return projectMap;
 	}
 	
 	public void printEntries(List<? extends AbstractEntry> entries) {
@@ -85,11 +177,9 @@ public class PodbaseMetadataMigration2 extends MonitoredJob {
 			try {
 				T entry = klass.getConstructor(PodbaseMetadataMigration2.class, String.class).newInstance(PodbaseMetadataMigration2.this,line);
 				entries.add(entry);
-			} catch (IllegalArgumentException e) {
+			} catch (Exception e) {
 				System.out.println("Illegal entry on line: "+i);
 			}
-			
-			if (i > 5) return entries; //TODO remove me
 		}
 		
 		return entries;

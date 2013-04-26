@@ -38,7 +38,31 @@ public class PathService {
 	
 	public static Path resolve(String rel) {
 		assertPath(rel);
-		return getRootImageDirectory().resolve("./"+rel).normalize();
+		return getRootImageDirectory().resolve("."+rel).normalize();
+	}
+	
+	public static Path fixCaseResolve(String rel) throws FileNotFoundException {
+		return fixCaseResolve(getRootImageDirectory(),rel);
+	}
+	
+	public static Path fixCaseResolve(Path base, String rel) throws FileNotFoundException {
+		if (rel.startsWith("/")) rel = rel.substring(1);
+		
+		String[] split = rel.split("/",2);
+		String folderName = split[0];
+		Path found = null;
+		
+		for (Path path : listPaths(base)) {
+			if (path.getFileName().toString().equalsIgnoreCase(folderName)) {
+				found = path;
+			}
+		}
+		
+		if (found == null) throw new FileNotFoundException("File not found: "+rel);
+		
+		if (split.length == 1) return found;
+		
+		return fixCaseResolve(found,split[1]);
 	}
 	
 	public static Path getRelativePath(Path path) {
