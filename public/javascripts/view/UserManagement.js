@@ -9,12 +9,17 @@ define(
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
 
-			initialize: function() {
+			initialize: function(opt) {
+				this.access = opt.access;
 				Link.getAllUsers().asap($.proxy(this.refresh,this));
 			},
 			
 			refresh : function() {
 				this.render();
+				
+				if (!Util.permits(this.access,"CREATE_USERS")) {
+					$(".add",this.el).hide();
+				}
 				
 				this.users = Link.getAllUsers().getData();
 				this.userList = Util.createView( $(".userlist",this.el), UserList, {users:this.users});

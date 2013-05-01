@@ -6,7 +6,7 @@ import java.util.Set;
 
 import access.Access;
 import access.AccessType;
-import access.ProjectAccess;
+import access.ModelAccess;
 
 import play.mvc.Util;
 import play.mvc.With;
@@ -25,7 +25,7 @@ public class ProjectController extends ParentController {
     	renderJSON(projects);
     }
     
-    @ProjectAccess(AccessType.VISIBLE)
+    @ModelAccess(AccessType.VISIBLE)
     public static void getProject(Project project) {
     	renderJSON(project);
     }
@@ -36,7 +36,7 @@ public class ProjectController extends ParentController {
     	ok();
     }
     
-    @ProjectAccess(AccessType.EDITOR)
+    @ModelAccess(AccessType.EDITOR)
     public static void setDataMode(Project project, boolean dataMode) {
     	project.dataMode = dataMode;
     	ok();

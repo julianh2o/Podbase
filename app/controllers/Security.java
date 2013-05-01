@@ -7,7 +7,7 @@ import java.util.Set;
 import access.Access;
 import access.AccessType;
 import access.PaperAccess;
-import access.ProjectAccess;
+import access.ModelAccess;
 
 import play.mvc.Before;
 import play.mvc.Util;
@@ -16,6 +16,8 @@ import services.PermissionService;
 
 import models.ImageSet;
 import models.Paper;
+import models.PermissionedModel;
+import models.Podbase;
 import models.Project;
 import models.User;
  
@@ -29,24 +31,27 @@ public class Security extends Secure.Security {
         Access access = getActionAnnotation(Access.class);
         if (access != null) {
 	        for (AccessType a : access.value()) {
-	        	boolean hasPermission = PermissionService.hasPermission(u, null, a);
+	        	boolean hasPermission = PermissionService.hasPermission(u,Podbase.getInstance(), a);
 	        	if (!hasPermission) forbidden();
 	        }
         }
         
-        ProjectAccess projectAccess = getActionAnnotation(ProjectAccess.class);
+        ModelAccess projectAccess = getActionAnnotation(ModelAccess.class);
         if (projectAccess != null) {
-        	Project project = params.get("project",Project.class);
-        	if (!project.isPersistent()) project = null;
+        	PermissionedModel model = params.get("project",PermissionedModel.class);
+        	if (model != null && !model.isPersistent()) model = null;
+        	
+        	model = params.get("model",PermissionedModel.class);
+        	if (model != null && !model.isPersistent()) model = null;
         
-        	if (project == null) {
+        	if (model == null) {
 	        	Path path = params.get("path",Path.class);
-	        	if (path != null) project = PathService.projectForPath(path);
+	        	if (path != null) model = PathService.projectForPath(path);
         	}
 	        	
-        	if (project == null) forbidden();
+        	if (model == null) forbidden();
         	
-        	Set<AccessType> projectAccessSet = PermissionService.getVirtualAccess(u,project);
+        	Set<AccessType> projectAccessSet = PermissionService.getVirtualAccess(u,model);
         	
 	        for (AccessType a : projectAccess.value()) {
 	        	boolean hasPermission = projectAccessSet.contains(a);

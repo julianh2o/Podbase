@@ -13,12 +13,12 @@ public enum AccessType {
 	CREATE_PROJECT("Allows user to create new projects","user"),
 	DELETE_PROJECT("Allows user to delete projects","user"),
 	CREATE_PAPER("Allows user to create papers","user"),
-	MANAGE_USERS("Allows user to access the user management dashboard","user"),
+	CREATE_USERS("Allows user to create users","user"),
 	
 	LISTED("The user has been associated with the entity in question","paper","project"),
 	VISIBLE("The user can see this entity in lists","paper","project"),
 	OWNER("The user is considered an owner of this entity","paper","project"),
-	MANAGE_PERMISSIONS("The user is allowed to manage permissions for this entity","paper","project"),
+	MANAGE_PERMISSIONS("The user is allowed to manage permissions for this entity","paper","project","user"),
 	EDITOR("The user is an editor of this entity","paper","project"),
 	DATA_EDITOR("The user is an data editor of this entity","paper","project"),
 	

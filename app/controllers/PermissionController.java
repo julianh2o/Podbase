@@ -16,7 +16,9 @@ import org.apache.commons.lang.RandomStringUtils;
 
 import controllers.ParentController;
 
+import access.Access;
 import access.AccessType;
+import access.ModelAccess;
 
 import play.mvc.Util;
 import play.mvc.With;
@@ -32,6 +34,7 @@ import models.User;
 
 @With(Security.class)
 public class PermissionController extends ParentController {
+	@ModelAccess(AccessType.MANAGE_PERMISSIONS)
     public static void setPermission(PermissionedModel model, User user, String permission, boolean value) {
     	AccessType access = AccessType.valueOf(permission);
     	
@@ -39,6 +42,7 @@ public class PermissionController extends ParentController {
     	ok();
     }
     
+	@Access(AccessType.MANAGE_PERMISSIONS)
     public static void setUserPermission(User user, String permission, boolean value) {
     	AccessType access = AccessType.valueOf(permission);
     	
@@ -68,6 +72,7 @@ public class PermissionController extends ParentController {
     	renderJSON(getAccessForUser(model,user));
     }
     
+    @ModelAccess(AccessType.OWNER)
     public static void addUserByEmail(PermissionedModel model, String email) {
     	User user = User.find("byEmail", email).first();
     	if (user == null) error("User not found");
@@ -78,6 +83,7 @@ public class PermissionController extends ParentController {
     	ok();
     }
     
+    @ModelAccess(AccessType.OWNER)
     public static void removeUser(PermissionedModel model, User user) {
     	List<Permission> permissions = PermissionService.getPermissions(user, model);
     	for(Permission perm : permissions) {

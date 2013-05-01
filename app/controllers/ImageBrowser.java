@@ -40,7 +40,7 @@ import org.apache.commons.io.FileUtils;
 
 import access.Access;
 import access.AccessType;
-import access.ProjectAccess;
+import access.ModelAccess;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -60,7 +60,7 @@ public class ImageBrowser extends ParentController {
 		render();
 	}
 	
-	@ProjectAccess(AccessType.VISIBLE)
+	@ModelAccess(AccessType.VISIBLE)
 	public static void fetchProjectPath(Project project, Path path) throws FileNotFoundException {
 		List<Path> paths = PathService.listPaths(path);
 		
@@ -71,12 +71,12 @@ public class ImageBrowser extends ParentController {
 		renderJSON(wrappedFiles);
 	}
 	
-	@ProjectAccess(AccessType.EDITOR)
+	@ModelAccess(AccessType.EDITOR)
 	public static void setVisible(Project project, DatabaseImage image, boolean visible) {
 		ProjectVisibleImage.setVisible(project,image,visible);
 	}
 	
-	@ProjectAccess(AccessType.EDITOR)
+	@ModelAccess(AccessType.EDITOR)
 	public static void setMultipleVisible(Project project, String ids, boolean visible) {
 		for (String id : ids.split(",")) {
 			long longid = Long.parseLong(id);
@@ -99,7 +99,7 @@ public class ImageBrowser extends ParentController {
 		}
 	}
 	
-	@ProjectAccess(AccessType.VISIBLE)
+	@ModelAccess(AccessType.VISIBLE)
 	public static void resolveFile(Path path, String mode, Project project, Float scale, Integer width, Integer height, Float brightness, Float contrast, Boolean histogram) throws IOException {
 		if (params._contains("download")) response.setHeader("Content-Disposition", "attachment; filename="+path.getFileName());
 		
@@ -138,7 +138,7 @@ public class ImageBrowser extends ParentController {
 		renderImage(image);
 	}
 	
-	@ProjectAccess(AccessType.VISIBLE)
+	@ModelAccess(AccessType.VISIBLE)
 	public static void fetchInfo(Project project, Path path, boolean dataMode) {
 		//TODO fix this by using inherited template assignments
 		TemplateAssignment assignment = TemplateController.templateForPath(project, path);
@@ -210,7 +210,7 @@ public class ImageBrowser extends ParentController {
 		renderJSON(attribute);
 	}
 	
-	@ProjectAccess(AccessType.EDITOR)
+	@ModelAccess(AccessType.EDITOR)
 	public static void deleteImageAttribute(ImageAttribute attribute) {
 		attribute.delete();
 		
@@ -219,7 +219,7 @@ public class ImageBrowser extends ParentController {
 		ok();
 	}
 	
-	@ProjectAccess(AccessType.EDITOR)
+	@ModelAccess(AccessType.EDITOR)
 	public static void createAttribute(Project project, Path path, String attribute, String value, boolean dataMode) {
 		DatabaseImage image = DatabaseImage.forPath(path);
 		ImageAttribute attr = image.addAttribute(project, attribute, value, dataMode);
@@ -229,22 +229,22 @@ public class ImageBrowser extends ParentController {
 		renderJSON(attr);
 	}
 	
-	@ProjectAccess(AccessType.OWNER)
+	@ModelAccess(AccessType.OWNER)
 	public static void importFromFile(Project project, Path path) throws IOException {
 		ImportExportService.importData(project, path);
 	}
 	
-	@ProjectAccess(AccessType.VISIBLE)
+	@ModelAccess(AccessType.VISIBLE)
 	public static void findImportables(Path path) {
 		renderJSON(ImportExportService.findImportables(path));
 	}
 	
-	@ProjectAccess(AccessType.OWNER)
+	@ModelAccess(AccessType.OWNER)
 	public static void importDirectory(Project project, Path path) throws IOException {
 		ImportExportService.importDirectoryRecursive(project, path);
 	}
 	
-	@ProjectAccess(AccessType.PROJECT_FILE_UPLOAD)
+	@ModelAccess(AccessType.PROJECT_FILE_UPLOAD)
 	public static void upload(File file, Path path) {
 		File destination = path.resolve(file.getName()).toFile();
 		try {
@@ -255,13 +255,13 @@ public class ImageBrowser extends ParentController {
 		ok();
 	}
 	
-	@ProjectAccess(AccessType.PROJECT_FILE_DELETE)
+	@ModelAccess(AccessType.PROJECT_FILE_DELETE)
 	public static void createDirectory(Path path) {
 		path.toFile().mkdir();
 		ok();
 	}
 	
-	@ProjectAccess(AccessType.PROJECT_FILE_DELETE)
+	@ModelAccess(AccessType.PROJECT_FILE_DELETE)
 	public static void deleteFile(Path path) {
 		path.toFile().delete();
 		ok();
