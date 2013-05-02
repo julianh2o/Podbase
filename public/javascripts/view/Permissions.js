@@ -16,7 +16,7 @@ define(
 				this.userList = new UserList();
 				this.$users.append(this.userList.el);
 				
-				this.userPermissionsEditor = new UserPermissionsEditor({type:this.type});
+				this.userPermissionsEditor = new UserPermissionsEditor({type:this.type,showRemove:true});
 				this.$permissions.append(this.userPermissionsEditor.el);
 				
 				$(this.userList).on("UserSelected",$.proxy(this.userSelected,this))

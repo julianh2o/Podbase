@@ -51,7 +51,7 @@ public class Security extends Secure.Security {
 	        	
         	if (model == null) forbidden();
         	
-        	Set<AccessType> projectAccessSet = PermissionService.getVirtualAccess(u,model);
+        	Set<AccessType> projectAccessSet = PermissionService.getResolvedAccess(u,model);
         	
 	        for (AccessType a : projectAccess.value()) {
 	        	boolean hasPermission = projectAccessSet.contains(a);

@@ -6,6 +6,7 @@ define(
 			
 			initialize : function() {
 				this.type = this.options.type;
+				this.showRemove = this.options.showRemove;
 				this.modelObject = this.options.modelObject;
 				this.loadUser(this.options.user);
 			},
@@ -33,6 +34,10 @@ define(
 					return;
 				}
 				
+				this.reload();
+			},
+			
+			reload : function() {
 				Link.getUserAccess(this.modelObject.id,this.user.id).invalidate().loadOnce($.proxy(this.refresh,this));
 			},
 			
@@ -42,7 +47,7 @@ define(
 				
 				var possiblePermissions = Link.getAccessTypes().getData("byType")[this.type]
 				
-				this.model = {user:this.user, userPermissionMap:permissionMap, permissions:possiblePermissions, showRemove:this.model != null};
+				this.model = {user:this.user, userPermissionMap:permissionMap, permissions:possiblePermissions, showRemove:this.showRemove};
 				
 				this.render();
 				
@@ -72,6 +77,7 @@ define(
 			},
 			
 			permissionSaveSuccess : function() {
+				this.reload();
 			}
 		});
 		

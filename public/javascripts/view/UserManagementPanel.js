@@ -18,7 +18,7 @@ define(
 				this.model = {user:this.user};
 				this.render();
 				
-				this.userPermissionsEditor = Util.createView( $(".permissions",this.el), UserPermissionsEditor, {type:"user",user:this.user,modelObject:podbase});
+				this.userPermissionsEditor = Util.createView( $(".permissions",this.el), UserPermissionsEditor, {type:"user",user:this.user,modelObject:podbase, showRemove:false});
 			},
 			
 			setUser : function(user) {

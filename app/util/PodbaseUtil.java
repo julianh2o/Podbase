@@ -18,6 +18,7 @@ import models.GsonTransient;
 import models.ImageAttribute;
 
 import access.AccessType;
+import access.VirtualAccessType;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
@@ -59,6 +60,18 @@ public class PodbaseUtil {
 			return json;
 		}
 	}
+	
+	private static class VirtualAccessTypeAdaptor implements JsonSerializer<VirtualAccessType> {
+		@Override
+		public JsonElement serialize(VirtualAccessType obj, Type type, JsonSerializationContext context) {
+			JsonObject json = new JsonObject();
+			json.addProperty("name", obj.name());
+			json.addProperty("description", obj.getDescription());
+			json.add("impliedBy", context.serialize(obj.impliedBy));
+			json.add("type", context.serialize(obj.type.types));
+			return json;
+		}
+	}
 
 	public static Gson getGsonExcludesGsonTransient() {
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
@@ -74,6 +87,7 @@ public class PodbaseUtil {
 			}})
 			.registerTypeAdapter(ImageAttribute.class, new ImageAttributeAdaptor())
 			.registerTypeAdapter(AccessType.class, new AccessTypeAdaptor())
+			.registerTypeAdapter(VirtualAccessType.class, new VirtualAccessTypeAdaptor())
 			.create();
 		return gson;
 	}

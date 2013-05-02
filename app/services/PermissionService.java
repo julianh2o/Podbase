@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import controllers.ParentController;
 
 import access.AccessType;
+import access.VirtualAccessType;
 
 import play.mvc.Util;
 
@@ -105,16 +107,34 @@ public class PermissionService {
 		return getAccessFromPermissions(getPermissions(user,model));
 	}
 	
-	public static Set<AccessType> getVirtualAccess(User user, PermissionedModel model) {
+	public static Set<AccessType> getResolvedAccess(User user, PermissionedModel model) {
+		Set<AccessType> accessList = new HashSet<AccessType>();
+		for (VirtualAccessType vat : getVirtualAccess(user, model)) {
+			accessList.add(vat.type);
+		}
+		return accessList;
+	}
+	
+	public static Set<VirtualAccessType> getVirtualAccess(User user, PermissionedModel model) {
+//		System.out.println();
 		Set<AccessType> accessList = getAccess(user,model);
-		Set<AccessType> virtualAccess = new HashSet<AccessType>();
+		HashMap<String,VirtualAccessType> virtualAccess = new HashMap<String,VirtualAccessType>();
 		for (AccessType access : accessList) {
-			virtualAccess.add(access);
+			if (!virtualAccess.containsKey(access.name())) virtualAccess.put(access.name(),new VirtualAccessType(access));
 			if (AccessType.IMPLICATIONS.containsKey(access)) {
-				virtualAccess.addAll(AccessType.IMPLICATIONS.get(access));
+				for (AccessType type : AccessType.IMPLICATIONS.get(access)) {
+//					System.out.println(access.name() + " implies " + type.name());
+					if (virtualAccess.containsKey(type.name())) {
+//						System.out.println("contains key: "+type.name());
+						virtualAccess.get(type.name()).addImplication(access);
+					} else {
+						VirtualAccessType newAccess = new VirtualAccessType(type,access);
+						virtualAccess.put(type.name(),newAccess);
+					}
+				}
 			}
 		}
-		return virtualAccess;
+		return new HashSet<VirtualAccessType>(virtualAccess.values());
 	}
 	
 	public static boolean hasPermission(User user, PermissionedModel model, AccessType access) {

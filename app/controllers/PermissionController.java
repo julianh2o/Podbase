@@ -19,6 +19,7 @@ import controllers.ParentController;
 import access.Access;
 import access.AccessType;
 import access.ModelAccess;
+import access.VirtualAccessType;
 
 import play.mvc.Util;
 import play.mvc.With;
@@ -64,7 +65,9 @@ public class PermissionController extends ParentController {
     }
     
     public static void getUserAccess(PermissionedModel model, User user) {
-    	renderJSON(getAccessForUser(model,user));
+    	//renderJSON(getAccessForUser(model,user));
+    	Set<VirtualAccessType> access = PermissionService.getVirtualAccess(user, model);
+    	renderJSON(access);
     }
     
     public static void getAccess(PermissionedModel model) {
@@ -99,7 +102,7 @@ public class PermissionController extends ParentController {
     	if (user.isRoot()) {
     		return new HashSet(Arrays.asList(AccessType.values()));
     	}
-    	Set<AccessType> access = PermissionService.getVirtualAccess(user, model);
+    	Set<AccessType> access = PermissionService.getResolvedAccess(user, model);
     	return access;
     }
     
