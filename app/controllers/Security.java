@@ -36,12 +36,12 @@ public class Security extends Secure.Security {
 	        }
         }
         
-        ModelAccess projectAccess = getActionAnnotation(ModelAccess.class);
-        if (projectAccess != null) {
+        ModelAccess modelAccess = getActionAnnotation(ModelAccess.class);
+        if (modelAccess != null) {
         	PermissionedModel model = params.get("project",PermissionedModel.class);
         	if (model != null && !model.isPersistent()) model = null;
         	
-        	model = params.get("model",PermissionedModel.class);
+        	if (model == null) model = params.get("model",PermissionedModel.class);
         	if (model != null && !model.isPersistent()) model = null;
         
         	if (model == null) {
@@ -53,7 +53,7 @@ public class Security extends Secure.Security {
         	
         	Set<AccessType> projectAccessSet = PermissionService.getResolvedAccess(u,model);
         	
-	        for (AccessType a : projectAccess.value()) {
+	        for (AccessType a : modelAccess.value()) {
 	        	boolean hasPermission = projectAccessSet.contains(a);
 	        	if (!hasPermission) forbidden();
 	        }
