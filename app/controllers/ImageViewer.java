@@ -1,5 +1,7 @@
 package controllers;
 
+import ij.ImagePlus;
+
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 
@@ -9,7 +11,7 @@ import services.PathService;
 @With(Security.class)
 public class ImageViewer extends ParentController {
 	public static void index(Path path) {
-		BufferedImage image = ImageBrowser.getImage(path);
+		ImagePlus image = ImageBrowser.getImage(path);
 		int width = image.getWidth();
 		int height = image.getHeight();
 		

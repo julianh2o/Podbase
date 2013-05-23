@@ -40,7 +40,7 @@ import models.User;
 
 public class ImageService {
 	// Scales the given buffered image to fit within the box given
-	public static BufferedImage scaleImageToFit(BufferedImage image, Integer targetWidth, Integer targetHeight) {
+	public static ImagePlus scaleImageToFit(ImagePlus image, Integer targetWidth, Integer targetHeight) {
 		if (targetWidth == null && targetHeight == null) return image;
 
 		int originalWidth = image.getWidth();
@@ -64,24 +64,20 @@ public class ImageService {
 		return scaleImage(image,width,height);
 	}
 
-	public static BufferedImage scaleImage(BufferedImage image, int width, int height) {
-		BufferedImage scaled = new BufferedImage(width, height, image.getType());
-
-		Graphics2D graphics2D = scaled.createGraphics();
-		graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		graphics2D.drawImage(image, 0, 0, width, height, null);
-
-		graphics2D.dispose();
-
-		return scaled;
+	public static ImagePlus scaleImage(ImagePlus image, int width, int height) {
+		ImageProcessor ip = image.getProcessor();
+		
+		ip.setInterpolate(true);
+		ImageProcessor ip2 = ip.resize(width,height);
+		
+		return new ImagePlus(image.getTitle(),ip2);
 	}
 
-	public static BufferedImage makeHistogram(BufferedImage source, int width, int height) {
+	public static BufferedImage makeHistogram(ImagePlus source, int width, int height) {
 		BufferedImage hist = new BufferedImage(width,height,BufferedImage.TYPE_3BYTE_BGR);
 		Graphics g = hist.getGraphics();
 
-		ImagePlus img = new ImagePlus("image",source);
-		ImageStatistics stats = img.getStatistics();
+		ImageStatistics stats = source.getStatistics();
 		g.setColor(Color.WHITE);
 		g.fillRect(0,0,hist.getWidth(),hist.getHeight());
 		int cpix = 0;
@@ -127,10 +123,9 @@ public class ImageService {
 
 	// Brightness between -150 and 150
 	// Contrast between -1 and infinity
-	public static BufferedImage adjustImage(BufferedImage image, double brightness, double contrast) {
-		DataBuffer dataBuffer = image.getRaster().getDataBuffer();
-		int size = dataBuffer.getDataTypeSize(dataBuffer.getDataType());
-		
+	public static ImagePlus adjustImage(ImagePlus image, double brightness, double contrast) {
+		ImageProcessor ip = image.getProcessor();
+	
 		contrast = Math.pow(2, contrast/30) - 1;
 		
 		brightness = Math.min(150, Math.max(-150,brightness));
@@ -139,13 +134,55 @@ public class ImageService {
 		double mul = (1 + brightness / 150.0) * contrast;
 		double add = -128*contrast + 128;
 		
-		for (int i=0; i<dataBuffer.getSize(); i++) {
-			int pixel = dataBuffer.getElem(i);
+		//byte[], short[], float[] or int[]
+		Object pixels = ip.getPixels();
+		if (pixels instanceof byte[]) {
+			byte[] data = (byte[])pixels;
 			
-			pixel = (int)(pixel * mul + add);
-			pixel = Math.min(255, Math.max(0,pixel));
+			for (int i=0; i<data.length; i++) {
+				int pixel = (int)data[i] + 128;
+				pixel = (int)(pixel * mul + add);
+				data[i] = (byte)(Math.min(255, Math.max(0,pixel))-128);
+			}
+		} else if (pixels instanceof short[]) {
+			System.out.println("short - THIS PROBABLY DOESNT WORK");
+			short[] data = (short[])pixels;
 			
-			dataBuffer.setElem(i, pixel);
+			for (int i=0; i<data.length; i++) {
+				int pixel = (int)data[i] + 128;
+				pixel = (int)(pixel * mul + add);
+				if (i<30) System.out.print(pixel+" ");
+				data[i] = (short)(Math.min(255, Math.max(0,pixel))-128);
+			}
+		} else if (pixels instanceof float[]) {
+			System.out.println("float - THIS PROBABLY DOESNT WORK");
+			float[] data = (float[])pixels;
+			
+			for (int i=0; i<data.length; i++) {
+				int pixel = (int)(data[i] * mul + add);
+				data[i] = (float)Math.min(255, Math.max(0,pixel));
+			}
+		} else if (pixels instanceof int[]) {
+			int[] data = (int[])pixels;
+			
+			for (int i=0; i<data.length; i++) {
+	            int a = (data[i] >> 24) & 0xff;
+	            int r = (data[i] >> 16) & 0xff;
+	            int g = (data[i] >> 8) & 0xff;
+	            int b = data[i] & 0xff;
+	            
+				a = (int)(a * mul + add);
+				r = (int)(r * mul + add);
+				g = (int)(g * mul + add);
+				b = (int)(b * mul + add);
+				
+				a = Math.min(255, Math.max(0,a));
+				r = Math.min(255, Math.max(0,r));
+				g = Math.min(255, Math.max(0,g));
+				b = Math.min(255, Math.max(0,b));
+				
+				data[i] = (a<<24) | (r<<16) | (g<<8) | b;  
+			}
 		}
 		
 		return image;

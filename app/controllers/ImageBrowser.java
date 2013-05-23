@@ -8,6 +8,7 @@ import play.mvc.Http.Response;
 import groovy.lang.DeprecationException;
 import ij.IJ;
 import ij.ImagePlus;
+import ij.io.Opener;
 import ij.process.ImageStatistics;
 
 import java.awt.Color;
@@ -86,21 +87,19 @@ public class ImageBrowser extends ParentController {
 	}
 	
 	@Util
-	public static BufferedImage getImage(Path path) {
+	public static ImagePlus getImage(Path path) {
 		User user = Security.getUser();
 		
 		boolean hasAccess = PermissionService.userCanAccessPath(user,path);
 		if (!hasAccess) forbidden();
 
-		try {
-			return ImageIO.read(path.toFile());
-		} catch (IOException e) {
-			return null;
-		}
+		Opener opener = new Opener();
+		ImagePlus ip = opener.openImage(path.toAbsolutePath().toString());
+		return ip;
 	}
 	
 	@ModelAccess(AccessType.VISIBLE)
-	public static void resolveFile(Path path, String mode, Project project, Float scale, Integer width, Integer height, Float brightness, Float contrast, Boolean histogram) throws IOException {
+	public static void resolveFile(Path path, String mode, Project project, Float scale, Integer width, Integer height, Float brightness, Float contrast, Boolean histogram, Integer slice) throws IOException {
 		if (params._contains("download")) response.setHeader("Content-Disposition", "attachment; filename="+path.getFileName());
 		
 		if (!PathService.isImage(path)) {
@@ -108,7 +107,11 @@ public class ImageBrowser extends ParentController {
 			return;
 		}
 		
-		BufferedImage image = getImage(path);
+		ImagePlus image = getImage(path);
+		if (slice != null) {
+			if (slice < 1 || slice > image.getStackSize()) throw new RuntimeException("Invalid slice! Found: "+slice+" max is "+image.getStackSize());
+			image.setSlice(slice);
+		}
 		
 		if ("thumb".equals(mode)) {
 			image = ImageService.scaleImageToFit(image,200,200);
@@ -129,13 +132,13 @@ public class ImageBrowser extends ParentController {
 		image = ImageService.adjustImage(image, brightness, contrast);
 		
 		if (histogram) {
-			BufferedImage hist = ImageService.makeHistogram(image, image.getWidth(), image.getWidth()/2);
-			
-			image = ImageService.appendImages(image,hist);
+			System.out.println("REIMPLEMENT ME!");
+			//BufferedImage hist = ImageService.makeHistogram(image, image.getWidth(), image.getWidth()/2);
+			//image = ImageService.appendImages(image,hist);
 		}
 		
 		//TODO cache this
-		renderImage(image);
+		renderImage(image.getBufferedImage());
 	}
 	
 	@ModelAccess(AccessType.VISIBLE)
