@@ -99,6 +99,16 @@ public class ImageBrowser extends ParentController {
 	}
 	
 	@ModelAccess(AccessType.VISIBLE)
+	public static void imageMetadata(Path path) throws IOException {
+		ImagePlus image = getImage(path);
+		
+		HashMap<String,Object> info = new HashMap<String,Object>();
+		info.put("slices", image.getStackSize());
+	
+		renderJSON(info);
+	}
+	
+	@ModelAccess(AccessType.VISIBLE)
 	public static void resolveFile(Path path, String mode, Project project, Float scale, Integer width, Integer height, Float brightness, Float contrast, Boolean histogram, Integer slice) throws IOException {
 		if (params._contains("download")) response.setHeader("Content-Disposition", "attachment; filename="+path.getFileName());
 		

@@ -36,7 +36,8 @@ define(['data/Loader'],function(Loader) {
 		this.fetchProjectPath = new Loader("@{ImageBrowser.fetchProjectPath}?project.id={projectId}&path={path}");
 		this.setVisible = new Loader("@{ImageBrowser.setVisible}?project.id={projectId}&image.id={imageId}&visible={visible}");
 		this.setMultipleVisible = new Loader("@{ImageBrowser.setMultipleVisible}?project.id={projectId}&ids={ids}&visible={visible}");
-		this.resolveFile = new Loader("@{ImageBrowser.resolveFile}?path={path}&mode={mode}&project.id={projectId}&scale={scale}&width={width}&height={height}&brightness={brightness}&contrast={contrast}&histogram={histogram}");
+		this.imageMetadata = new Loader("@{ImageBrowser.imageMetadata}?path={path}");
+		this.resolveFile = new Loader("@{ImageBrowser.resolveFile}?path={path}&mode={mode}&project.id={projectId}&scale={scale}&width={width}&height={height}&brightness={brightness}&contrast={contrast}&histogram={histogram}&slice={slice}");
 		this.fetchInfo = new Loader("@{ImageBrowser.fetchInfo}?project.id={projectId}&path={path}&dataMode={dataMode}");
 		this.updateImageAttribute = new Loader("@{ImageBrowser.updateImageAttribute}?attribute.id={attributeId}&value={value}&dataMode={dataMode}");
 		this.deleteImageAttribute = new Loader("@{ImageBrowser.deleteImageAttribute}?attribute.id={attributeId}");

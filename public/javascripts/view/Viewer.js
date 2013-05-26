@@ -1,6 +1,6 @@
 define(
-	['view/RenderedView', 'util/Point2d', 'util/MoveTool', 'util/MeasureTool', 'util/AdjustTool', 'text!tmpl/Viewer.html'],
-	function (RenderedView, Point2d, MoveTool, MeasureTool, AdjustTool, tmpl) {
+	['view/RenderedView', 'util/Point2d', 'data/Link', 'util/MoveTool', 'util/MeasureTool', 'util/AdjustTool', 'text!tmpl/Viewer.html'],
+	function (RenderedView, Point2d, Link, MoveTool, MeasureTool, AdjustTool, tmpl) {
 		//TODO dedupe from AdjustTool.js
 		function scaleRange(n,start,end,newStart,newEnd) {
 			var ratio = (n - start) / (end - start);
@@ -23,6 +23,7 @@ define(
 				$.extend(this.state,{
 						imageDim: new Point2d(options.width, options.height),
 						scale: 1,
+						slice: 1,
 						pan: new Point2d(0,0),
 						brightness: 0,
 						contrast: 0,
@@ -31,19 +32,25 @@ define(
 						}
 				});
 				
+				var usePath = this.path;
+				if (usePath.startsWith("/data")) {
+					usePath = usePath.substring("/data".length);
+				}
+				Link.imageMetadata(usePath).asap($.proxy(this.infoLoaded,this));
+			},
+			
+			infoLoaded : function(link) {
+				this.imageInfo = link.getData();
+				this.refresh();
+			},
+				
+			refresh : function() {
 				this.render();
 				
 				this.$url = $(".url-field",this.el);
 				this.updateUrl();
 				
-				var ctx = $(".test",this.el).get(0).getContext("2d");
-				ctx.moveTo(0,100);
-				ctx.lineTo(100,0);
-				ctx.stroke();
-				this.$test = $(".test",this.el);
-				
 				window.viewer = this;
-				
 				
 				this.$tools = $(".tools",this.el)
 				this.$toolOptions = $(".tool-options",this.el);
@@ -62,7 +69,6 @@ define(
 				this.$viewport = $(".viewport",this.el);
 				this.$toolbar = $(".toolbar",this.el);
 				
-				this.$original.load($.proxy(this.imageLoaded,this));
 				
 				this.$viewport.on("mousedown",$.proxy(this.mousedown,this));
 				this.$viewport.on("mouseup",$.proxy(this.mouseup,this));
@@ -71,6 +77,7 @@ define(
 				this.$viewport.mousewheel($.proxy(this.mousewheel,this));
 				
 				$(window).resize($.proxy(this.doResize,this));
+				$(window).keypress($.proxy(this.keyPress,this));
 				
 				this.updateImage();
 				
@@ -102,6 +109,12 @@ define(
 			stateUpdated : function() {
 				if (this.tool && this.tool.update) this.tool.update();
 				
+				$(".slice",this.el).toggle(this.imageInfo.slices > 1);
+				if (this.imageInfo.slices > 1) {
+					$(".current-slice",this.el).text(this.state.slice);
+					$(".total-slices",this.el).text(this.imageInfo.slices);
+				}
+				
 				this.updateUrl();
 			},
 			
@@ -115,16 +128,23 @@ define(
 			
 			updateImage : function() {
 				var url = this.path;
+				if (this.imageInfo.slices > 1) {
+					url += "?slice="+this.state.slice;
+				}
 				
-				this.$original.attr("src",url);
+				var img = new Image();
+				img.src = url;
+				this.original = img;
+				
+				$(img).load($.proxy(this.imageLoaded,this));
 				
 				this.imageLoading = true;
 			},
 			
 			imageLoaded : function() {
-				this.state.imageDim = new Point2d(this.$original.width(), this.$original.height());
-				this.$processed.attr({"width":this.state.imageDim.x,"height":this.state.imageDim.y});
-				this.copyImageToProcess();
+				this.state.imageDim = new Point2d(this.original.width, this.original.height);
+				//this.$processed.attr({"width":this.state.imageDim.x,"height":this.state.imageDim.y});
+				//this.copyImageToProcess();
 				
 				this.imageLoading = false;
 				this.imageProcessing = true;
@@ -135,9 +155,9 @@ define(
 			doProcess : function() {
 				var brightness = this.state.brightness;
 				var contrast = Math.pow(2,this.state.contrast/30) - 1;
-				this.$processed.attr("width",this.state.imageDim.x);
-				this.$processed.attr("height",this.state.imageDim.y);
-				Pixastic.process(this.$original.get(0), "brightness", {brightness:brightness,contrast:contrast},$.proxy(this.imageProcessingComplete,this));
+				//this.$processed.attr("width",this.state.imageDim.x);
+				//this.$processed.attr("height",this.state.imageDim.y);
+				Pixastic.process(this.original, "brightness", {brightness:brightness,contrast:contrast},$.proxy(this.imageProcessingComplete,this));
 			},
 			
 			imageProcessingComplete : function(image) {
@@ -148,28 +168,23 @@ define(
 			
 			updateCanvas : function() {
 				if (!this.processedImage) return;
-				var g = this.$viewport.get(0).getContext("2d");
 				
+				var g = this.$viewport.get(0).getContext("2d");
 				g.clearRect(0,0,this.state.canvasDim.x,this.state.canvasDim.y);
+				
+				var scaledImageDim = this.state.effectiveDim();
 				
 				//                 source offset, width height  --- destination offset, width height
 				//drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
 				
-				var image = this.$processed.get(0);
-				if (this.processedImage) image = this.processedImage;
-				
-				var scaledImageDim = this.state.effectiveDim();
-				
 				g.drawImage(
-						image,
-						0,
-						0,
-						this.state.imageDim.x,
-						this.state.imageDim.y,
-						this.state.pan.x,
-						this.state.pan.y,
-						scaledImageDim.x,
-						scaledImageDim.y);
+					this.processedImage,
+					0,
+					0,
+					this.processedImage.width,this.processedImage.height,
+					this.state.pan.x,this.state.pan.y,
+					scaledImageDim.x,scaledImageDim.y
+				);
 				
 				this.tool.draw(g,this.state);
 			},
@@ -232,6 +247,18 @@ define(
 				this.updateCanvas();
 				
 				event.preventDefault();
+			},
+			
+			keyPress : function(e) {
+				if (e.keyCode == 91 | e.keyCode == 93) {
+					var previous = this.state.slice;
+					this.state.slice = this.state.slice + (e.keyCode == 91 ? -1 : 1)
+					this.state.slice = Math.max(1,Math.min(this.imageInfo.slices,this.state.slice));
+					if (previous == this.state.slice) return;
+					
+					this.stateUpdated();
+					this.updateImage();
+				}
 			},
 			
 			handleToolClick : function(e) {
