@@ -2,7 +2,7 @@
 
 PLAY=/home/julian/play/play
 HOSTNAME=`hostname`
-if [ "$HOSTNAME" == "podbase2" ]; then
+if [ "$HOSTNAME" == "ares" ]; then
     cd /home/julian/podbase
     $PLAY stop
     rm server.pid
@@ -10,5 +10,5 @@ if [ "$HOSTNAME" == "podbase2" ]; then
     $PLAY dependencies
     $PLAY start --%prod
 else
-    ssh julian@podbase2.pbrc.hawaii.edu /home/julian/podbase/bin/refresh.sh
+    ssh root@new.podbase.net /home/julian/podbase/bin/refresh.sh
 fi
