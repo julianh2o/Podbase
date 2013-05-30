@@ -133,7 +133,7 @@ define([], function() {
 		var instances = {};
 		
 		var opts = $.extend({}, {
-			//dataType : "json",
+			dataType : "json",
 			cache : false
 		}, ajaxOptions);
 		

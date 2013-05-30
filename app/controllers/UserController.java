@@ -40,7 +40,7 @@ public class UserController extends ParentController {
 			
 		u.setCleartextPassword(newpassword);
 		u.save();
-		ok();
+		jsonOk();
 	}
 	
 	public static void createUser(String email) {

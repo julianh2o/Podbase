@@ -54,7 +54,6 @@ define(
 			},
 			
 			changePasswordError : function(xhr) {
-				console.log(xhr.status);
 				data = JSON.parse(xhr.responseText);
 				alert(data.message);
 			}

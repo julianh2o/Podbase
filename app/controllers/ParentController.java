@@ -30,6 +30,10 @@ public class ParentController extends Controller {
 	    renderJSON(gson.toJson(o));  
 	}
 	
+	protected static void jsonOk() {
+		renderJSON("{\"status\":\"Ok\"}");
+	}
+	
 	@Util
 	protected static String renderJSONToString(Object o) {
 	    Gson gson = PodbaseUtil.getGsonExcludesGsonTransient();
