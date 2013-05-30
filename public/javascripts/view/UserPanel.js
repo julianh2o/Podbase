@@ -46,18 +46,15 @@ define(
 					$group.find(".help-inline").text("");
 				}
 				
-				Link.changePassword(map['current'],map['new']).post({
-					success:$.proxy(this.changePasswordSuccess,this),
-					error:$.proxy(this.changePasswordError,this),
-					dataType:'json'
-				});
+				Link.changePassword(map['current'],map['new']).post().done($.proxy(this.changePasswordSuccess,this)).error($.proxy(this.changePasswordError,this));
 			},
 			
-			changePasswordSuccess : function() {
+			changePasswordSuccess : function(xhr) {
 				this.$changePasswordDialog.modal("hide");
 			},
 			
 			changePasswordError : function(xhr) {
+				console.log(xhr.status);
 				data = JSON.parse(xhr.responseText);
 				alert(data.message);
 			}
