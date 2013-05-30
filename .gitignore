@@ -8,7 +8,7 @@ eclipse/
 .settings
 test-result/
 db/*
-data/*
+data
 logs/*
 server.pid
 migrate
