@@ -10,7 +10,7 @@ define(
 			},
 			
 			refresh : function() {
-				var showAdd = _.contains(Link.getCurrentUserPermissions().getData(),"CREATE_PROJECT");
+				var showAdd = Util.permits(Link.getCurrentUserPermissions().getData(),"CREATE_PROJECT");
 				this.model = {projects:Link.getProjects().getData(), showAdd:showAdd};
 				this.render();
 				

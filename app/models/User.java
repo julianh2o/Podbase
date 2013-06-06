@@ -62,7 +62,7 @@ public class User extends TimestampModel {
 	}
 	
 	public boolean isRoot() {
-		return this.email == "root";
+		return this.email.equals("root");
 	}
 	
 	public static User getGuestAccount() {
