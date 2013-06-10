@@ -175,7 +175,7 @@ public class PodbaseMetadataMigration2 extends MonitoredJob {
 			i++;
 			if (line.trim().length() == 0) continue;
 			
-			String readable = line.replace(FIELD_SEPARATOR, " ");
+			String readable = line.replace(FIELD_SEPARATOR, "[###]");
 			if (line.contains("Fatal error")) {
 				System.out.println(klass.toString()+": Ignoring line "+i+": "+readable);
 			}
