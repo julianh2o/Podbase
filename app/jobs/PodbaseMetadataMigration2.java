@@ -33,6 +33,9 @@ import services.PathService;
 public class PodbaseMetadataMigration2 extends MonitoredJob {
 	ProgressCounter pc;
 	
+	public final String RECORD_SEPARATOR = "\0";
+	public final String FIELD_SEPARATOR = "||";
+	
 	public void doJob() throws Exception {
 		((FilesystemStore)Search.getCurrentStore()).sync = false;
 		
@@ -168,11 +171,11 @@ public class PodbaseMetadataMigration2 extends MonitoredJob {
 		
 		List<T> entries = new LinkedList<T>();
 		int i = 0;
-		for (String line : fileContents.split("\0\0")) {
+		for (String line : fileContents.split(RECORD_SEPARATOR)) {
 			i++;
 			if (line.trim().length() == 0) continue;
 			
-			String readable = line.replace("\0", " ");
+			String readable = line.replace(FIELD_SEPARATOR, " ");
 			if (line.contains("Fatal error")) {
 				System.out.println(klass.toString()+": Ignoring line "+i+": "+readable);
 			}
@@ -209,7 +212,7 @@ public class PodbaseMetadataMigration2 extends MonitoredJob {
 		
 		public void setFields(String line) {
 			String[] fields = getFields();
-			String[] lineFields = line.split("\0");
+			String[] lineFields = line.split(FIELD_SEPARATOR);
 			
 			if (fields.length != lineFields.length) throw new IllegalArgumentException("Length mismatch: "+fields.length + " vs " + lineFields.length); 
 			
