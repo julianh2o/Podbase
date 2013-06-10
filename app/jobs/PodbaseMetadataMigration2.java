@@ -183,7 +183,7 @@ public class PodbaseMetadataMigration2 extends MonitoredJob {
 				T entry = klass.getConstructor(PodbaseMetadataMigration2.class, String.class).newInstance(PodbaseMetadataMigration2.this,line);
 				entries.add(entry);
 			} catch (Exception e) {
-				System.out.println(klass.toString()+": Illegal entry on line "+i+": "+readable);
+				System.out.println(klass.toString()+": Illegal entry on line "+i+": "+readable+" ( "+e.getMessage()+")");
 			}
 		}
 		
