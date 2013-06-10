@@ -40,8 +40,8 @@ public class PodbaseMetadataMigration2 extends MonitoredJob {
 		HashMap<Integer,String> projectMap = parseProjectMap(projects);
 		
 		List<TagEntry> tags = dataFromFile("./migrate/tags.data",TagEntry.class);
-		
 		List<TemplateEntry> templates = dataFromFile("./migrate/templates.data",TemplateEntry.class);
+		
 		List<TemplateFieldEntry> templateFields = dataFromFile("./migrate/template_fields.data",TemplateFieldEntry.class);
 		
 		int entryCount = tags.size() + templates.size() + templateFields.size();
@@ -172,13 +172,13 @@ public class PodbaseMetadataMigration2 extends MonitoredJob {
 			i++;
 			if (line.trim().length() == 0) continue;
 			if (line.contains("Fatal error")) {
-				System.out.println("Found 'Fatal Error' in line: "+i);
+				System.out.println("Ignoring line "+i+": "+line.trim());
 			}
 			try {
 				T entry = klass.getConstructor(PodbaseMetadataMigration2.class, String.class).newInstance(PodbaseMetadataMigration2.this,line);
 				entries.add(entry);
 			} catch (Exception e) {
-				System.out.println("Illegal entry on line: "+i);
+				System.out.println("Illegal entry on line "+i+": "+line);
 			}
 		}
 		
