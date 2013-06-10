@@ -171,14 +171,16 @@ public class PodbaseMetadataMigration2 extends MonitoredJob {
 		for (String line : fileContents.split("\0\0")) {
 			i++;
 			if (line.trim().length() == 0) continue;
+			
+			String readable = line.replace("\0", " ");
 			if (line.contains("Fatal error")) {
-				System.out.println("Ignoring line "+i+": "+line.trim());
+				System.out.println("Ignoring line "+i+": "+readable);
 			}
 			try {
 				T entry = klass.getConstructor(PodbaseMetadataMigration2.class, String.class).newInstance(PodbaseMetadataMigration2.this,line);
 				entries.add(entry);
 			} catch (Exception e) {
-				System.out.println("Illegal entry on line "+i+": "+line);
+				System.out.println("Illegal entry on line "+i+": "+readable);
 			}
 		}
 		
