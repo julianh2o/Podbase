@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -19,32 +20,51 @@ import models.Template;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.CharSet;
+import org.apache.commons.lang.StringUtils;
+import org.hibernate.CacheMode;
+import org.hibernate.FlushMode;
+import org.hibernate.Session;
 import org.yaml.snakeyaml.Yaml;
 
 import play.Play;
 import play.cache.Cache;
+import play.db.jpa.JPA;
 import play.exceptions.JavaExecutionException;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import play.modules.search.Search;
 import play.modules.search.store.FilesystemStore;
 import services.PathService;
+import util.Stopwatch;
 
+@OnApplicationStart
 public class PodbaseMetadataMigration2 extends MonitoredJob {
 	ProgressCounter pc;
 	
 	public final String RECORD_SEPARATOR = "\0";
-	public final String FIELD_SEPARATOR = "||";
+	public final String FIELD_SEPARATOR = "\\|\\|";
 	
 	public void doJob() throws Exception {
+		if (!(Play.id.equals("dev") || Play.id.equals("setup"))) {
+			System.out.println("Skipping Migration!");
+			return;
+		}
+		
+		System.out.println("Running data migration");
+		
 		((FilesystemStore)Search.getCurrentStore()).sync = false;
 		
+		System.out.println("Reading projects..");
 		List<ProjectEntry> projects = dataFromFile("./migrate/projects.data",ProjectEntry.class);
 		HashMap<Integer,String> projectMap = parseProjectMap(projects);
 		
+		System.out.println("Reading tags..");
 		List<TagEntry> tags = dataFromFile("./migrate/tags.data",TagEntry.class);
+		
+		System.out.println("Reading templates..");
 		List<TemplateEntry> templates = dataFromFile("./migrate/templates.data",TemplateEntry.class);
 		
+		System.out.println("Reading template fields..");
 		List<TemplateFieldEntry> templateFields = dataFromFile("./migrate/template_fields.data",TemplateFieldEntry.class);
 		
 		int entryCount = tags.size() + templates.size() + templateFields.size();
@@ -52,10 +72,48 @@ public class PodbaseMetadataMigration2 extends MonitoredJob {
 		
 		importTemplates(projectMap, templates,templateFields);
 		
+		long lastStatus = System.currentTimeMillis();
+		int currentTagCount = 0;
+		int lastStatusCount = 0;
+		long startTime = System.currentTimeMillis();
+		System.out.println("Processing "+tags.size()+" tags.");
+		Stopwatch sw = new Stopwatch();
+		((Session)JPA.em().getDelegate()).setCacheMode(CacheMode.IGNORE);
+		((Session)JPA.em().getDelegate()).setFlushMode(FlushMode.MANUAL);
 		for (TagEntry tag : tags) {
+			currentTagCount ++;
+			long currentTime = System.currentTimeMillis();
+			if (currentTime - lastStatus > 1000*5) {
+				lastStatus = currentTime;
+				int deltaCount = currentTagCount - lastStatusCount;
+				lastStatusCount = currentTagCount;
+				long elapsed = currentTime - startTime;
+				double timePerRecord = (double)elapsed / (double)currentTagCount;
+				int remainingRecords = tags.size() - currentTagCount;
+				double estCompletion = timePerRecord*remainingRecords;
+				System.out.println("Average time per record total: "+timePerRecord);
+				System.out.println("Remaining Records: "+remainingRecords);
+				double percent = (double)currentTagCount/(double)tags.size();
+				System.out.println("Completed "+deltaCount+" new record. ("+currentTagCount+" / "+tags.size()+")" + String.format("%2f",percent)+"%");
+				System.out.println("Elapsed: "+formatMs(elapsed));
+				System.out.println("Average Record Insertion: "+formatMs(sw.getAverageTime("tag")));
+				System.out.println("Estimated remaining: "+formatMs(estCompletion));
+				System.out.println();
+				sw.clear();
+			}
+			
+			if (currentTagCount % 20 == 0) {
+				//JPA.em().getTransaction().commit();
+				JPA.em().flush();
+				JPA.em().clear();
+				//JPA.em().getTransaction().begin();
+			}
+			sw.start("tag");
 			pc.inc();
 			String projectName = projectMap.get(tag.projectId);
+			sw.start("getProject");
 			Project project = Project.get(projectName);
+			sw.stop("getProject");
 			if (project == null) {
 				System.out.println("No project found! : "+projectName);
 				continue;
@@ -71,17 +129,36 @@ public class PodbaseMetadataMigration2 extends MonitoredJob {
 			}
 			
 			try {
+				sw.start("createImage");
 				DatabaseImage image = DatabaseImage.forPath(PathService.fixCaseResolve(tag.path));
+				sw.stop("createImage");
+				
+				sw.start("addAttribute");
 				image.addAttribute(project, key, value, true);
+				sw.stop("addAttribute");
 			} catch (FileNotFoundException fnf) {
 				System.out.println("!! "+fnf.getMessage());
+				continue;
 			}
+			sw.stop("tag");
 		}
 		
 //		printEntries(tags);
 //		printEntries(templates);
 //		printEntries(templateFields);
 		((FilesystemStore)Search.getCurrentStore()).sync = true;
+		
+		System.out.println("Migration completed successfully!");
+		Play.stop();
+	}
+	
+	private String formatMs(double ms) {
+		DecimalFormat df = new DecimalFormat("###0.00");
+		if (ms < 3000) return ms+"ms";
+		if (ms < 1000*60*3) return df.format((double)ms/1000)+"s";
+		int minutes = (int)(ms/(1000*60));
+		int seconds = (int)((ms - minutes*1000*60) / 1000);
+		return String.format("%d minutes, %d seconds",minutes,seconds);
 	}
 	
 	class ProgressCounter {
@@ -171,21 +248,26 @@ public class PodbaseMetadataMigration2 extends MonitoredJob {
 		
 		List<T> entries = new LinkedList<T>();
 		int i = 0;
-		for (String line : fileContents.split(RECORD_SEPARATOR)) {
+		int ignore = 0;
+		for (String line : fileContents.split(RECORD_SEPARATOR,-1)) {
 			i++;
 			if (line.trim().length() == 0) continue;
 			
 			String readable = line.replace(FIELD_SEPARATOR, "[###]");
 			if (line.contains("Fatal error")) {
-				System.out.println(klass.toString()+": Ignoring line "+i+": "+readable);
+				ignore ++;
+				//System.out.println(klass.toString()+": Ignoring line "+i+": "+readable);
 			}
 			try {
 				T entry = klass.getConstructor(PodbaseMetadataMigration2.class, String.class).newInstance(PodbaseMetadataMigration2.this,line);
 				entries.add(entry);
 			} catch (Exception e) {
 				System.out.println(klass.toString()+": Illegal entry on line "+i+": "+readable+" ( "+e.getMessage()+")");
+				e.printStackTrace();
+				return entries;
 			}
 		}
+		System.out.println("Ignored "+ignore+" entries");
 		
 		return entries;
 	}
@@ -212,9 +294,9 @@ public class PodbaseMetadataMigration2 extends MonitoredJob {
 		
 		public void setFields(String line) {
 			String[] fields = getFields();
-			String[] lineFields = line.split(FIELD_SEPARATOR);
+			String[] lineFields = line.split(FIELD_SEPARATOR,-1);
 			
-			if (fields.length != lineFields.length) throw new IllegalArgumentException("Length mismatch: "+fields.length + " vs " + lineFields.length); 
+			if (fields.length != lineFields.length) throw new IllegalArgumentException("Length mismatch: "+fields.length + " vs " + lineFields.length+"  ("+StringUtils.join(lineFields,"--")+")"); 
 			
 			for(int i=0; i< fields.length; i++) {
 				setAttribute(fields[i],lineFields[i]);

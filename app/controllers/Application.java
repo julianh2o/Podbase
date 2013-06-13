@@ -44,15 +44,26 @@ public class Application extends ParentController {
 		renderJSON(user);
 	}
 	
-	public static void migrateData() {
+	public static void runMigration() {
 		String progressKey = new PodbaseMetadataMigration2().getMonitorKey();
 		Float migrationProgress = Cache.get(progressKey,Float.class);
 		if (migrationProgress == null) {
 			new PodbaseMetadataMigration2().now();
 			renderText("Metadata migration begun..");
+		}
+		checkMigration();
+	}
+	
+	public static void checkMigration() {
+		String progressKey = new PodbaseMetadataMigration2().getMonitorKey();
+		Float migrationProgress = Cache.get(progressKey,Float.class);
+		DecimalFormat df = new DecimalFormat("#.##");
+		if (migrationProgress == null) {
+			renderText("Migration current migration.");
 		} else {
-			DecimalFormat df = new DecimalFormat("#.##");
 			renderText("Progress: "+df.format(migrationProgress*100)+"%");
 		}
 	}
+	
+	
 }

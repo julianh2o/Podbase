@@ -7,6 +7,7 @@ require:
     - play -> secure
     - play -> crud
     - play -> search 2.0
+    - play -> db 1.1.1
     
 
 repositories:
