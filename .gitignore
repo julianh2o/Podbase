@@ -12,7 +12,8 @@ db/*
 data
 logs/*
 server.pid
-migrate
+migrate*
+build.xml
 
 *.class
 *.jar

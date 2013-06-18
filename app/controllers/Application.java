@@ -11,9 +11,6 @@ import access.AccessType;
 
 import javax.persistence.Query;
 
-import jobs.PodbaseMetadataMigration;
-import jobs.PodbaseMetadataMigration2;
-
 import models.*;
 
 @With(Security.class)
@@ -43,27 +40,4 @@ public class Application extends ParentController {
 		User user = Security.getUser();
 		renderJSON(user);
 	}
-	
-	public static void runMigration() {
-		String progressKey = new PodbaseMetadataMigration2().getMonitorKey();
-		Float migrationProgress = Cache.get(progressKey,Float.class);
-		if (migrationProgress == null) {
-			new PodbaseMetadataMigration2().now();
-			renderText("Metadata migration begun..");
-		}
-		checkMigration();
-	}
-	
-	public static void checkMigration() {
-		String progressKey = new PodbaseMetadataMigration2().getMonitorKey();
-		Float migrationProgress = Cache.get(progressKey,Float.class);
-		DecimalFormat df = new DecimalFormat("#.##");
-		if (migrationProgress == null) {
-			renderText("Migration current migration.");
-		} else {
-			renderText("Progress: "+df.format(migrationProgress*100)+"%");
-		}
-	}
-	
-	
 }

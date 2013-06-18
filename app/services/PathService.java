@@ -32,8 +32,14 @@ import models.Project;
 import models.User;
 
 public class PathService {
+	public static Path getApplicationPath() {
+		File applicationPath = Play.applicationPath;
+		if (applicationPath == null) applicationPath = new File(".");
+		return applicationPath.toPath();
+	}
+	
 	public static Path getRootImageDirectory() {
-		return Paths.get(Play.applicationPath.getAbsolutePath() + "/data");
+		return Paths.get(getApplicationPath() + "/data");
 	}
 	
 	public static Path resolve(String rel) {
