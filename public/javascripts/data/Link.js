@@ -101,8 +101,6 @@ define(['data/Loader'],function(Loader) {
 		this.paper = new Loader("@{Application.paper}?paperId={paperId}");
 		this.loadJavascript = new Loader("@{Application.loadJavascript}?path={path}");
 		this.getCurrentUser = new Loader("@{Application.getCurrentUser}");
-		this.runMigration = new Loader("@{Application.runMigration}");
-		this.checkMigration = new Loader("@{Application.checkMigration}");
 		
 		
 		// ############################################

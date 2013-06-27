@@ -3,6 +3,7 @@ package util;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -72,5 +73,14 @@ public class FileWrapper {
 		}
 		
 		return filtered;
+	}
+	
+	public static Comparator<FileWrapper> getComparator() {
+		return new Comparator<FileWrapper>() {
+			@Override
+			public int compare(FileWrapper o1, FileWrapper o2) {
+				return o1.display.compareTo(o2.display);
+			}
+		};
 	}
 }

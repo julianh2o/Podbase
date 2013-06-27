@@ -69,6 +69,7 @@ public class ImageBrowser extends ParentController {
 		
 		List<FileWrapper> wrappedFiles = FileWrapper.wrapFiles(project, paths);
 		wrappedFiles = FileWrapper.visibilityFilter(project, Security.getUser(), wrappedFiles);
+		Collections.sort(wrappedFiles,FileWrapper.getComparator());
 		renderJSON(wrappedFiles);
 	}
 	
