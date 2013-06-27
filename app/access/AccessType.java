@@ -22,6 +22,7 @@ public enum AccessType {
 	MANAGE_PERMISSIONS("The user is allowed to manage permissions for this entity","paper","project","user"),
 	EDITOR("The user is an editor of this entity","paper","project"),
 	DATA_EDITOR("The user is an data editor of this entity","paper","project"),
+	NO_WATERMARK("The user can view the images without a watermark","project"),
 	
 	PROJECT_SET_TEMPLATE("The user can change the template associated with directories","project"),
 	PROJECT_MANAGE_TEMPLATES("The user can edit templates associated with this project","project"),

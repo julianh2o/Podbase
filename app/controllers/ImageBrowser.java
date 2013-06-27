@@ -149,7 +149,10 @@ public class ImageBrowser extends ParentController {
 		}
 		
 		//TODO cache this
-		renderImage(image.getBufferedImage());
+		BufferedImage imageOut = image.getBufferedImage();
+		boolean noWatermark = PermissionService.hasInheritedAccess(Security.getUser(), PathService.projectForPath(path), AccessType.NO_WATERMARK);
+		if (!noWatermark) imageOut = ImageService.addWatermark(imageOut);
+		renderImage(imageOut);
 	}
 	
 	@ModelAccess(AccessType.VISIBLE)

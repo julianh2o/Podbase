@@ -12,11 +12,15 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
 import java.awt.image.DataBufferInt;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import notifiers.Email;
 
@@ -103,6 +107,30 @@ public class ImageService {
 		}
 
 		return hist;
+	}
+	
+	public static BufferedImage addWatermark(BufferedImage a) {
+		Graphics g = a.createGraphics();
+		
+		BufferedImage watermark = null;
+		try {
+			watermark = ImageIO.read(new File("./public/images/logo.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+			return a;
+		}		
+		
+		int width = (int)(a.getWidth()*.3);
+		double aspect = (double)watermark.getWidth() / (double)watermark.getHeight();
+		
+		int height = (int)(1.0 / (aspect / width));
+		
+		int xSpace = (int)(width*0.1);
+		int ySpace = (int)(width*0.1);
+		
+		g.drawImage(watermark, a.getWidth() - width - xSpace, a.getHeight() - height - ySpace, width, height, null);
+		
+		return a;
 	}
 
 	public static BufferedImage appendImages(BufferedImage a, BufferedImage b) {
