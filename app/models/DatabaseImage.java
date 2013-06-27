@@ -1,5 +1,6 @@
 package models;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +17,7 @@ import util.PodbaseUtil;
 @Entity
 public class DatabaseImage extends TimestampModel {
 	public String path;
+	public String hash;
 	
 	@OneToMany(mappedBy="image", cascade=CascadeType.ALL)
 	public List<ImageAttribute> attributes;
@@ -28,6 +30,15 @@ public class DatabaseImage extends TimestampModel {
 		PathService.assertPath(path);
 		
 		this.path = path;
+		Path pathObject = PathService.resolve(path);
+		
+		this.hash = null;
+		try {
+			if (!pathObject.toFile().isDirectory()) this.hash = PathService.calculateImageHash(pathObject);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		this.attributes = new LinkedList<ImageAttribute>();
 		this.imported = false;
 	}

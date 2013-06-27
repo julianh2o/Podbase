@@ -1,7 +1,9 @@
 package services;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -168,6 +170,12 @@ public class PathService {
 			paths.add(f.toPath());
 		}
 		return paths;
+	}
+	
+	public static String calculateImageHash(Path path) throws IOException {
+		FileInputStream fis = new FileInputStream(path.toFile());
+		String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(fis);
+		return md5;	
 	}
 	
 }
