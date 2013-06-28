@@ -83,7 +83,7 @@ public class PermissionController extends ParentController {
     	PermissionService.togglePermission(user,model,AccessType.LISTED,true);
     	PermissionService.togglePermission(user,model,AccessType.VISIBLE,true);
     	
-    	ok();
+    	jsonOk();
     }
     
     @ModelAccess(AccessType.OWNER)

@@ -31,8 +31,11 @@ define(
 				e.preventDefault();
 				var email = prompt("Enter the user's email address");
 				var self = this;
-				Link.addUserByEmail({modelId:this.modelObject.id,email:email}).post(function() {
+				if (!email) return;
+				Link.addUserByEmail({modelId:this.modelObject.id,email:email}).post().done(function() {
 					Link.getListedUsers({modelId:self.modelObject.id}).pull();
+				}).fail(function() {
+					alert("User not found!");
 				});
 			},
 			
