@@ -13,10 +13,10 @@ import java.lang.reflect.Type;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import models.Activation;
 import models.DatabaseImage;
 import models.GsonTransient;
 import models.ImageAttribute;
-
 import access.AccessType;
 import access.VirtualAccessType;
 
@@ -72,6 +72,17 @@ public class PodbaseUtil {
 			return json;
 		}
 	}
+	
+	private static class ActivationAdaptor implements JsonSerializer<Activation> {
+		@Override
+		public JsonElement serialize(Activation obj, Type type, JsonSerializationContext context) {
+			JsonObject json = new JsonObject();
+			json.addProperty("id", obj.id);
+			json.addProperty("activationCode", obj.activationCode);
+			json.addProperty("expirationDate", obj.expirationDate.getTime());
+			return json;
+		}
+	}
 
 	public static Gson getGsonExcludesGsonTransient() {
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
@@ -88,6 +99,7 @@ public class PodbaseUtil {
 			.registerTypeAdapter(ImageAttribute.class, new ImageAttributeAdaptor())
 			.registerTypeAdapter(AccessType.class, new AccessTypeAdaptor())
 			.registerTypeAdapter(VirtualAccessType.class, new VirtualAccessTypeAdaptor())
+			.registerTypeAdapter(Activation.class, new ActivationAdaptor())
 			.create();
 		return gson;
 	}

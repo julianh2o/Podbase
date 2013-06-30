@@ -25,6 +25,7 @@
 			
 			<td>
 				<a href="@@{UserController.doActivate}?activationCode=<%= user.activation.activationCode %>"><%= user.activation.activationCode %></a>
+				(expiry: <%= moment(user.activation.expirationDate).fromNow() %>)
 			</td>
 		</tr>
 	<% } %>
