@@ -53,11 +53,12 @@ public class UserController extends ParentController {
 		renderJSON(user);
 	}
 	
-	@Util
 	public static void resendActivation(String email) {
 		User user = User.find("byEmail", email).first();
 		Activation.generateActivationCode(user, 30);
 		Email.newAccount(user);
+		
+		renderText("Your activation code has been re-sent to: "+email);
 	}
 	
 	private static Activation validateActivationCode(String activationCode) {
@@ -69,8 +70,9 @@ public class UserController extends ParentController {
 		
 		if (activation.expirationDate.before(new Date())) {
 			error("Activation expired - resending activation");
-			resendActivation(activation.user.email);
+			String email = activation.user.email;
 			activation.delete();
+			resendActivation(email);
 		}
 		
 		return activation;
