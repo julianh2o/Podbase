@@ -30,6 +30,7 @@ import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.yaml.snakeyaml.Yaml;
 
+import services.ImageService;
 import services.PathService;
 
 public class PodbaseMetadataMigration2 {
@@ -100,7 +101,7 @@ public class PodbaseMetadataMigration2 {
 		System.out.println("Migration completed successfully!");
 	}
 	
-	private static String generateDatabaseImageSql() {
+	private static String generateDatabaseImageSql() throws IOException {
 		StringBuilder sb = new StringBuilder();
 		
 		boolean first = true;
@@ -112,7 +113,7 @@ public class PodbaseMetadataMigration2 {
 			int imageId = entry.getValue();
 			
 			//id,now,now,imported,path
-			sb.append(String.format("(%d,'%s','%s',0x0,'%s')",imageId,NOW,NOW,PathService.getRelativeString(path)));
+			sb.append(String.format("(%d,'%s','%s',0x0,'%s','%s')",imageId,NOW,NOW,PathService.getRelativeString(path),PathService.calculateImageHash(path)));
 			first = false;
 		}
 		
