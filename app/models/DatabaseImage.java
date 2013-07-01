@@ -11,11 +11,15 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.UniqueConstraint;
 
+import play.modules.search.Field;
+import play.modules.search.Indexed;
 import services.PathService;
 import util.PodbaseUtil;
 
 @Entity
+@Indexed
 public class DatabaseImage extends TimestampModel {
+	@Field
 	public String path;
 	public String hash;
 	
