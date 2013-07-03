@@ -16,7 +16,7 @@ import services.PermissionService;
  
 import models.*;
  
-@Every("1h")
+//@Every("1h")
 public class SearchIndexMaintenance extends Job {
 	
     public void doJob() throws Exception {

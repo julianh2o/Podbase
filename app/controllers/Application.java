@@ -3,6 +3,7 @@ package controllers;
 import play.*;
 import play.cache.Cache;
 import play.db.jpa.JPA;
+import play.modules.search.Search;
 import play.mvc.*;
 
 import java.text.DecimalFormat;
@@ -39,5 +40,9 @@ public class Application extends ParentController {
 	public static void getCurrentUser() {
 		User user = Security.getUser();
 		renderJSON(user);
+	}
+	
+	public static void rebuildIndex() throws Exception {
+        Search.rebuildAllIndexes();
 	}
 }
