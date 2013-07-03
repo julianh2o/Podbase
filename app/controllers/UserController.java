@@ -47,21 +47,32 @@ public class UserController extends ParentController {
 		User user = new User(email,null);
 		user.save();
 		
-		Activation.generateActivationCode(user, 3);
+		Activation.generateActivationCode(user, 30);
 		Email.newAccount(user);
 		
 		renderJSON(user);
 	}
 	
+	public static void resendActivation(String email) {
+		User user = User.find("byEmail", email).first();
+		Activation.generateActivationCode(user, 30);
+		Email.newAccount(user);
+		
+		renderText("Your activation code has been re-sent to: "+email);
+	}
+	
 	private static Activation validateActivationCode(String activationCode) {
 		Activation activation = Activation.find("byActivationCode", activationCode).first();
-		List<Activation> activations = Activation.findAll();
+		//List<Activation> activations = Activation.findAll();
 		if (activation == null) {
 			error("Activation code not found");
 		}
 		
 		if (activation.expirationDate.before(new Date())) {
-			error("Activation expired");
+			error("Activation expired - resending activation");
+			String email = activation.user.email;
+			activation.delete();
+			resendActivation(email);
 		}
 		
 		return activation;

@@ -37,9 +37,20 @@ public class SearchService {
 		try {
 			Set<DatabaseImage> results = new HashSet<DatabaseImage>();
 			
+			if (query.trim().length() == 0) return results;
+			
 			String lucene = "value:"+query+"*";
 			List<ImageAttribute> found = Search.search(lucene, ImageAttribute.class).fetch();
-	
+			
+			//lucene = "path:"+query+"*";
+			//Search.search(lucene, DatabaseImage.class).fetch();
+
+			List<DatabaseImage> imageResults = DatabaseImage.find("byPathLike","%"+query+"%").fetch(); 
+
+			for (DatabaseImage image : imageResults) {
+				results.add(image);
+			}
+			
 			for (ImageAttribute attr : found) {
 				results.add(attr.image);
 			}

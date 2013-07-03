@@ -25,6 +25,9 @@
 			
 			<td>
 				<a href="@@{UserController.doActivate}?activationCode=<%= user.activation.activationCode %>"><%= user.activation.activationCode %></a>
+				(expiry: <%= moment(user.activation.expirationDate).fromNow() %>)
+				<br/>
+				<a href="@@{UserController.resendActivation}?email=<%=user.email%>">Regenerate Token</a>
 			</td>
 		</tr>
 	<% } %>
