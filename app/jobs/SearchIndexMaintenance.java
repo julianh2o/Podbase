@@ -26,7 +26,7 @@ public class SearchIndexMaintenance extends Job {
 	    	System.out.println("Rebuilding indicies..");
 	    	
             List<JPABase> objects = JPA.em().createQuery("select e from " + "ImageAttribute" + " as e").getResultList();
-            System.out.println("object count: "+objects);
+            System.out.println("object count: "+objects.size());
 	    	
 	        //Search.rebuildAllIndexes();
 	        long duration = System.currentTimeMillis() - start;
