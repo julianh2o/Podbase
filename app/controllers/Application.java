@@ -12,6 +12,8 @@ import access.AccessType;
 
 import javax.persistence.Query;
 
+import jobs.SearchIndexMaintenance;
+
 import models.*;
 
 @With(Security.class)
@@ -43,6 +45,6 @@ public class Application extends ParentController {
 	}
 	
 	public static void rebuildIndex() throws Exception {
-        Search.rebuildAllIndexes();
+		new SearchIndexMaintenance().now();
 	}
 }

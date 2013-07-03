@@ -18,8 +18,11 @@ import models.*;
  
 //@Every("1h")
 public class SearchIndexMaintenance extends Job {
-	
     public void doJob() throws Exception {
+    	long start = System.currentTimeMillis();
         Search.rebuildAllIndexes();
+        long duration = System.currentTimeMillis() - start;
+        long seconds = (int)(duration / 1000);
+        System.out.println("Index tool "+seconds+" seconds to rebuild.");
     }
 }
