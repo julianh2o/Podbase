@@ -57,7 +57,7 @@ public class SearchService {
 			
 			return results;
 		} catch (SearchException se) {
-			Search.getCurrentStore().rebuild(ImageAttribute.class.getName());
+			//Search.getCurrentStore().rebuild(ImageAttribute.class.getName());
 			throw se;
 		}
 	}
