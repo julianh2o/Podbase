@@ -31,7 +31,7 @@ public class Security extends Secure.Security {
         Access access = getActionAnnotation(Access.class);
         if (access != null) {
 	        for (AccessType a : access.value()) {
-	        	boolean hasPermission = PermissionService.hasPermission(u,Podbase.getInstance(), a);
+	        	boolean hasPermission = PermissionService.hasInheritedAccess(u,Podbase.getInstance(), a);
 	        	if (!hasPermission) forbidden();
 	        }
         }
@@ -72,7 +72,7 @@ public class Security extends Secure.Security {
         	
         	if (paper == null) forbidden();
 	        for (AccessType a : paperAccess.value()) {
-	        	boolean hasPermission = PermissionService.hasPermission(u, paper, a);
+	        	boolean hasPermission = PermissionService.hasInheritedAccess(u, paper, a);
 	        	if (!hasPermission) forbidden();
 	        }
         }

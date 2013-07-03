@@ -18,6 +18,7 @@ define(
 				this.access = this.options.access;
 				this.canEdit = this.access["EDITOR"];
 				this.dataMode = this.options.dataMode;
+				this.hideHidden = true;
 				
 				this.project = this.options.project;
 				
@@ -73,10 +74,14 @@ define(
 				$(".add",this.el).click($.proxy(this.createAttribute,this));
 				
 				$(".toggle-hidden",this.el).click($.proxy(this.toggleHiddenAttributes,this));
+				
+				this.$body.toggleClass("show-hidden",!this.hideHidden);
 			},
 			
 			toggleHiddenAttributes : function(e) {
-				this.$body.toggleClass("show-hidden");
+				e.preventDefault();
+				this.hideHidden = !this.hideHidden;
+				this.$body.toggleClass("show-hidden",!this.hideHidden);
 			},
 				
 			createAttribute : function(e) {

@@ -65,11 +65,28 @@ public class PermissionService {
 	// Inherited permissions
 	public static boolean hasInheritedAccess(User user, PermissionedModel model, AccessType access) {
 		if (user.isRoot()) return true;
-		if (hasPermission(User.getGuestAccount(),model,access)) return true;
-		if (hasPermission(User.getAuthenticatedAccount(),model,access)) return true;
-		if (hasPermission(user,model,access)) return true;
+		
+		if (userHasVirtualAccess(User.getGuestAccount(),model,access)) return true;
+		if (userHasVirtualAccess(User.getAuthenticatedAccount(),model,access)) return true;
+		if (userHasVirtualAccess(user,model,access)) return true;
 		
 		return false;
+	}
+	
+	public static boolean userHasVirtualAccess(User user, PermissionedModel model, AccessType access) {
+		Set<VirtualAccessType> virtualAccess = getVirtualAccess(user, model);
+		HashMap<AccessType, VirtualAccessType> virtualAccessMap = getVirtualAccessMap(virtualAccess);
+		
+		return virtualAccessMap.containsKey(access);
+	}
+	
+	public static HashMap<AccessType, VirtualAccessType> getVirtualAccessMap(Set<VirtualAccessType> virtualAccess) {
+		HashMap<AccessType, VirtualAccessType> virtualAccessMap = new HashMap<AccessType, VirtualAccessType>();
+		for (VirtualAccessType access : virtualAccess) {
+			virtualAccessMap.put(access.type, access);
+		}
+		
+		return virtualAccessMap;
 	}
 	
 	
