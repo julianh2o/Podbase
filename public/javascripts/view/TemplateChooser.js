@@ -60,7 +60,8 @@ define(
 			templatesLoaded : function() {
 				this.templates = Link.getTemplates({projectId:this.project.id}).getData();
 				this.access = Link.getAccess({modelId:this.project.id}).getData();
-				this.canChooseTemplate = $.inArray("PROJECT_MANAGE_TEMPLATES",this.access) >= 0;
+				console.log(this.access);
+				this.canChooseTemplate = Util.permits(this.access,"PROJECT_MANAGE_TEMPLATES");
 				
 				this.refresh();
 				
@@ -72,9 +73,9 @@ define(
 				var templateAssignment = this.templateCache.get(this.path);
 				
 				if (templateId) {
-					Link.setFolderTemplate({projectId:this.project.id,templateId:templateId,path:this.path}).post($.proxy(this.handleTemplateForPath,this));
+					Link.setFolderTemplate({projectId:this.project.id,templateId:templateId,path:this.path}).post().done($.proxy(this.handleTemplateForPath,this));
 				} else {
-					Link.clearFolderTemplate({projectId:this.project.id,path:this.path}).post($.proxy(this.handleTemplateForPath,this));
+					Link.clearFolderTemplate({projectId:this.project.id,path:this.path}).post().done($.proxy(this.handleTemplateForPath,this));
 				}
 				
 				$(this).trigger("TemplateChanged",[templateId]);
@@ -88,7 +89,7 @@ define(
 					this.setSelectedTemplate(this.templateCache.get(path));
 				} else {
 					this.templateCache.put(path,null);
-					Link.getTemplateForPath({projectId:this.project.id,path:path}).post($.proxy(this.handleTemplateForPath,this));
+					Link.getTemplateForPath({projectId:this.project.id,path:path}).post().done($.proxy(this.handleTemplateForPath,this));
 				}
 			},
 			

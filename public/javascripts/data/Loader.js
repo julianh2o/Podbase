@@ -55,6 +55,7 @@ define([], function() {
 		post : function(opt) {
 			if (opt) {
 				console.log("Using deprecated options to post");
+				//throw "Using deprecated options to post";
 			}
 			if (opt && $.isFunction(opt)) opt = {complete:opt};
 			var options = $.extend({}, this.opts, {

@@ -48,7 +48,7 @@ define(
 				
 				var name = prompt("Enter a new name for your template:");
 				if (name && name != "") {
-					Link.duplicateTemplate(this.editTemplate.id,name).post($.proxy(this.reloadTemplates,this));
+					Link.duplicateTemplate(this.editTemplate.id,name).post().done($.proxy(this.reloadTemplates,this));
 				}
 			},
 			
@@ -62,7 +62,7 @@ define(
 			},
 			
 			deleteTemplate : function() {
-				Link.deleteTemplate(this.editTemplate.id).post($.proxy(this.reloadTemplates,this));
+				Link.deleteTemplate(this.editTemplate.id).post().done($.proxy(this.reloadTemplates,this));
 			},
 			
 			reloadTemplates : function() {
@@ -74,7 +74,7 @@ define(
 			},
 			
 			addAttribute : function() {
-				Link.addAttribute({templateId:this.editTemplate.id,name:"",description:""}).post($.proxy(this.handleNewAttribute,this));
+				Link.addAttribute({templateId:this.editTemplate.id,name:"",description:""}).post().done($.proxy(this.handleNewAttribute,this));
 			},
 			
 			handleNewAttribute : function(attribute) {
@@ -95,7 +95,7 @@ define(
 				attr.description = $row.find("[name=description]").val();
 				attr.hidden = $row.find("[name=hidden]").prop("checked");
 				
-				Link.updateAttribute({attributeId:attr.id,name:attr.name,description:attr.description,hidden:attr.hidden}).post($.proxy(this.returnStatus,this));
+				Link.updateAttribute({attributeId:attr.id,name:attr.name,description:attr.description,hidden:attr.hidden}).post(); //.always($.proxy(this.returnStatus,this));
 			},
 			
 			onSortStop : function(event,ui) {
@@ -106,7 +106,7 @@ define(
 					var attr = self.getAttributeForElement($(entry));
 					ids[ids.length] = attr.id;
 				});
-				Link.updateAttributeOrder({templateId:this.editTemplate.id,ids:ids}).post($.proxy(this.returnStatus,this));
+				Link.updateAttributeOrder({templateId:this.editTemplate.id,ids:ids}).post(); //.always($.proxy(this.returnStatus,this));
 			},
 			
 			onDeleteClicked : function(event) {
@@ -114,7 +114,7 @@ define(
 				var attribute = this.getAttributeForElement($el);
 				
 				var self = this;
-				Link.removeAttribute({attributeId:attribute.id}).post(function() {
+				Link.removeAttribute({attributeId:attribute.id}).post().done(function() {
 					self.editTemplate.attributes.splice($el.data("index"),1);
 					self.refresh();
 				});
