@@ -18,6 +18,7 @@ define(
 			initialize: function(options) {
 				this.path = options.path;
 				this.tool = null;
+				this.tools = [];
 				
 				this.state = function() {};
 				$.extend(this.state,{
@@ -119,9 +120,9 @@ define(
 			},
 			
 			addTool : function(name,display,object) {
+				this.tools.push(object);
 				var $li = $("<li>").addClass(name).attr("data-tool-name",name).data("tool",object);
 				var $a = $("<a href='#'>").text(display);
-				object.el = this.$toolOptions;
 				$li.append($a);
 				this.$tools.append($li);
 				object.init(this);
@@ -187,7 +188,10 @@ define(
 					scaledImageDim.x,scaledImageDim.y
 				);
 				
-				this.tool.draw(g,this.state);
+				var state = this.state;
+				_.each(this.tools,function(tool) {
+					tool.draw(g,state);
+				});
 			},
 			
 			mousedown : function(e) {
@@ -273,10 +277,14 @@ define(
 			
 			selectTool : function(tool) {
 				var $el = this.$tools.find("[data-tool-name='"+tool+"']");
-				if (this.tool) this.tool.deactivate();
+				if (this.tool) {
+					this.tool.deactivate();
+					$(this.tool.el).detach();
+				}
 				
 				this.tool = $el.data("tool");
 				
+				$(".tool-options",this.el).append(this.tool.el);
 				this.tool.activate(this);
 				$el.siblings().removeClass("active");
 				$el.addClass("active");

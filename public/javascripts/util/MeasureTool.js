@@ -13,7 +13,6 @@ define(
 			
 			init : function(viewer) {
 				this.viewer = viewer;
-				console.log("initting viewer");
 				
 				this.render();
 				
@@ -47,7 +46,6 @@ define(
 			},
 			
 			deactivate : function() {
-				this.el.empty();
 			},
 			
 			mousedown : function(e,state) {

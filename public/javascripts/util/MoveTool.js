@@ -31,7 +31,6 @@ define(
 			},
 			
 			deactivate : function() {
-				this.el.empty();
 			},
 			
 			mousedown : function(e,pos,state) {
