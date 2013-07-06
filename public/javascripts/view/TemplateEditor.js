@@ -35,6 +35,7 @@ define(
 				
 				$(".delete-template",this.el).click($.proxy(this.deleteTemplateClicked,this));
 				$(".duplicate-template",this.el).click($.proxy(this.duplicateTemplateClicked,this));
+				$(".rename-template",this.el).click($.proxy(this.renameTemplateClicked,this));
 				
 				$(".remove",this.el).on("click",$.proxy(this.onDeleteClicked,this));
 				$(".add",this.el).on("click",$.proxy(this.addAttribute,this));
@@ -48,7 +49,7 @@ define(
 				
 				var name = prompt("Enter a new name for your template:");
 				if (name && name != "") {
-					Link.duplicateTemplate(this.editTemplate.id,name).post().done($.proxy(this.reloadTemplates,this));
+					Link.duplicateTemplate(this.editTemplate.id,name).post().always($.proxy(this.reloadTemplates,this));
 				}
 			},
 			
@@ -61,8 +62,17 @@ define(
 				}
 			},
 			
+			renameTemplateClicked : function(e) {
+				e.preventDefault();
+				
+				var name = prompt("Enter a new name for this template: ");
+				if (name) {
+					Link.renameTemplate(this.editTemplate.id,name).post().always($.proxy(this.reloadTemplates,this));
+				}
+			},
+			
 			deleteTemplate : function() {
-				Link.deleteTemplate(this.editTemplate.id).post().done($.proxy(this.reloadTemplates,this));
+				Link.deleteTemplate(this.editTemplate.id).post().always($.proxy(this.reloadTemplates,this));
 			},
 			
 			reloadTemplates : function() {

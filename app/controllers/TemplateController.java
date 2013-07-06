@@ -46,6 +46,11 @@ public class TemplateController extends ParentController {
 		newTemplate.save();
 	}
 	
+	public static void renameTemplate(Template template, String newName) {
+		template.name = newName;
+		template.save();
+	}
+	
 	//TODO clean me up
 	public static void setFolderTemplate(Project project, Template template, Path path) {
 		TemplateAssignment assignment = TemplateAssignment.find("project = ? AND path = ?", project, PathService.getRelativeString(path)).first();

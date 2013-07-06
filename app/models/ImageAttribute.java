@@ -25,6 +25,8 @@ public class ImageAttribute extends TimestampModel {
 	@Field
 	public String value;
 	
+	public int ordering;
+	
 	public boolean data;
 	
 	public boolean hidden;

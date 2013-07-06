@@ -51,6 +51,12 @@ define(['data/Loader'],function(Loader) {
 		
 		
 		// ############################################
+		// PodbaseSecure.java
+		// ############################################
+		this.authenticate = new Loader("@{PodbaseSecure.authenticate}?String={String}&password={password}&remember={remember}&redirect={redirect}");
+		
+		
+		// ############################################
 		// PermissionController.java
 		// ############################################
 		this.setPermission = new Loader("@{PermissionController.setPermission}?model.id={modelId}&user.id={userId}&permission={permission}&value={value}");
@@ -71,6 +77,7 @@ define(['data/Loader'],function(Loader) {
 		this.getAllUsers = new Loader("@{UserController.getAllUsers}");
 		this.changePassword = new Loader("@{UserController.changePassword}?oldpassword={oldpassword}&newpassword={newpassword}");
 		this.createUser = new Loader("@{UserController.createUser}?email={email}");
+		this.resendActivation = new Loader("@{UserController.resendActivation}?email={email}");
 		this.doActivate = new Loader("@{UserController.doActivate}?activationCode={activationCode}");
 		this.completeActivation = new Loader("@{UserController.completeActivation}?user.id={userId}&activationCode={activationCode}&password={password}&confirm={confirm}");
 		this.mimicUser = new Loader("@{UserController.mimicUser}?user.id={userId}");
@@ -101,6 +108,7 @@ define(['data/Loader'],function(Loader) {
 		this.paper = new Loader("@{Application.paper}?paperId={paperId}");
 		this.loadJavascript = new Loader("@{Application.loadJavascript}?path={path}");
 		this.getCurrentUser = new Loader("@{Application.getCurrentUser}");
+		this.rebuildIndex = new Loader("@{Application.rebuildIndex}");
 		
 		
 		// ############################################
@@ -116,6 +124,7 @@ define(['data/Loader'],function(Loader) {
 		this.addTemplate = new Loader("@{TemplateController.addTemplate}?project.id={projectId}&templateName={templateName}");
 		this.deleteTemplate = new Loader("@{TemplateController.deleteTemplate}?template.id={templateId}");
 		this.duplicateTemplate = new Loader("@{TemplateController.duplicateTemplate}?template.id={templateId}&newName={newName}");
+		this.renameTemplate = new Loader("@{TemplateController.renameTemplate}?template.id={templateId}&newName={newName}");
 		this.setFolderTemplate = new Loader("@{TemplateController.setFolderTemplate}?project.id={projectId}&template.id={templateId}&path={path}");
 		this.clearFolderTemplate = new Loader("@{TemplateController.clearFolderTemplate}?project.id={projectId}&path={path}");
 		this.getTemplateForPath = new Loader("@{TemplateController.getTemplateForPath}?project.id={projectId}&path={path}");
