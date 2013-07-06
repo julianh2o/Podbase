@@ -22,6 +22,11 @@ import models.Project;
 import models.User;
  
 public class Security extends Secure.Security {
+	static void db(Object s) {
+		//Uncomment to debug
+		//System.out.println(s);
+	}
+	
     @Before
     static void checkAccess() throws Throwable {
         User u = getUser();
@@ -30,16 +35,20 @@ public class Security extends Secure.Security {
         
         Access access = getActionAnnotation(Access.class);
         if (access != null) {
+        	db(request.url+": "+access);
 	        for (AccessType a : access.value()) {
 	        	boolean hasPermission = PermissionService.hasInheritedAccess(u,Podbase.getInstance(), a);
-	        	if (!hasPermission) forbidden();
+	        	if (!hasPermission) redirectToLogin();
 	        }
         }
         
         ModelAccess modelAccess = getActionAnnotation(ModelAccess.class);
         if (modelAccess != null) {
+        	db(request.url+": "+modelAccess);
         	PermissionedModel model = params.get("project",PermissionedModel.class);
         	if (model != null && !model.isPersistent()) model = null;
+        	
+        	if (model == null && params.get("projectId",Long.class) != null) model = Project.findById(params.get("projectId",Long.class));
         	
         	if (model == null) model = params.get("model",PermissionedModel.class);
         	if (model != null && !model.isPersistent()) model = null;
@@ -48,38 +57,52 @@ public class Security extends Secure.Security {
 	        	Path path = params.get("path",Path.class);
 	        	if (path != null) model = PathService.projectForPath(path);
         	}
+        	
+        	db("  Security Model: "+model);
 	        	
-        	if (model == null) forbidden();
+        	if (model == null) redirectToLogin();
         	
         	Set<AccessType> projectAccessSet = PermissionService.getResolvedAccess(u,model);
         	
 	        for (AccessType a : modelAccess.value()) {
 	        	boolean hasPermission = projectAccessSet.contains(a);
-	        	if (!hasPermission) forbidden();
+	        	if (!hasPermission) redirectToLogin();
 	        }
         }
         
         PaperAccess paperAccess = getActionAnnotation(PaperAccess.class);
         if (paperAccess != null) {
+        	db(request.url+": "+paperAccess);
         	Paper paper = params.get("paper",Paper.class);
+        	
+        	if (paper == null && params.get("paperId",Long.class) != null) paper = Paper.findById(params.get("paperId",Long.class));
         	
         	if (paper == null) {
         		ImageSet set = params.get("imageset",ImageSet.class);
         		if (set != null) paper = set.paper;
         	}
         	
-        	if (paper == null) forbidden();
+        	db("  Security Model: "+paper);
         	
-        	if (paper == null) forbidden();
+        	if (paper == null) redirectToLogin();
+        	
 	        for (AccessType a : paperAccess.value()) {
 	        	boolean hasPermission = PermissionService.hasInheritedAccess(u, paper, a);
-	        	if (!hasPermission) forbidden();
+	        	if (!hasPermission) redirectToLogin();
 	        }
         }
     }
+    
+	protected static void redirectToLogin() {
+		String url = "GET".equals(request.method) ? request.url : "/";
+		flash.put("url", url);
+		System.out.println("setting url to: "+url);
+		redirect("/login");
+	}
+	
 	
     @Util
-    public static boolean authentify(String email, String password) {
+    public static boolean authenticate(String email, String password) {
         User user = User.find("byEmail", email).first();
         return user != null && user.authenticate(password);
     }

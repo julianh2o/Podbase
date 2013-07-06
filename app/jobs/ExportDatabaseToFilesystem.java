@@ -33,7 +33,7 @@ import services.ImportExportService;
 import services.PathService;
 import util.PodbaseUtil;
 
-@Every("1h")
+@Every("4h")
 public class ExportDatabaseToFilesystem extends Job {
 	public void doJob() throws Exception {
 		Path p = PathService.getRootImageDirectory();

@@ -9,6 +9,7 @@ import play.mvc.*;
 import java.text.DecimalFormat;
 import java.util.*;
 import access.AccessType;
+import access.ModelAccess;
 
 import javax.persistence.Query;
 
@@ -23,6 +24,7 @@ public class Application extends ParentController {
     	render();
     }
     
+    @ModelAccess(AccessType.VISIBLE)
     public static void entry(Long projectId) {
     	Project project = Project.findById(projectId);
     	if (project == null) index();

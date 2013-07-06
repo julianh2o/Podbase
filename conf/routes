@@ -3,7 +3,7 @@
 # ~~~~
 
 GET     /                                       Application.index
-GET     /entry/{projectId}                      Application.entry
+GET     /entry/{projectId}                     Application.entry
 GET     /paper/{paperId}                        Application.paper
 GET     /renderImageset/{imagesetId}            PaperController.render
 GET     /project                                ProjectController.getProjects
