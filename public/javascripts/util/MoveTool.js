@@ -7,7 +7,7 @@ define(
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
 		
-			activate : function(viewer) {
+			init : function(viewer) {
 				this.viewer = viewer;
 				this.render();
 				
@@ -16,6 +16,10 @@ define(
 				this.$scale = $(".scale",this.el);
 				
 				this.update(viewer.state);
+			},
+			
+			activate : function(viewer) {
+				
 			},
 			
 			update : function() {

@@ -9,8 +9,8 @@ define(
 		
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
-		
-			activate : function(viewer) {
+			
+			init : function(viewer) {
 				this.viewer = viewer;
 				
 				this.render();
@@ -34,7 +34,9 @@ define(
 				
 				this.$brightness.change($.proxy(this.valuesUpdated,this));
 				this.$contrast.change($.proxy(this.valuesUpdated,this));
-				
+			},
+		
+			activate : function(viewer) {
 				this.updateUI(viewer.state);
 			},
 			

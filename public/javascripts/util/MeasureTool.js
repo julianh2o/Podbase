@@ -10,9 +10,10 @@ define(
 		
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
-		
-			activate : function(viewer) {
+			
+			init : function(viewer) {
 				this.viewer = viewer;
+				console.log("initting viewer");
 				
 				this.render();
 				
@@ -21,6 +22,9 @@ define(
 				this.setCalibrationLength(1);
 				
 				this.$legendLength.change($.proxy(this.fieldUpdated,this));
+			},
+		
+			activate : function(viewer) {
 			},
 			
 			update : function() {

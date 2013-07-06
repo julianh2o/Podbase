@@ -124,6 +124,7 @@ define(
 				object.el = this.$toolOptions;
 				$li.append($a);
 				this.$tools.append($li);
+				object.init(this);
 			},
 			
 			updateImage : function() {
