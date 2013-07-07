@@ -93,7 +93,7 @@ db=fs
 #
 # Specify the ddl generation pattern to use. Set to none to disable it 
 # (default to update in DEV mode, and none in PROD mode):
-jpa.ddl=create
+jpa.ddl=create-drop
 #
 # Debug SQL statements (logged using DEBUG level):
 # jpa.debugSQL=true
@@ -170,19 +170,22 @@ play.search.path=tmp/index
 # ~~~~~
 
 application.log.path=/log4j-prod.properties
-
+#jpa.dialect=org.hibernate.dialect.MySQLDialect
 
 
 %dev.application.mode=dev
 %dev.db=mem
-%dev.jpa.ddl=create-drop
+%dev.jpa.ddl=create
 #%dev.mail.smtp=mock
 %dev.http.port=9001
 %dev.application.log.path=/log4j-dev.properties
+#%dev.jpa.debugSQL=true
+#%dev.hibernate.show_sql=true
+#%dev.log4j.logger.org.hibernate.tool.hbm2ddl=trace
 
 %test.application.mode=dev
 %test.db=mem
-%test.jpa.ddl=create-drop
+%test.jpa.ddl=create
 %test.mail.smtp=mock
 %test.http.port=9001
 %test.application.log.path=/log4j-dev.properties
