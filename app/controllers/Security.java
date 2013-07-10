@@ -96,7 +96,6 @@ public class Security extends Secure.Security {
 	protected static void redirectToLogin() {
 		String url = "GET".equals(request.method) ? request.url : "/";
 		flash.put("url", url);
-		System.out.println("setting url to: "+url);
 		redirect("/login");
 	}
 	
