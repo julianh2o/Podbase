@@ -62,6 +62,9 @@ define(
 			
 			closeResults : function() {
 				this.$resultsPanel.hide();
+				this.$resultsPanel.empty();
+				this.results = [];
+				$(".image-search-field").val("");
 			}
 		});
 		
