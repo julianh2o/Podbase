@@ -80,7 +80,7 @@ public class PodbaseMetadataMigration2 {
 		System.out.println("Generating Field SQL");
 		String fieldsSql = generateSql((List<AbstractEntry>)(List<?>)templateFields);
 		
-		BufferedWriter bw = new BufferedWriter(new FileWriter(new File("./schema.sql")));
+		BufferedWriter bw = new BufferedWriter(new FileWriter(new File("./database.sql")));
 		bw.append(projectSql);
 		bw.append("\n\n");
 		bw.append(databaseImages);

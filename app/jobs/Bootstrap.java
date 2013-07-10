@@ -23,8 +23,10 @@ public class Bootstrap extends Job {
 			return;
 		}
 		
-		System.out.println("Clearing database and bootstrapping.");
-        Fixtures.deleteDatabase();
+		//System.out.println("Clearing database and bootstrapping.");
+        //Fixtures.deleteDatabase();
+		
+		if (Podbase.findAll().size() > 0) return;
         
         new Podbase().save();
         

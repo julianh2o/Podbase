@@ -15,6 +15,7 @@ import play.modules.search.Search;
 import play.test.*;
 import services.PathService;
 import services.PermissionService;
+import util.TaskCompletionEstimator;
  
 import models.*;
  
@@ -23,12 +24,21 @@ public class SearchIndexMaintenance extends Job {
     public void doJob() throws Exception {
     	try {
 	    	long start = System.currentTimeMillis();
-	    	System.out.println("Rebuilding indicies..");
 	    	
-            //List<JPABase> objects = JPA.em().createQuery("select e from " + "ImageAttribute" + " as e").getResultList();
-            //System.out.println("object count: "+objects.size());
+	    	System.out.println("Loading objects..");
+	    	List<ImageAttribute> imageAttributes = ImageAttribute.findAll();
+	    	System.out.println("Objects loaded: "+imageAttributes.size());
+	    	System.out.println("Indexing..");
+	    	TaskCompletionEstimator est = new TaskCompletionEstimator(10,20,imageAttributes.size());
+	    	for (ImageAttribute attr : imageAttributes) {
+		        Search.index(attr);
+		        est.tick();
+		        
+		        if (est.getCurrentTick() % 300 == 0) {
+		        	System.out.println(est.getStatusLine());
+		        }
+	    	}
 	    	
-	        Search.rebuildAllIndexes();
 	        long duration = System.currentTimeMillis() - start;
 	        long seconds = (int)(duration / 1000);
 	        System.out.println("Index rebuilt in "+seconds+" seconds.");
