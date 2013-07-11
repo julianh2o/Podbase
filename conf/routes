@@ -21,6 +21,11 @@ PUT     /project                                ProjectController.newProjects
 # Import Secure routes
 *      /  						                module:secure
 
+GET /@search/? modules.search.Administration.index
+GET /@search/optimize/{name} modules.search.Administration.optimize
+GET /@search/reindex/{name} modules.search.Administration.reindex
+GET /@search/reopen/{name} modules.search.Administration.reopen
+
 
 # Map static resources from the /app/public folder to the /public path
 GET		/public/javascripts/lib/ 	  			staticDir:public
