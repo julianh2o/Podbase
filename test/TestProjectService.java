@@ -1,3 +1,7 @@
+// Copyright 2013 Julian Hartline <julianh2o@gmail.com>
+// 
+// This code is available under the MIT license.
+// See the LICENSE file for details.
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
