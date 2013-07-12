@@ -49,4 +49,15 @@ public class Application extends ParentController {
 	public static void rebuildIndex() throws Exception {
 		new SearchIndexMaintenance().now();
 	}
+	
+//	public static void testSearch(String query) {
+//		List<ImageAttribute> found = Search.search(query, ImageAttribute.class).fetch();
+//		StringBuilder sb = new StringBuilder();
+//		sb.append("Query: '"+query+"'\n");
+//		sb.append("Results: "+found.size()+"\n");
+//		for (ImageAttribute attr : found) {
+//			sb.append(String.format("%s %s %s\n",attr.image.getPath().toString(),attr.attribute,attr.value));
+//		}
+//		renderText(sb.toString());
+//	}
 }
