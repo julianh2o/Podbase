@@ -155,6 +155,8 @@ define(
 						this.loadDirectory(Util.getParentDirectory(this.path));
 					}
 				}
+				
+				$(this).trigger("keydown",[e]);
 			},
 			
 			isRoot : function() {

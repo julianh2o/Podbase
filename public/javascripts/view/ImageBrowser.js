@@ -36,6 +36,7 @@ define(
 				this.selectedFile = null;
 				
 				this.fileBrowser = new FileBrowser({root:"/"+this.project.name+"/",project:this.project, showVisibility: this.access["EDITOR"]});
+				$(this.fileBrowser).on("keydown",$.proxy(this.filebrowserKeydown,this));
 				this.$browser.append(this.fileBrowser.el);
 				
 				$(".path",this.actionBar.el).replaceWith($(".path",this.fileBrowser.el));
@@ -66,6 +67,25 @@ define(
 				$(".upload-files",this.el).click($.proxy(this.uploadFilesClicked,this));
 				
 				this.loadHashPath();
+			},
+			
+			copyAttributes : function() {
+				this.stored = this.imageDetails.getAttributes();
+			},
+			
+			pasteAttributes : function() {
+				if (!this.stored) return;
+				
+				this.imageDetails.pasteAttributes(this.stored);
+			},
+			
+			filebrowserKeydown : function(_,e) {
+				if (e.keyCode == 67 && e.ctrlKey) { //control-C
+					this.copyAttributes();
+				}
+				if (e.keyCode == 86 && e.ctrlKey) { //control-V
+					this.pasteAttributes();
+				}
 			},
 			
 			uploadFilesClicked : function(e) {

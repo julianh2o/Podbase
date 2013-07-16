@@ -50,6 +50,52 @@ define(
 				this.refresh();
 			},
 			
+			getAttributes : function() {
+				return this.attributes;
+			},
+			
+			pasteAttributes : function(pasted) {
+				var byAttribute = _.groupBy(this.attributes,"attribute");
+				
+				var attributesToWrite = [];
+				var overwrite = null;
+				_.each(pasted,function(item) {
+					var alreadyExists = byAttribute[item.attribute];
+					if (overwrite == null && alreadyExists) {
+						overwrite = confirm("Overwrite existing attributes?");
+					}
+						
+					if (!alreadyExists || overwrite) {
+						attributesToWrite.push({
+							attribute: item.attribute,
+							value: item.value
+						});
+					}
+				});
+				
+				if (overwrite == null) overwrite = true;
+				
+				/*
+				var overwrite = false;
+				if (existing.length) {
+					var attributeList = _.pluck(existing,"attribute").join(", ");
+					overwrite = 
+					if (!overwrite) {
+						var noquit = confirm("Continue with the remaining attributes?")
+						if (!noquit) return;
+					}
+				}
+				*/
+				
+				$.post("@{ImageBrowser.pasteAttributes()}",{
+					"project.id" : this.project.id,
+					path : this.file.path,
+					jsonAttributes: JSON.stringify(attributesToWrite),
+					overwrite : overwrite,
+					dataMode : this.dataMode
+				},$.proxy(this.createAttributeSuccess,this));
+			},
+			
 			refresh : function() {
 				this.attributes = this.link ? this.link.getData() : null;
 				

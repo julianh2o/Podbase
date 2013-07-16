@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
@@ -51,6 +52,8 @@ import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import models.*;
 import services.ImageService;
@@ -248,6 +251,43 @@ public class ImageBrowser extends ParentController {
 		ImportExportService.tryExportData(image);
 		
 		renderJSON(attr);
+	}
+	
+	private class KeyValueStore {
+		String attribute;
+		String value;
+		
+		public String toString() {
+			return attribute + ": "+value;
+		}
+	}
+	
+	@ModelAccess(AccessType.EDITOR)
+	public static void pasteAttributes(Project project, Path path, String jsonAttributes, boolean overwrite, boolean dataMode) {
+		DatabaseImage image = DatabaseImage.forPath(path);
+		
+		Type listType = new TypeToken<List<KeyValueStore>>() {}.getType();
+		List<KeyValueStore> attributes = new GsonBuilder().create().fromJson(jsonAttributes, listType);
+		
+		for (KeyValueStore attr : attributes) {
+			setImageAttribute(project,image,attr.attribute,attr.value,overwrite,dataMode);
+		}
+		
+		ImportExportService.tryExportData(image);
+		jsonOk();
+	}
+	
+	@Util
+	public static ImageAttribute setImageAttribute(Project project, DatabaseImage image, String attribute, String value, boolean overwrite, boolean dataMode) {
+		ImageAttribute existing = ImageAttribute.find("byProjectAndImageAndAttributeAndData", project, image, attribute, dataMode).first();
+		if (existing != null && overwrite) {
+			existing.value = value;
+			existing.save();
+			return existing;
+		} else {
+			ImageAttribute attr = image.addAttribute(project, attribute, value, dataMode);
+			return attr;
+		}
 	}
 	
 	@ModelAccess(AccessType.OWNER)

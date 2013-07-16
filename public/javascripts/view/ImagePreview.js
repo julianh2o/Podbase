@@ -6,8 +6,8 @@ define(
 			template: _.template( tmpl ),
 			
 			initialize: function() {
-				this.loadPreview(this.options.file);
 				this.browser = this.options.browser;
+				this.loadPreview(this.options.file);
 			},
 			
 			loadPreview : function(file) {
@@ -44,6 +44,12 @@ define(
 				this.$toggleVisible = $(".toggle-visible",this.el);
 				this.$toggleVisible.click($.proxy(this.toggleVisible,this));
 				
+				this.$copy = $(".copy",this.el);
+				this.$copy.click($.proxy(this.doCopy,this));
+				
+				this.$paste = $(".paste",this.el);
+				this.$paste.click($.proxy(this.doPaste,this));
+				
 				this.$import = $(".import-data",this.el);
 				this.$import.click($.proxy(this.importData,this));
 				
@@ -53,7 +59,16 @@ define(
 				this.updateVisibleText();
 				
 				$(".add-to-image-set",this.el).unbind('click').click($.proxy(this.addToImageSet,this));
-				
+			},
+			
+			doCopy : function(e) {
+				e.preventDefault();
+				this.browser.copyAttributes();
+			},
+			
+			doPaste : function(e) {
+				e.preventDefault();
+				this.browser.pasteAttributes();
 			},
 			
 			imageHoverIn : function() {
