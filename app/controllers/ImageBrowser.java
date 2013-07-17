@@ -280,6 +280,7 @@ public class ImageBrowser extends ParentController {
 				}
 			}
 			
+			if (attr.value.trim().isEmpty()) continue;
 			image.addAttribute(project, attr.attribute, attr.value, dataMode);
 		}
 		
