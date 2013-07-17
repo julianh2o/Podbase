@@ -56,6 +56,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import models.*;
+import services.DatabaseImageService;
 import services.ImageService;
 import services.ImportExportService;
 import services.PathService;
@@ -269,25 +270,21 @@ public class ImageBrowser extends ParentController {
 		Type listType = new TypeToken<List<KeyValueStore>>() {}.getType();
 		List<KeyValueStore> attributes = new GsonBuilder().create().fromJson(jsonAttributes, listType);
 		
+		Map<String,List<ImageAttribute>> existingMap = DatabaseImageService.attributeMapForImageAndMode(project, image, dataMode);
 		for (KeyValueStore attr : attributes) {
-			setImageAttribute(project,image,attr.attribute,attr.value,overwrite,dataMode);
+			if (existingMap.containsKey(attr.attribute)) {
+				if (!overwrite) continue;
+				
+				for (ImageAttribute iattr : existingMap.get(attr.attribute)) {
+					iattr.delete();
+				}
+			}
+			
+			image.addAttribute(project, attr.attribute, attr.value, dataMode);
 		}
 		
 		ImportExportService.tryExportData(image);
 		jsonOk();
-	}
-	
-	@Util
-	public static ImageAttribute setImageAttribute(Project project, DatabaseImage image, String attribute, String value, boolean overwrite, boolean dataMode) {
-		ImageAttribute existing = ImageAttribute.find("byProjectAndImageAndAttributeAndData", project, image, attribute, dataMode).first();
-		if (existing != null && overwrite) {
-			existing.value = value;
-			existing.save();
-			return existing;
-		} else {
-			ImageAttribute attr = image.addAttribute(project, attribute, value, dataMode);
-			return attr;
-		}
 	}
 	
 	@ModelAccess(AccessType.OWNER)
