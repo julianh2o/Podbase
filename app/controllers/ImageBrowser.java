@@ -265,26 +265,47 @@ public class ImageBrowser extends ParentController {
 	
 	@ModelAccess(AccessType.EDITOR)
 	public static void pasteAttributes(Project project, Path path, String jsonAttributes, boolean overwrite, boolean dataMode) {
+		Stopwatch sw = new Stopwatch();
+		sw.start("loading image");
 		DatabaseImage image = DatabaseImage.forPath(path);
+		sw.stop("loading image");
 		
+		sw.start("parsing json");
 		Type listType = new TypeToken<List<KeyValueStore>>() {}.getType();
 		List<KeyValueStore> attributes = new GsonBuilder().create().fromJson(jsonAttributes, listType);
+		sw.stop("parsing json");
 		
+		sw.start("get map");
 		Map<String,List<ImageAttribute>> existingMap = DatabaseImageService.attributeMapForImageAndMode(project, image, dataMode);
+		sw.start("get map");
+		
+		sw.start("loop");
 		for (KeyValueStore attr : attributes) {
+			if (attr.value ==  null) continue;
+			sw.start("loopinner");
 			if (existingMap.containsKey(attr.attribute)) {
 				if (!overwrite) continue;
 				
+				sw.start("delete all");
 				for (ImageAttribute iattr : existingMap.get(attr.attribute)) {
 					iattr.delete();
 				}
+				sw.stop("delete all");
 			}
 			
 			if (attr.value.trim().isEmpty()) continue;
+			sw.start("add attr");
 			image.addAttribute(project, attr.attribute, attr.value, dataMode);
+			sw.stop("add attr");
+			sw.stop("loopinner");
 		}
+		sw.stop("loop");
 		
+		sw.start("export data");
 		ImportExportService.tryExportData(image);
+		sw.stop("export data");
+		
+		System.out.println(sw.toString());
 		jsonOk();
 	}
 	

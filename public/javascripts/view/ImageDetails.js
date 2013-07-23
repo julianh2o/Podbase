@@ -51,7 +51,9 @@ define(
 			},
 			
 			getAttributes : function() {
-				return this.attributes;
+				return _.filter(this.attributes,function(item) {
+					return item.value != undefined && item.value != "";
+				});
 			},
 			
 			pasteAttributes : function(pasted) {
@@ -60,8 +62,9 @@ define(
 				var attributesToWrite = [];
 				var overwrite = null;
 				_.each(pasted,function(item) {
-					var alreadyExists = byAttribute[item.attribute];
-					if (overwrite == null && alreadyExists) {
+					var existing = byAttribute[item.attribute];
+					var alreadyExists = existing && existing.value && existing.value != "";
+					if (overwrite == null) {
 						overwrite = confirm("Overwrite existing attributes?");
 					}
 						
