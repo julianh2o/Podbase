@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import com.google.gson.Gson;
 
 import play.Play;
+import play.mvc.After;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.Http.Response;
@@ -27,6 +28,20 @@ public class ParentController extends Controller {
 		renderArgs.put("user", Security.getUser());
 	    renderArgs.put("frameworkId", Play.id);
 	    renderArgs.put("serverUrl", request.getBase());
+    }
+    
+    @Before
+    static void startTimer() {
+    	renderArgs.put("renderStart", System.currentTimeMillis());
+    }
+    
+    @After
+    static void stopTimer() {
+    	long currentTime = System.currentTimeMillis();
+    	long delta = currentTime - (Long)renderArgs.get("renderStart");
+    	renderArgs.put("renderStop", currentTime);
+    	renderArgs.put("renderTime", delta);
+    	System.out.println("Pagetimer: "+delta+" ms "+request.url);
     }
 	
 	@Util
