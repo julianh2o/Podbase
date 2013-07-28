@@ -135,31 +135,34 @@ define(
 				}
 				
 				var img = new Image();
-				img.src = url;
 				this.original = img;
 				
 				$(img).load($.proxy(this.imageLoaded,this));
+				img.src = url;
 				
 				this.imageLoading = true;
 			},
 			
 			imageLoaded : function() {
 				this.state.imageDim = new Point2d(this.original.width, this.original.height);
-				//this.$processed.attr({"width":this.state.imageDim.x,"height":this.state.imageDim.y});
-				//this.copyImageToProcess();
 				
 				this.imageLoading = false;
 				this.imageProcessing = true;
-				
+					
 				this.doProcess();
 			},
 			
 			doProcess : function() {
 				var brightness = this.state.brightness;
 				var contrast = Math.pow(2,this.state.contrast/30) - 1;
-				//this.$processed.attr("width",this.state.imageDim.x);
-				//this.$processed.attr("height",this.state.imageDim.y);
-				Pixastic.process(this.original, "brightness", {brightness:brightness,contrast:contrast},$.proxy(this.imageProcessingComplete,this));
+				try {
+					Pixastic.process(this.original, "brightness", {brightness:brightness,contrast:contrast},$.proxy(this.imageProcessingComplete,this));
+				} catch (err) {
+					//Hack to fix some very strange firefox issues relating to component not being ready despite the image load event triggering
+					setTimeout($.proxy(function() {
+						Pixastic.process(this.original, "brightness", {brightness:brightness,contrast:contrast},$.proxy(this.imageProcessingComplete,this));
+					},this),100);
+				}
 			},
 			
 			imageProcessingComplete : function(image) {
