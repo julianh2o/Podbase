@@ -78,7 +78,7 @@ define(
 				text.bind("blur", $.proxy(this.handleValueBlur,this));
 				
 				var self = this;
-				text.bind("keydown",function(e) {
+				text.bind("keyup",function(e) {
 					if (e.keyCode == 13) {
 						self.handleValueBlur($el);
 					}
@@ -94,7 +94,7 @@ define(
 				var value = $("textarea",this.el).val();
 				var oldValue = $el.data("value");
 				
-				if (value == oldValue || value == "") {
+				if (value == oldValue) {
 					this.refresh();
 					return;
 				};
