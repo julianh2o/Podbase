@@ -1,25 +1,20 @@
 REQUIRED:
 
 NICE TO HAVE:
-* after login redirect
 * fix refresh clearing out the related panel (project permissions when list changes)
 
 POLISHING
-* more tests, more clean up, more services
 * add EHCache (or other caching solution)
 
 OTHER:
 * hidden permissions
 * fix link so that null values can be sent for objects
-* image file hash data
-* background task to index the filesystem
 * fix sending post data via get strings.. @.@
 * multiple image sets per paper (and management UI)
 
 V2:
 * add filesystem watching (add upload features)
 * image groups within papers
-* permission descriptions
 * access levels "user groups"
 * messaging system
 * paper specific metadata
