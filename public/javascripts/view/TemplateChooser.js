@@ -18,10 +18,11 @@ define(
 			setProject : function(project) {
 				this.project = project;
 				
+				
 				Link.loadAll([
-				                          ["getTemplates",{projectId:this.project.id}],
-				                          ["getAccess",{modelId:this.project.id}]
-				                          ],$.proxy(this.templatesLoaded,this),true);
+	                          ["getTemplates",{projectId:this.project.id}],
+	                          ["getAccess",{modelId:this.project.id}]
+	                          ],$.proxy(this.templatesLoaded,this),true);
 			},
 			
 			refresh : function() {

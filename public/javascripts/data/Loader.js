@@ -148,7 +148,8 @@ define([], function() {
 		}
 		
 		var Fun = function() {
-			var key = JSON.stringify(arguments);
+			var key = doArgumentReplacement(resourceUrl,arguments)
+			//var key = JSON.stringify(arguments);
 			
 			var instance = instances[key];
 			if (!instance) {
