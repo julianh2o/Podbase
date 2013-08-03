@@ -52,6 +52,7 @@ define(
 			templateClicked : function(event) {
 				var $el = $(event.target);
 				this.templateSelected($el);
+				event.preventDefault();
 			},
 			
 			templateSelected : function($el) {
