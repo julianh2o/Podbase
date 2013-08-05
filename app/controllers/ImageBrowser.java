@@ -177,8 +177,8 @@ public class ImageBrowser extends ParentController {
 		if (image != null) attributes.addAll(image.attributes);
 		
 		//Add attributes from the template
+		List<ImageAttribute> returnAttributes = new LinkedList<ImageAttribute>();
 		if (templateAttributes != null) {
-			List<ImageAttribute> templateImageAttributes = new LinkedList<ImageAttribute>();
 			for(TemplateAttribute templateAttribute : templateAttributes) {
 				ImageAttribute found = null;
 				for (ImageAttribute attribute : attributes) {
@@ -190,13 +190,14 @@ public class ImageBrowser extends ParentController {
 				if (found != null) {
 					found.templated = true;
 					found.hidden = templateAttribute.hidden;
+					returnAttributes.add(found);
 				} else {
-					attributes.add(new ImageAttribute(project, image,templateAttribute.name,null,dataMode,true, templateAttribute.hidden));
+					returnAttributes.add(new ImageAttribute(project, image,templateAttribute.name,null,dataMode,true, templateAttribute.hidden));
 				}
 			}
 		}
 		
-		Iterator<ImageAttribute> it = attributes.iterator();
+		Iterator<ImageAttribute> it = returnAttributes.iterator();
 		while(it.hasNext()) {
 			ImageAttribute attr = it.next();
 			
@@ -204,7 +205,7 @@ public class ImageBrowser extends ParentController {
 			if (dataMode && !attr.data) it.remove();
 		}
 		
-	    renderJSON(attributes);  
+	    renderJSON(returnAttributes);  
 	}
 	
 	//TODO Access control is done in the method.. maybe this could be enhanced?

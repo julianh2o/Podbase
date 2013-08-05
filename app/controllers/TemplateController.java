@@ -42,17 +42,20 @@ public class TemplateController extends ParentController {
 	
 	public static void deleteTemplate(Template template) {
 		template.delete();
+		jsonOk();
 	}
 	
 	public static void duplicateTemplate(Template template, String newName) {
 		Template newTemplate = new Template(template);
 		newTemplate.name = newName;
 		newTemplate.save();
+		jsonOk();
 	}
 	
 	public static void renameTemplate(Template template, String newName) {
 		template.name = newName;
 		template.save();
+		jsonOk();
 	}
 	
 	//TODO clean me up
@@ -63,7 +66,7 @@ public class TemplateController extends ParentController {
 		} else {
 			if (template == null) {
 				assignment.delete();
-				ok();
+				jsonOk();
 				return;
 			}
 			
@@ -79,7 +82,7 @@ public class TemplateController extends ParentController {
 		
 		if (assignment != null) assignment.delete();
 		
-		ok();
+		jsonOk();
 	}
 	
 	//TODO move to template service
@@ -103,7 +106,7 @@ public class TemplateController extends ParentController {
 		TemplateAssignment assignment = templateForPath(project,path);
 			
 		if (assignment == null) {
-			ok();
+			jsonOk();
 		}
 		
 		renderJSON(assignment);
@@ -129,7 +132,7 @@ public class TemplateController extends ParentController {
 
 	public static void removeAttribute(TemplateAttribute attribute) {
 		attribute.delete();
-		ok();
+		jsonOk();
 	}
 	
 	public static void updateAttributeOrder(Template template, String ids) {

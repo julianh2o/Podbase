@@ -11,6 +11,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 
 @Entity
 public class Template extends TimestampModel {
@@ -21,6 +22,7 @@ public class Template extends TimestampModel {
 	public String name;
 	
 	@OneToMany(mappedBy="template", cascade=CascadeType.ALL)
+	@OrderBy("sort")
 	public List<TemplateAttribute> attributes;
 	
 	public Template(Project project, String name) {
