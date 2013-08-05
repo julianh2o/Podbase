@@ -42,7 +42,7 @@ define(
 				$(".value",this.el).click($.proxy(this.triggerEditValue,this));
 				//this.$attribute.dblclick($.proxy(this.triggerEditAttribute,this));
 				
-				$(this.el).find(".delete").click($.proxy(this.handleDelete,this));
+				//$(this.el).find(".delete").click($.proxy(this.handleDelete,this));
 				//this.$attribute.toggleClass("novalue",this.dbo.id == undefined);
 			},
 			

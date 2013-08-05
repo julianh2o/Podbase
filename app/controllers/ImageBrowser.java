@@ -197,6 +197,10 @@ public class ImageBrowser extends ParentController {
 			}
 		}
 		
+		for (ImageAttribute attribute : attributes) {
+			if (!attribute.templated) returnAttributes.add(attribute);
+		}
+
 		Iterator<ImageAttribute> it = returnAttributes.iterator();
 		while(it.hasNext()) {
 			ImageAttribute attr = it.next();
@@ -236,8 +240,15 @@ public class ImageBrowser extends ParentController {
 		renderJSON(attribute);
 	}
 	
-	@ModelAccess(AccessType.EDITOR)
 	public static void deleteImageAttribute(ImageAttribute attribute) {
+		boolean permitted;
+		if (attribute.data) {
+			permitted = PermissionService.hasInheritedAccess(Security.getUser(),attribute.project, AccessType.DATA_EDITOR);
+		} else {
+			permitted = PermissionService.hasInheritedAccess(Security.getUser(),attribute.project, AccessType.EDITOR);
+		}
+		if (!permitted) forbidden();
+		
 		attribute.delete();
 		
 		ImportExportService.tryExportData(attribute.image);
