@@ -4,8 +4,14 @@
 // See the LICENSE file for details.
 package controllers;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
+
+import com.google.gson.Gson;
 
 import play.mvc.Util;
 import play.mvc.With;
@@ -55,6 +61,25 @@ public class TemplateController extends ParentController {
 	public static void renameTemplate(Template template, String newName) {
 		template.name = newName;
 		template.save();
+		jsonOk();
+	}
+	
+	public static void exportTemplate(Template template) {
+		response.setHeader("Content-Disposition", "attachment; filename="+template.name+".template");
+		renderJSON(template);
+	}
+	
+	public static void importTemplate(Project project, File file) throws IOException {
+		String data = FileUtils.readFileToString(file);
+		Template importedTemplate = new Gson().fromJson(data, Template.class);
+		
+		Template newTemplate = project.addTemplate(importedTemplate.name);
+		for (TemplateAttribute attr : importedTemplate.attributes) {
+			TemplateAttribute newAttr = newTemplate.addAttribute(attr.name, attr.description, attr.hidden);
+			newAttr.sort = attr.sort;
+			newAttr.save();
+		}
+		
 		jsonOk();
 	}
 	

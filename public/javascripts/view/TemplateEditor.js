@@ -36,6 +36,7 @@ define(
 				$(".delete-template",this.el).click($.proxy(this.deleteTemplateClicked,this));
 				$(".duplicate-template",this.el).click($.proxy(this.duplicateTemplateClicked,this));
 				$(".rename-template",this.el).click($.proxy(this.renameTemplateClicked,this));
+				//$(".export-template",this.el).click($.proxy(this.exportTemplateClicked,this));
 				
 				$(".remove",this.el).on("click",$.proxy(this.onDeleteClicked,this));
 				$(".add",this.el).on("click",$.proxy(this.addAttribute,this));

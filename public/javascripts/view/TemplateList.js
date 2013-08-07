@@ -37,6 +37,21 @@ define(
 				
 				$(".template",this.el).click($.proxy(this.templateClicked,this));
 				$(".add",this.el).click($.proxy(this.addTemplateClicked,this));
+				
+				$(".template-upload",this.el).fileupload({
+			        dataType: 'json',
+			        formData: $.proxy(function() {
+						return [{name:"project.id","value":this.project.id}];
+			        },this),
+			        add: function(e,data) {
+			        	data.submit();
+			        },
+			        complete: $.proxy(this.templateImportComplete,this)
+			        });
+			},
+			
+			templateImportComplete : function() {
+				this.reload();
 			},
 			
 			addTemplateClicked : function(event) {

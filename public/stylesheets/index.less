@@ -387,3 +387,27 @@ input.image-search-field {
 	display: block;
 	padding-left: 20px;
 }
+
+//TODO dedupe this (from bootstrap variables.less)
+@linkColor:             #08c;
+@linkColorHover:        darken(@linkColor, 15%);
+.upload-link {
+	position: relative;
+	display: inline-block;
+	.upload-cover {
+		color: @linkColor;
+	}
+	&:hover .upload-cover {
+		text-decoration: underline;
+		color: @linkColorHover;
+	}
+	::-webkit-file-upload-button { cursor:pointer; }
+	.file-upload {
+		cursor:pointer;
+		top:0;
+		width: 100%;
+		position: absolute;
+		opacity: 0;
+		overflow: hidden;
+	}
+}

@@ -163,6 +163,15 @@ public class ImageBrowser extends ParentController {
 		renderImage(imageOut);
 	}
 	
+	public static void checkHash(Path path) throws IOException {
+		DatabaseImage image = DatabaseImage.forPath(path);
+		StringBuffer sb = new StringBuffer();
+		sb.append("Stored hash: "+image.hash+"\n");
+		String imageHash = PathService.calculateImageHash(path);
+		sb.append("File hash:   "+imageHash);
+		renderText(sb.toString());
+	}
+	
 	@ModelAccess(AccessType.VISIBLE)
 	public static void fetchInfo(Project project, Path path, boolean dataMode) {
 		//TODO fix this by using inherited template assignments
