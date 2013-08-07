@@ -48,6 +48,8 @@ public class UserController extends ParentController {
 	}
 	
 	public static void createUser(String email) {
+		if (email.contains("\0")) forbidden();
+		
 		User user = new User(email,null);
 		user.save();
 		
