@@ -173,6 +173,17 @@ public class ImageBrowser extends ParentController {
 	}
 	
 	@ModelAccess(AccessType.VISIBLE)
+	public static void downloadAttributes(Project project, Path path) {
+		DatabaseImage dbi = DatabaseImage.forPath(path);
+		String data = ImportExportService.serializeAttributes(dbi);
+		
+		String name = dbi.getPath().getFileName().toString();
+		
+		response.setHeader("Content-Disposition", "attachment; filename="+name+".yml");
+		renderText(data);
+	}
+	
+	@ModelAccess(AccessType.VISIBLE)
 	public static void fetchInfo(Project project, Path path, boolean dataMode) {
 		//TODO fix this by using inherited template assignments
 		TemplateAssignment assignment = TemplateController.templateForPath(project, path);

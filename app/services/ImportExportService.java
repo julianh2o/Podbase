@@ -66,15 +66,6 @@ public class ImportExportService {
 	    String contents = FileUtils.readFileToString(path.toFile());
 	    return (Map<String,String>)yaml.load(contents);
 	}
-	
-	private static void saveYaml(Path path, Map<String, String> data) throws IOException {
-		DumperOptions options = new DumperOptions();
-	    options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);		
-	    
-		Yaml yaml = new Yaml(options);
-		String contents = yaml.dump(data);
-		FileUtils.writeStringToFile(path.toFile(), contents);
-	}
 
 	public static void importData(Project project, DatabaseImage dbi) throws IOException {
 		Path path = getInputFile(dbi);
@@ -126,15 +117,27 @@ public class ImportExportService {
 		}
 	}
 	
-	public static void exportData(DatabaseImage dbi) throws IOException {
-		Path path = getOutputFile(dbi);
-		
+	public static String serializeAttributes(DatabaseImage dbi) {
 		Map<String,String> data = new HashMap<String,String>();
 		for (ImageAttribute attr : dbi.attributes) {
 			data.put(attr.attribute, attr.value);
 		}
 		
-		saveYaml(path,data);
+		DumperOptions options = new DumperOptions();
+	    options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);		
+	    
+		Yaml yaml = new Yaml(options);
+		String contents = yaml.dump(data);
+		
+		return contents;
+	}
+	
+	public static void exportData(DatabaseImage dbi) throws IOException {
+		Path path = getOutputFile(dbi);
+		
+		String data = serializeAttributes(dbi);
+		
+		FileUtils.writeStringToFile(path.toFile(), data);
 	}
 	
 	public static void importDirectoryRecursive(final Project project, Path root) throws IOException {
