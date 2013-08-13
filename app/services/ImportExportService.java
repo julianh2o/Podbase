@@ -66,6 +66,11 @@ public class ImportExportService {
 	    String contents = FileUtils.readFileToString(path.toFile());
 	    return (Map<String,String>)yaml.load(contents);
 	}
+	
+	public static Map<String,String> deserialzeAttributes(String contents) {
+	    Yaml yaml = new Yaml();
+	    return (Map<String,String>)yaml.load(contents);
+	}
 
 	public static void importData(Project project, DatabaseImage dbi) throws IOException {
 		Path path = getInputFile(dbi);

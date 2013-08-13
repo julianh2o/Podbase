@@ -7,6 +7,8 @@ define(
 			
 			initialize: function() {
 				this.browser = this.options.browser;
+				this.project = this.options.project;
+				this.dataMode = this.options.dataMode;
 				this.loadPreview(this.options.file);
 			},
 			
@@ -59,6 +61,17 @@ define(
 				this.updateVisibleText();
 				
 				$(".add-to-image-set",this.el).unbind('click').click($.proxy(this.addToImageSet,this));
+				
+				$(".metadata-upload",this.el).fileupload({
+			        dataType: 'json',
+			        formData: $.proxy(function() {
+						return [{name:"project.id","value":this.project.id},{name:"path","value":this.file.path},{name:"dataMode",value:this.dataMode}];
+			        },this),
+			        add: function(e,data) {
+			        	data.submit();
+			        },
+			        complete: $.proxy(this.refreshFilebrowser,this)
+			        });
 			},
 			
 			doCopy : function(e) {

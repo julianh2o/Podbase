@@ -43,7 +43,7 @@ define(
 				
 				this.templateChooser.setPath("/");
 				
-				this.imagePreview = new ImagePreview({browser:this});
+				this.imagePreview = new ImagePreview({browser:this,dataMode:this.dataMode,project:this.project});
 				this.$preview.append(this.imagePreview.el);
 				
 				this.imageDetails = new ImageDetails({project:this.project,access:this.access,dataMode:this.dataMode});

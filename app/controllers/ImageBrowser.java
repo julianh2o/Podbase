@@ -36,6 +36,7 @@ import java.lang.reflect.Type;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageInputStream;
@@ -181,6 +182,26 @@ public class ImageBrowser extends ParentController {
 		
 		response.setHeader("Content-Disposition", "attachment; filename="+name+".yml");
 		renderText(data);
+	}
+	
+	public static void importAttributes(Project project, Path path, File file, boolean dataMode) throws IOException {
+		DatabaseImage dbi = DatabaseImage.forPath(path);
+		String data = FileUtils.readFileToString(file);
+		
+		System.out.println("importing metadata!");
+		System.out.println(data);
+		
+		List<ImageAttribute> existingAttributes = ImageAttribute.find("byProjectAndImageAndData", project, dbi, dataMode).fetch();
+		for (ImageAttribute attr : existingAttributes) {
+			attr.delete();
+		}
+		
+		Map<String,String> attributes = ImportExportService.deserialzeAttributes(data);
+		for (Entry<String, String> entry : attributes.entrySet()) {
+			dbi.addAttribute(project, entry.getKey(), entry.getValue(), dataMode);
+		}
+		
+		jsonOk();
 	}
 	
 	@ModelAccess(AccessType.VISIBLE)
