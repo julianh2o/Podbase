@@ -1,0 +1,178 @@
+PODBASE2 MANUAL
+
+Click_Pencil_Icon_2_Read: HELP page (these instructions)
+
+{see bottom for instructions on editing this manual]
+
+I.  IMAGE BROWSER TAB
+
+A.  IMAGE BROWSING
+
+Browse available images by navigating through the directory tree in the Browser window.  When you reach the desired image, click on it to select, and a thumbnail will appear in the View window.
+  1.  Mousing over the thumbnail brings up a larger version
+	2.  Double clicking the thumbnail brings up an adjustable image with these options:
+		"Move" allows click-and-drag repositioning and scroll-wheel enlargement
+		"Measure" allows clicking and dragging across a scale bar, followed by
+			click and drag between two points with distance read-out (scale value
+                  must be enterd in the window at the top)
+		"Adjust" allows brightness and contrast adjustment
+		"Url" gives a clickable link to the adjusted view, or copy and paste
+			into a separate browser window
+	3.  "View image" link brings up additional enlargement options
+	4.  "Download image" link for downloading to a file or opening with a program (e.g. Photoshop)
+	5.  "Set visible" (if user is granted permission) makes image public
+	6.  "Browser link and thumbnail" window has editable-text links to the browser  
+		window and the image that can be copy/pasted into summary HTML pages. 
+	7.  "Toggle hidden attributes" reveals/hides susceptible metadata attributes
+	8.  "Add new attribute" [for persons with Edit pemission?][changes template?]  
+
+
+B.  METADATA EDITING
+
+	Ifg you are authorized
+
+C.  TEMPLATE CHOICE
+
+	[TO BE ADDED]
+
+D.  UPLOAD
+
+	1.   You must (normally) be registered as an "owner" of a project to upload
+
+	2.  Navigate in the Browser window to the desired folder to be uploaded to.
+
+	3.  Click the Upload link at the bottom of Browser window.  An upload screen 
+		will appear
+
+	4.  Drag and drop the desired file onto the screen.  The name of the uploaded
+		file will appear below the "upload" link.
+
+	5.  Alternatively, click the "Drag files or click to upload" link to bring up a
+		browser window for locating the desired file
+
+	6.  Continue dragging and dropping as needed.
+
+	7.  Click "delete" link next to any uploaded file needing to be discarded
+
+	8.  Click the close box to terminate the upload session
+
+
+E.  REPORTING BUGS
+
+II.  TEMPLATE MANAGER TAB
+
+III.  PROJECT PERMISSIONS TAB
+
+	1.  Permissions on a project (set by authorized "Owners") are as follows:
+
+	2.  Permissions are:
+	PROJECT_FILE_DELETE: 		
+		The user can delete files (images and text files) from this project
+	PROJECT_FILE_UPLOAD: 		
+		The user can upload files (images and text files)to this project
+            (see UPLOAD above for instructions)
+	PROJECT_MANAGE_TEMPLATES:
+		The user can edit templates associated with this project
+	PROJECT_SET_TEMPLATE:		
+		The user can change the template associated with directories
+	DATA EDITOR:
+		The user can enter, edit and/or delete the original metadata for this
+		project (using "Data mode") [this works now]
+	EDITOR
+		The user can enter, edit and/or delete the PUBLIC metadataset for this project to prepare it
+		for PUBLIC (currenty called "VISIBLE") status (using "Analysis mode") [not implemented yet]
+	MANAGE_PERMISSIONS:
+		The user is allowed to manage permissions for this project
+	ADMINISTRATOR:
+		Has elevated access rights to a project: in addition to those granted an "owner"
+		an Administrator has authority to add/delete users, manage permissions, delete templates, 
+		edit metadata for release to the public, and release project images to the public.
+	OWNER:
+		The user is considered an owner of this project, ordinarily someone closely
+		involved in obtaining the images and respnsible for assessing the correctness
+		of entered metadata. An owner has control over most aspects:
+		uploading/downloading image files; selecting and managing (editing) templates;
+		viewing/downloading images without a watermark; entering/editing the original 
+		metadata; viewing (but not altering) permissions of users [not implemented]
+		(these permissions are automatically granted with "ownership")	
+	VISIBLE:				
+		[A user with this permission can view/download project images and metadata.
+		-- not implemented this way yet]. This is the minimum access. Current situation:
+		This kind of user can also see the directories and any images that
+		are set to visible.
+	LISTED:
+		The user has been associated with the project in question.  Being LISTED
+		doesn't grant any access whatsoever. It means only that the "add user"
+		button has been used to add the user to the project list so that an 
+		Administrator can set permissions appropriately.
+	[MAKE [PUBLIC] VISIBLE: - not implemented			
+		The user is allowed to mark (or unmark) images, edited metadata and files
+		as accessible ("Public" or  currently "Visible") to the public via the "Public" ("Visible") check box that
+		will then display with each image]. VISIBLE means that the project appears 
+		in lists. This is the minimum access. This kind of user can also see the 
+		directories and any images that are set to visible.
+							[NOT IMPLEMENTED YET]
+[NOTE:  THe highest level of administration is charged with creating new projects and inviting/deleting users
+
+IV.  Editing Manual
+
+
+1.  Point browser at:
+https://github.com/julianh2o/Podbase/tree/master/public/help
+
+2. At the top of the page, next to the path. There is a little file icon with 
+a plus on it. Click this to add a new file to this directory.
+
+3. Click on a file to view it. Once viewing a file, click the "edit" button
+on the right side of the header that comes up to edit the file.
+
+4. To save the updates, click the "commit changes" button. You can choose to
+dd a message or description of your change if you like.
+
+5.  When you're done making changes, let Julian know and he can make them live for
+you. They will not automatically get synced with the running server.
+
+
+
+V.  GitHub for Dummies
+
+On Sun, Jan 20, 2013 at 9:52 AM, Julian <julianh2o@gmail.com> wrote [dh edited/adapted to Podbase]:
+
+*Create a new issue*
+
+     1. Go to: https://github.com/julianh2o/Podbase and log in if necessary
+
+     2. In the right sidebar, click "Issues" 
+
+     3. On the top right of the screen, click green button "New Issue"
+
+     4. Fill out the title and any comments you have describing the task or
+error you're dealing with and click "Submit new issue."
+
+     5.  You can also flag the nature of the issue, close issues, add comments
+ to issues, edit the original issue, open a closed issue, etc. etc.
+
+
+*Access/download the latest version of a Podbase program*
+
+     1. Go to: https://github.com/organizations/ and log in if necessary
+
+     2. In the right sidebar (under "Repositories"), click julisnh2o/Podbase. 
+[this did not work for Dan the last time he tried but searching for julianh2o/podbase 
+via a link at the bottom of the error page works]
+
+     3.  Alternatively, Go to: https://github.com/julianh2o/Podbase
+
+     4. In the main part of the screen, there is a list of files and
+directories. Navigate this list until you find the file/script that you need
+
+     5. Click on the file you need and then click (in the top right corner of the
+main window) "raw"
+
+     6. You can now save this file (control-s or apple-s) to where you'd like it
+to be. Be sure to maintain the original extension (e.g .jar for Java files)
+
+
+>
+> Julian
+>
