@@ -129,6 +129,7 @@ define(
 			dataModeChanged : function(e,mode) {
 				this.dataMode = mode;
 				this.imageDetails.setDataMode(mode);
+				this.imagePreview.setDataMode(mode);
 				Link.setDataMode({projectId:this.project.id, dataMode: mode}).post();
 			},
 			

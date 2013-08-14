@@ -21,12 +21,17 @@ import models.Project;
 import models.User;
 
 public class DatabaseImageService {
-	public static List<ImageAttribute> attributesForImageAndMode(Project project, DatabaseImage image, boolean dataMode) {
-		List<ImageAttribute> attributes = ImageAttribute.find("byProjectAndImageAndData", project, image, dataMode).fetch();
-		return attributes;
+	public static List<ImageAttribute> attributesForImageAndMode(Project project, DatabaseImage image, Boolean dataMode) {
+		if (dataMode == null) {
+			List<ImageAttribute> attributes = ImageAttribute.find("byProjectAndImage", project, image).fetch();
+			return attributes;
+		} else {
+			List<ImageAttribute> attributes = ImageAttribute.find("byProjectAndImageAndData", project, image, dataMode).fetch();
+			return attributes;
+		}
 	}
 	
-	public static Map<String,List<ImageAttribute>> attributeMapForImageAndMode(Project project, DatabaseImage image, boolean dataMode) {
+	public static Map<String,List<ImageAttribute>> attributeMapForImageAndMode(Project project, DatabaseImage image, Boolean dataMode) {
 		List<ImageAttribute> attributes = attributesForImageAndMode(project, image, dataMode);
 		HashMap<String,List<ImageAttribute>> map = new HashMap<String, List<ImageAttribute>>();
 		

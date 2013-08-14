@@ -188,17 +188,50 @@ public class ImageBrowser extends ParentController {
 		DatabaseImage dbi = DatabaseImage.forPath(path);
 		String data = FileUtils.readFileToString(file);
 		
-		System.out.println("importing metadata!");
-		System.out.println(data);
+		Map<String,String> importedAttributes = ImportExportService.deserialzeAttributes(data);
 		
-		List<ImageAttribute> existingAttributes = ImageAttribute.find("byProjectAndImageAndData", project, dbi, dataMode).fetch();
+		//remove all existing attributes
+		List<ImageAttribute> existingAttributes = DatabaseImageService.attributesForImageAndMode(project,dbi,dataMode);
 		for (ImageAttribute attr : existingAttributes) {
+			if (attr.linkedAttribute != null) {
+				attr.linkedAttribute.linkedAttribute = null;
+				attr.linkedAttribute.save();
+				attr.linkedAttribute = null;
+			}
 			attr.delete();
 		}
 		
-		Map<String,String> attributes = ImportExportService.deserialzeAttributes(data);
-		for (Entry<String, String> entry : attributes.entrySet()) {
-			dbi.addAttribute(project, entry.getKey(), entry.getValue(), dataMode);
+		//if we're in analysis mode, we need to consider inherited attributes
+		Map<String,List<ImageAttribute>> dataModeAttributes = DatabaseImageService.attributeMapForImageAndMode(project, dbi, !dataMode);
+		HashSet<ImageAttribute> usedImageAttributes = new HashSet<ImageAttribute>();
+		
+		
+		//get the imported attributes grouped by attributeName
+		Map<String,List<String>> groupedAttributes = new HashMap<String,List<String>>();
+		for (Entry<String,String> entry : importedAttributes.entrySet()) {
+			if (!groupedAttributes.containsKey(entry.getKey())) groupedAttributes.put(entry.getKey(), new LinkedList<String>());
+			groupedAttributes.get(entry.getKey()).add(entry.getValue());
+		}
+		for (Entry<String, List<String>> entry : groupedAttributes.entrySet()) {
+			String attributeName = entry.getKey();
+			for (String value : entry.getValue()) {
+				List<ImageAttribute> existingAttributesForKey = dataModeAttributes.get(attributeName);
+				ImageAttribute linkMe = null;
+				for (ImageAttribute existingAttr : existingAttributesForKey) {
+					if (!usedImageAttributes.contains(existingAttr)) {
+						linkMe = existingAttr;
+					}
+				}
+				ImageAttribute newImageAttribute = dbi.addAttribute(project, attributeName, value, dataMode);
+				if (linkMe != null) {
+					usedImageAttributes.add(linkMe);
+					newImageAttribute.linkedAttribute = linkMe;
+					newImageAttribute.save();
+					
+					linkMe.linkedAttribute = newImageAttribute;
+					linkMe.save();
+				}
+			}
 		}
 		
 		jsonOk();
@@ -206,7 +239,6 @@ public class ImageBrowser extends ParentController {
 	
 	@ModelAccess(AccessType.VISIBLE)
 	public static void fetchInfo(Project project, Path path, boolean dataMode) {
-		//TODO fix this by using inherited template assignments
 		TemplateAssignment assignment = TemplateController.templateForPath(project, path);
 		
 		Template template = assignment==null?null:assignment.template;

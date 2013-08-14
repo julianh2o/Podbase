@@ -10,6 +10,8 @@ define(
 				
 				this.render();
 				
+				this.$inherited = $(".inherited",this.el);
+				this.$inheritedBox = $(".inherited-box",this.el).hide();
 				this.$template = $(".template",this.el);
 				
 				this.setProject(this.options.project);
@@ -65,7 +67,7 @@ define(
 				
 				this.refresh();
 				
-				this.updateTemplateSelection(this.selectedTemplate)
+				this.updateTemplateSelection(this.selectedTemplate,this.inheritedFrom);
 			},
 			
 			handleTemplateChange : function(event) {
@@ -96,20 +98,29 @@ define(
 			handleTemplateForPath : function(templateAssignment) {
 				if (templateAssignment != null) {
 					this.templateCache.put(templateAssignment.path,templateAssignment.template);
-					this.setSelectedTemplate(templateAssignment.template);
+					var inheritedFrom = this.path != templateAssignment.path ? templateAssignment.path : null;
+					this.setSelectedTemplate(templateAssignment.template,inheritedFrom);
 				} else {
-					this.setSelectedTemplate(null);
+					this.setSelectedTemplate(null,null);
 				}
 			},
 			
-			setSelectedTemplate : function(template) {
+			setSelectedTemplate : function(template,inheritedFrom) {
+				this.inheritedFrom = inheritedFrom;
 				this.selectedTemplate = template;
-				if (this.$select || this.$span) this.updateTemplateSelection(template)
+				if (this.$select || this.$span) this.updateTemplateSelection(template,inheritedFrom);
 			},
 			
-			updateTemplateSelection : function(template) {
+			updateTemplateSelection : function(template,inheritedFrom) {
 				if (this.canChooseTemplate) {
 					this.$select.val(template == null?"":template.id);
+					if (inheritedFrom) {
+						var dirName = Util.getFileName(inheritedFrom);
+						this.$inheritedBox.show();
+						this.$inherited.text(dirName);
+					} else {
+						this.$inheritedBox.hide();
+					}
 				} else {
 					this.$span.html(template == null? "[No Template]" : template.name);
 				}

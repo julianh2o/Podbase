@@ -15,10 +15,13 @@ define(
 			loadPreview : function(file) {
 				this.fileCount = null;
 				
-				if (file && file.length) {
+				if (file && file.length > 1) {
 					this.file = null;
 					this.files = file;
 					this.fileCount = _.chain(this.files).pluck("isDir").filter(function(val) {return !val;}).value().length
+				} else if (file && file.length) {
+					this.file = file[0];
+					this.files = file;
 				} else if (file) {
 					this.file = file;
 					this.files = [file];
@@ -70,8 +73,13 @@ define(
 			        add: function(e,data) {
 			        	data.submit();
 			        },
-			        complete: $.proxy(this.refreshFilebrowser,this)
+			        complete: $.proxy(this.reloadImageAttributes,this)
 			        });
+			},
+			
+			setDataMode : function(mode) {
+				this.dataMode = mode;
+				this.loadPreview(this.files ? this.files : this.file);
 			},
 			
 			doCopy : function(e) {
@@ -106,6 +114,10 @@ define(
 			
 			exportData : function() {
 				Link.exportToFile(this.file.path).post();
+			},
+			
+			reloadImageAttributes : function() {
+				$("html").trigger("ReloadImageDetails");
 			},
 			
 			refreshFilebrowser : function() {

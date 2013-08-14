@@ -23,6 +23,8 @@ define(
 				this.project = this.options.project;
 				
 				this.setFile(this.options.file);
+				
+				$("html").on("ReloadImageDetails",$.proxy(this.reload,this));
 			},
 			
 			setDataMode : function(mode) {
