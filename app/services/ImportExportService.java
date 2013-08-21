@@ -13,6 +13,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -123,8 +124,12 @@ public class ImportExportService {
 	}
 	
 	public static String serializeAttributes(DatabaseImage dbi) {
-		Map<String,String> data = new HashMap<String,String>();
-		for (ImageAttribute attr : dbi.attributes) {
+		return serializeAttributes(dbi.attributes);
+	}
+	
+	public static String serializeAttributes(List<ImageAttribute> attributes) {
+		Map<String,String> data = new LinkedHashMap<String,String>();
+		for (ImageAttribute attr : attributes) {
 			data.put(attr.attribute, attr.value);
 		}
 		

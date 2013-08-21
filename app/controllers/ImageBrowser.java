@@ -174,11 +174,15 @@ public class ImageBrowser extends ParentController {
 	}
 	
 	@ModelAccess(AccessType.VISIBLE)
-	public static void downloadAttributes(Project project, Path path) {
-		DatabaseImage dbi = DatabaseImage.forPath(path);
-		String data = ImportExportService.serializeAttributes(dbi);
+	public static void downloadAttributes(Project project, Path path, boolean dataMode) {
+		DatabaseImage image = DatabaseImage.forPath(path);
+		TemplateAssignment assignment = TemplateController.templateForPath(project, path);
+		Template template = assignment==null?null:assignment.template;
 		
-		String name = dbi.getPath().getFileName().toString();
+	    List<ImageAttribute> attributes = DatabaseImageService.compileAttributesForImage(project, image, template, dataMode, false);
+		String data = ImportExportService.serializeAttributes(attributes);
+		
+		String name = image.getPath().getFileName().toString();
 		
 		response.setHeader("Content-Disposition", "attachment; filename="+name+".yml");
 		renderText(data);
@@ -243,49 +247,10 @@ public class ImageBrowser extends ParentController {
 	@ModelAccess(AccessType.VISIBLE)
 	public static void fetchInfo(Project project, Path path, boolean dataMode) {
 		TemplateAssignment assignment = TemplateController.templateForPath(project, path);
-		
 		Template template = assignment==null?null:assignment.template;
-		List<TemplateAttribute> templateAttributes = template==null?null:template.attributes;
-		
 		DatabaseImage image = DatabaseImage.forPath(path);
-		List<ImageAttribute> attributes = new LinkedList<ImageAttribute>();
 		
-		if (image != null) attributes.addAll(image.attributes);
-		
-		//Add attributes from the template
-		List<ImageAttribute> returnAttributes = new LinkedList<ImageAttribute>();
-		if (templateAttributes != null) {
-			for(TemplateAttribute templateAttribute : templateAttributes) {
-				ImageAttribute found = null;
-				for (ImageAttribute attribute : attributes) {
-					if (attribute.attribute.equals(templateAttribute.name)) {
-						found = attribute;
-						break;
-					}
-				}
-				if (found != null) {
-					found.templated = true;
-					found.hidden = templateAttribute.hidden;
-					returnAttributes.add(found);
-				} else {
-					returnAttributes.add(new ImageAttribute(project, image,templateAttribute.name,null,dataMode,true, templateAttribute.hidden));
-				}
-			}
-		}
-		
-		for (ImageAttribute attribute : attributes) {
-			if (!attribute.templated) returnAttributes.add(attribute);
-		}
-
-		Iterator<ImageAttribute> it = returnAttributes.iterator();
-		while(it.hasNext()) {
-			ImageAttribute attr = it.next();
-			
-			//only show data mode attributes in datamode
-			if (dataMode && !attr.data) it.remove();
-		}
-		
-	    renderJSON(returnAttributes);  
+	    renderJSON( DatabaseImageService.compileAttributesForImage(project, image, template, dataMode, true) );
 	}
 	
 	//TODO Access control is done in the method.. maybe this could be enhanced?
@@ -298,7 +263,7 @@ public class ImageBrowser extends ParentController {
 		if (attribute.value == value) return;
 		
 		if (dataMode != attribute.data) {
-			ImageAttribute newAttribute = new ImageAttribute(attribute.project,attribute.image,attribute.attribute,value,dataMode);
+			ImageAttribute newAttribute = attribute.image.addAttribute(attribute.project,attribute.attribute,value,dataMode);
 			
 			newAttribute.linkedAttribute = attribute;
 			newAttribute.save();

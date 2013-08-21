@@ -13,6 +13,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.UniqueConstraint;
 
 import play.modules.search.Field;
@@ -28,6 +29,7 @@ public class DatabaseImage extends TimestampModel {
 	public String hash;
 	
 	@OneToMany(mappedBy="image", cascade=CascadeType.ALL)
+	@OrderBy("ordering")
 	public List<ImageAttribute> attributes;
 	
 	public boolean imported;
@@ -52,7 +54,12 @@ public class DatabaseImage extends TimestampModel {
 	}
 	
 	public ImageAttribute addAttribute(Project project, String key, String value, boolean dataMode) {
-		ImageAttribute attr = new ImageAttribute(project, this, key, value, dataMode).save();
+		return this.addAttribute(project,key,value,dataMode,null);
+	}
+	
+	public ImageAttribute addAttribute(Project project, String key, String value, boolean dataMode, Integer ordering) {
+		if (ordering == null) ordering = this.attributes.size();
+		ImageAttribute attr = new ImageAttribute(project, this, key, value, dataMode, ordering).save();
 		this.attributes.add(attr);
 		this.save();
 		return attr;

@@ -46,17 +46,18 @@ public class ImageAttribute extends TimestampModel {
 	@Transient
 	public boolean templated = false;
 
-	public ImageAttribute(Project project, DatabaseImage image, String attribute, String value, boolean data) {
-		this(project, image, attribute, value, data, false, false);
+	public ImageAttribute(Project project, DatabaseImage image, String attribute, String value, boolean data, int ordering) {
+		this(project, image, attribute, value, data, ordering, false, false);
 	}
 
-	public ImageAttribute(Project project, DatabaseImage image, String attribute, String value, boolean data, boolean templated, boolean hidden) {
+	public ImageAttribute(Project project, DatabaseImage image, String attribute, String value, boolean data, int ordering, boolean templated, boolean hidden) {
 		super();
 		this.project = project;
 		this.image = image;
 		this.attribute = attribute;
 		this.value = value;
 		this.data = data;
+		this.ordering = ordering;
 		this.templated = templated;
 		this.hidden = hidden;
 	}
