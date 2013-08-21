@@ -217,11 +217,14 @@ public class ImageBrowser extends ParentController {
 			for (String value : entry.getValue()) {
 				List<ImageAttribute> existingAttributesForKey = dataModeAttributes.get(attributeName);
 				ImageAttribute linkMe = null;
-				for (ImageAttribute existingAttr : existingAttributesForKey) {
-					if (!usedImageAttributes.contains(existingAttr)) {
-						linkMe = existingAttr;
+				if (dataModeAttributes.containsKey(attributeName)) {
+					for (ImageAttribute existingAttr : existingAttributesForKey) {
+						if (!usedImageAttributes.contains(existingAttr)) {
+							linkMe = existingAttr;
+						}
 					}
 				}
+				
 				ImageAttribute newImageAttribute = dbi.addAttribute(project, attributeName, value, dataMode);
 				if (linkMe != null) {
 					usedImageAttributes.add(linkMe);
