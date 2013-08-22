@@ -1,14 +1,6 @@
 define(
 	['view/RenderedView', 'util/Util', 'data/Link', 'text!tmpl/ImageAttribute.html'],
 	function (RenderedView, Util, Link, tmpl) {
-		
-		function attributesById(attributes) {
-			return _.reduce(attributes,function(memo,attribute) {
-				memo[attribute.id] = attribute;
-				return memo;
-			},{});
-		}
-		
 		var This = RenderedView.extend({
 			template: _.template( tmpl ),
 			
@@ -22,19 +14,18 @@ define(
 				this.path = options.path;
 				this.dataMode = options.dataMode;
 				
-				this.attributesById = attributesById(options.attrs);
+				this.attributes = options.attrs;
 				
 				this.link.asap($.proxy(this.refresh,this));
 			},
 			
 			refresh : function() {
-				var values = this.attributesById;
-				if (!values) {
+				if (!this.attributes) {
 					$(this.el).remove();
 					return;
 				}
 				
-				this.model = {name:this.attributeName,hidden:this.hidden, values:values};
+				this.model = {name:this.attributeName,hidden:this.hidden, values:this.attributes};
 				this.render();
 				
 				$(".value .delete-attribute",this.el).click($.proxy(this.triggerDeleteAttribute,this));
@@ -100,17 +91,34 @@ define(
 				};
 				
 				var id = $el.data("id");
-				var attribute = this.attributesById[id];
+				var index = $el.data("index");
+				var attribute = this.attributes[index];
+				
+				this.showLoading();
 				
 				if (id) {
-					Link.updateImageAttribute(id,value,this.dataMode).post().always($.proxy(this.updateAttributeComplete,this));
+					Link.updateImageAttribute(id,value,this.dataMode).post().always($.proxy(this.updateAttributeComplete,this,index));
 				} else {
-					Link.createAttribute(this.projectId,this.path,this.attributeName,value,this.dataMode).post().always($.proxy(this.updateAttributeComplete,this));
+					Link.createAttribute(this.projectId,this.path,this.attributeName,value,this.dataMode).post().always($.proxy(this.createAttributeComplete,this,index));
 				}
 			},
 			
-			updateAttributeComplete : function() {
-				this.link.pull();
+			showLoading : function() {
+				$(this.el).block();
+			},
+			
+			updateAttributeComplete : function(index,data) {
+				$(this.el).unblock();
+				data.templated = this.attributes[index].templated;
+				this.attributes[index] = data;
+				this.refresh();
+			},
+			
+			createAttributeComplete : function(index,data) {
+				$(this.el).unblock();
+				data.templated = this.attributes[index].templated;
+				this.attributes[index] = data;
+				this.refresh();
 			}
 		});
 		

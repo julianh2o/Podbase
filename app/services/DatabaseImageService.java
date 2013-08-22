@@ -33,18 +33,17 @@ public class DatabaseImageService {
 		List<ImageAttribute> returnAttributes = new LinkedList<ImageAttribute>();
 		if (templateAttributes != null) {
 			for(TemplateAttribute templateAttribute : templateAttributes) {
-				ImageAttribute found = null;
+				boolean found = false;
 				for (ImageAttribute attribute : attributes) {
-					if (attribute.attribute.equals(templateAttribute.name)) {
-						found = attribute;
-						break;
+					if ((attribute.data || !dataMode) && attribute.attribute.equals(templateAttribute.name)) {
+						found = true;
+						
+						attribute.templated = true;
+						attribute.hidden = templateAttribute.hidden;
+						returnAttributes.add(attribute);
 					}
 				}
-				if (found != null) {
-					found.templated = true;
-					found.hidden = templateAttribute.hidden;
-					returnAttributes.add(found);
-				} else if (includeEmptyTemplateAttributes) {
+				if (!found && includeEmptyTemplateAttributes) {
 					returnAttributes.add(new ImageAttribute(project, image,templateAttribute.name,null,dataMode,0,true, templateAttribute.hidden));
 				}
 			}
