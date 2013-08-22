@@ -97,9 +97,9 @@ define(
 				this.showLoading();
 				
 				if (id) {
-					Link.updateImageAttribute(id,value,this.dataMode).post().always($.proxy(this.updateAttributeComplete,this,index));
+					Link.updateImageAttribute(id,encodeURIComponent(value),this.dataMode).post().always($.proxy(this.updateAttributeComplete,this,index));
 				} else {
-					Link.createAttribute(this.projectId,this.path,this.attributeName,value,this.dataMode).post().always($.proxy(this.createAttributeComplete,this,index));
+					Link.createAttribute(this.projectId,this.path,this.attributeName,encodeURIComponent(value),this.dataMode).post().always($.proxy(this.createAttributeComplete,this,index));
 				}
 			},
 			
