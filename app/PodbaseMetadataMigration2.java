@@ -388,7 +388,8 @@ public class PodbaseMetadataMigration2 {
 					imagePathMap.put(convertedPath, imageId);
 				}
 				
-				return String.format("(%d,'%s','%s','%s',0x1,0x0,'%s',%d,NULL,%d)",generateId(),NOW,NOW,escape(key),escape(value),imageId,projectId);
+				int ordering = 0;
+				return String.format("(%d,'%s','%s','%s',0x1,0x0,%d,'%s',%d,NULL,%d)",generateId(),NOW,NOW,escape(key),ordering,escape(value),imageId,projectId);
 			} catch (FileNotFoundException fnf) {
 				missingImages.add(path);
 				return null;
