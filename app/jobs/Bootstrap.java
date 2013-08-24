@@ -24,14 +24,6 @@ public class Bootstrap extends Job {
 	private final String DEFAULT_ROOT_PASSWORD = "password";
 	
     public void doJob() {
-		if (!(Play.id.equals("dev") || Play.id.equals("setup"))) {
-			System.out.println("Skipping Bootstrap!");
-			return;
-		}
-		
-		//System.out.println("Clearing database and bootstrapping.");
-        //Fixtures.deleteDatabase();
-		
 		if (Podbase.findAll().size() > 0) {
 			System.out.println("Podbase is already bootstrapped.");
 			return;
