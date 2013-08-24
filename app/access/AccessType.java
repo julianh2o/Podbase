@@ -21,8 +21,8 @@ public enum AccessType {
 	
 	LISTED("The user has been associated with the entity in question","paper","project"),
 	VISIBLE("The user can see this entity in lists","paper","project"),
-	OWNER("The user is considered an owner of this entity","paper","project"),
-	ADMINISTRATOR("A user with elevated access rights","paper","project"),
+	OWNER("The user is considered an owner of this entity and can perform any actions","paper","project"),
+	ADMINISTRATOR("Can do everything except for managing permissions","paper","project"),
 	MANAGE_PERMISSIONS("The user is allowed to manage permissions for this entity","paper","project","user"),
 	EDITOR("The user is an editor of this entity","paper","project"),
 	DATA_EDITOR("The user is an data editor of this entity","paper","project"),

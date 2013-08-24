@@ -170,6 +170,7 @@ play.search.path=tmp/index
 # ~~~~~
 
 application.log.path=/log4j-prod.properties
+podbase.root.password=password
 #jpa.dialect=org.hibernate.dialect.MySQLDialect
 
 

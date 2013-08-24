@@ -78,6 +78,8 @@ public class PodbaseMetadataMigration2 {
 		String imageAttributes = generateSql((List<AbstractEntry>)(List<?>)tags);
 		System.out.println("Generating Image SQL");
 		String databaseImages = generateDatabaseImageSql();
+		System.out.println("Generating Directory SQL");
+		String directorySql = generateDirectorySql(projects);
 		
 		System.out.println("Generating Template SQL");
 		String templateSql = generateSql((List<AbstractEntry>)(List<?>)templates);
@@ -89,6 +91,8 @@ public class PodbaseMetadataMigration2 {
 		bw.append(projectSql);
 		bw.append("\n\n");
 		bw.append(databaseImages);
+		bw.append("\n\n");
+		bw.append(directorySql);
 		bw.append("\n\n");
 		bw.append(imageAttributes);
 		bw.append("\n\n");
@@ -124,6 +128,25 @@ public class PodbaseMetadataMigration2 {
 		}
 		
 		return "INSERT INTO `DatabaseImage` VALUES "+sb.toString()+";";
+	}
+	
+	private static String generateDirectorySql(List<ProjectEntry> projects) throws IOException {
+		StringBuilder sb = new StringBuilder();
+		
+		boolean first = true;
+		
+		int index = 1;
+		for (ProjectEntry project : projects) {
+			if (!first) sb.append(",");
+			
+			//id,now,now,"/path",projectid
+			//(1,'2013-06-11 20:38:59','2013-06-11 20:38:59','/CopeNeuroAnat',2)
+			sb.append(String.format("(%d,'%s','%s','%s',%d)",index,NOW,NOW,"/"+project.name,project.projectId));
+			index ++;
+			first = false;
+		}
+		
+		return "INSERT INTO `Directory` VALUES "+sb.toString()+";";
 	}
 	
 	private static String generateSql(List<AbstractEntry> entries) {
