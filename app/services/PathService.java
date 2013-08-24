@@ -179,6 +179,7 @@ public class PathService {
 	public static String calculateImageHash(Path path) throws IOException {
 		FileInputStream fis = new FileInputStream(path.toFile());
 		String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(fis);
+		fis.close();
 		return md5;	
 	}
 	

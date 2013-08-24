@@ -84,6 +84,7 @@ public class PodbaseMetadataMigration2 {
 		System.out.println("Generating Field SQL");
 		String fieldsSql = generateSql((List<AbstractEntry>)(List<?>)templateFields);
 		
+		System.out.println("Writing database.sql");
 		BufferedWriter bw = new BufferedWriter(new FileWriter(new File("./database.sql")));
 		bw.append(projectSql);
 		bw.append("\n\n");
@@ -96,6 +97,7 @@ public class PodbaseMetadataMigration2 {
 		bw.append(fieldsSql);
 		bw.close();
 		
+		System.out.println("Writing missingImages.txt");
 		bw = new BufferedWriter(new FileWriter(new File("./missingImages.txt")));
 		for (String img : missingImages) {
 			bw.append(img+"\n");
