@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import notifiers.Email;
@@ -101,8 +102,14 @@ public class PermissionService {
 	}
 	
 	public static Set<PermissionedModel> getModelsForUser(User user, AccessType access) {
-		List<Permission> permissions = Permission.find("byUserAndAccess", user, access).fetch();
-		return getModelsFromPermissions(permissions);
+		Set<AccessType> implicatingTypes = getImplicatingAccessTypes(access);
+		
+		Set<PermissionedModel> models = new HashSet<PermissionedModel>();
+		for (AccessType type : implicatingTypes) {
+			List<Permission> permissions = Permission.find("byUserAndAccess", user, type).fetch();
+			models.addAll(getModelsFromPermissions(permissions));
+		}
+		return models;
 	}
 	
 	public static List<User> getUsersForModel(PermissionedModel model, AccessType access) {
@@ -136,17 +143,28 @@ public class PermissionService {
 		return accessList;
 	}
 	
+	@Util
+	public static Set<AccessType> getImplicatingAccessTypes(AccessType seekingAccess) {
+		Set<AccessType> implicatingTypes = new HashSet<AccessType>();
+		implicatingTypes.add(seekingAccess);
+		
+		for (Entry<AccessType,List<AccessType>> entry : AccessType.IMPLICATIONS.entrySet()) {
+			if (entry.getValue().contains(seekingAccess)) {
+				implicatingTypes.addAll(getImplicatingAccessTypes(entry.getKey()));
+			}
+		}
+		
+		return implicatingTypes;
+	}
+	
 	public static Set<VirtualAccessType> getVirtualAccess(User user, PermissionedModel model) {
-//		System.out.println();
 		Set<AccessType> accessList = getAccess(user,model);
 		HashMap<String,VirtualAccessType> virtualAccess = new HashMap<String,VirtualAccessType>();
 		for (AccessType access : accessList) {
 			if (!virtualAccess.containsKey(access.name())) virtualAccess.put(access.name(),new VirtualAccessType(access));
 			if (AccessType.IMPLICATIONS.containsKey(access)) {
 				for (AccessType type : AccessType.IMPLICATIONS.get(access)) {
-//					System.out.println(access.name() + " implies " + type.name());
 					if (virtualAccess.containsKey(type.name())) {
-//						System.out.println("contains key: "+type.name());
 						virtualAccess.get(type.name()).addImplication(access);
 					} else {
 						VirtualAccessType newAccess = new VirtualAccessType(type,access);
@@ -205,7 +223,7 @@ public class PermissionService {
     	if (user.isRoot()) return true;
     	
     	DatabaseImage image = DatabaseImage.forPath(path);
-    	Set<PermissionedModel> models = getModelsForUser(user,AccessType.VISIBLE);
+    	Set<PermissionedModel> models = getModelsForUser(user,AccessType.VIEW_ALL_IMAGES);
     	for(PermissionedModel model : models) {
     		if (model instanceof Paper) {
     			Paper p = (Paper)model;
@@ -226,6 +244,8 @@ public class PermissionService {
     			}
     		}
     	}
+    	
+    	models = getModelsForUser(user,AccessType.VIEW_ALL_IMAGES);
     	
     	return false;
 	}

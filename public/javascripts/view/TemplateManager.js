@@ -7,13 +7,14 @@ define(
 			
 			initialize: function() {
 				this.project = this.options.project;
+				this.access = this.options.access;
 				
 				this.render();
 				
 				this.$templates = $(".templates",this.el);
 				this.$editor = $(".editor",this.el);
 				
-				this.templateList = new TemplateList({project:this.project});
+				this.templateList = new TemplateList({project:this.project, access: this.access});
 				this.$templates.append(this.templateList.el);
 				
 				// SELECT FIRST TEMPLATE
@@ -21,7 +22,7 @@ define(
 					this.templateList.selectIndex(0);
 				}
 				
-				this.templateEditor = new TemplateEditor({project:this.project});
+				this.templateEditor = new TemplateEditor({project:this.project, access: this.access});
 				this.$editor.append(this.templateEditor.el);
 				
 				$(this.templateList)

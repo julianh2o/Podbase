@@ -1,13 +1,18 @@
 <h1>Projects</h1>
-<ul>
+<table class="project-table">
 	<% _.each(projects,function(project) { %>
-		<li>
-			<a href="/entry/<%= project.id %>">
-				<%= project.name %><br/>
-			</a>
-		</li>
+		<tr data-project-id="<%= project.id %>" data-project-name="<%= project.name %>">
+			<td>
+				<a href="/entry/<%= project.id %>">
+					<%= project.name %>
+				</a>
+			</td>
+			<td>
+				<a href="#" class="delete-project">Delete</a>
+			</td>
+		</tr>
 	<% }); %>
-</ul>
+</table>
 <hr/>
 
 <% if (showAdd) { %>

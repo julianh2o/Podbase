@@ -28,7 +28,7 @@ public class Application extends ParentController {
     	render();
     }
     
-    @ModelAccess(AccessType.VISIBLE)
+    @ModelAccess(AccessType.LISTED)
     public static void entry(Long projectId) {
     	Project project = Project.findById(projectId);
     	if (project == null) index();

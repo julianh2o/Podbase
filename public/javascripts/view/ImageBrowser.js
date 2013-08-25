@@ -10,7 +10,7 @@ define(
 				this.access = this.options.access;
 				this.dataMode = this.project.dataMode;
 				
-				this.dataMode = this.dataMode && this.access["DATA_EDITOR"] !== undefined;
+				this.dataMode = this.dataMode && this.access["EDIT_DATA_METADATA"] !== undefined;
 				
 				this.render();
 				
@@ -35,7 +35,7 @@ define(
 				this.directoryCache = new Cache();
 				this.selectedFile = null;
 				
-				this.fileBrowser = new FileBrowser({root:"/"+this.project.name+"/",project:this.project, showVisibility: this.access["EDITOR"]});
+				this.fileBrowser = new FileBrowser({root:"/"+this.project.name+"/",project:this.project, showVisibility: this.access["SET_VISIBLE"]});
 				$(this.fileBrowser).on("keydown",$.proxy(this.filebrowserKeydown,this));
 				this.$browser.append(this.fileBrowser.el);
 				
@@ -43,7 +43,7 @@ define(
 				
 				this.templateChooser.setPath("/");
 				
-				this.imagePreview = new ImagePreview({browser:this,dataMode:this.dataMode,project:this.project});
+				this.imagePreview = new ImagePreview({browser:this,dataMode:this.dataMode,project:this.project, access: this.access});
 				this.$preview.append(this.imagePreview.el);
 				
 				this.imageDetails = new ImageDetails({project:this.project,access:this.access,dataMode:this.dataMode});

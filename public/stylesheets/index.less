@@ -3,6 +3,10 @@
 	margin-bottom: 0;
 }
 
+.nav-pills .disabled.active a {
+	background-color: #eef;
+}
+
 select {
 	height: 20px;
 	line-height: 20px;
@@ -401,6 +405,16 @@ input.image-search-field {
 	vertical-align: top;
 }
 
+.user-permission-table {
+	.table-header td {
+		margin-top: 10px;
+		background: #08c;
+		color: white;
+		padding: 0 5px;
+		border-radius: 3px;
+	}
+}
+
 .permission-implied-by {
 	color: blue;
 }
@@ -432,4 +446,8 @@ input.image-search-field {
 		opacity: 0;
 		overflow: hidden;
 	}
+}
+
+.project-table td, .paper-table td {
+	padding: 0 5px;
 }

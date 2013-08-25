@@ -40,7 +40,7 @@ define(
 					content: this.imageBrowser
 				});
 				
-				if (access["PROJECT_MANAGE_TEMPLATES"]) {
+				if (access["VIEW_TEMPLATES"]) {
 					tabs.push({
 						id: "templates",
 						label: "Template Manager",

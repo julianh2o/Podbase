@@ -33,7 +33,7 @@ define(
 				
 				$(".files",this.el).html(html);
 				
-				if (!this.access.PROJECT_FILE_DELETE) {
+				if (!this.access.FILE_DELETE) {
 					$(".delete-file",this.el).hide();
 				} else {
 					$(".delete-file",this.el).click($.proxy(this.deleteFileClicked,this));
@@ -58,7 +58,7 @@ define(
 				
 				this.render();
 				
-				if (!this.access.PROJECT_FILE_UPLOAD) {
+				if (!this.access.FILE_UPLOAD) {
 					$(".file-upload-widget",this.el).hide();
 					$(".new-directory",this.el).hide();
 				} else {

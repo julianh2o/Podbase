@@ -16,7 +16,6 @@ define(
 			
 			initialize: function() {
 				this.access = this.options.access;
-				this.canEdit = this.access["EDITOR"];
 				this.dataMode = this.options.dataMode;
 				this.hideHidden = true;
 				
@@ -102,6 +101,7 @@ define(
 			},
 			
 			refresh : function() {
+				this.canEdit = (!this.dataMode && this.access["EDIT_ANALYSIS_METADATA"]) || (this.dataMode && this.access["EDIT_DATA_METADATA"]);
 				this.attributes = this.link ? this.link.getData() : null;
 				
 				this.model = {file:this.file,attributes:this.attributes,canEdit:this.canEdit,dataMode:this.dataMode};

@@ -18,7 +18,7 @@ public class ProjectService {
     	User user = Security.getUser();
     	if (user.isRoot()) return new HashSet(Project.findAll());
     	
-    	return PermissionService.filter(PermissionService.getModelsForUser(user, AccessType.VISIBLE), Project.class);
+    	return PermissionService.filter(PermissionService.getModelsForUser(user, AccessType.LISTED), Project.class);
 	}
 	
 	public static Project createProject(String name) {
@@ -30,8 +30,6 @@ public class ProjectService {
     	project.addDirectory("/"+name);
     	
     	PermissionService.togglePermission(user,project,AccessType.OWNER,true);
-    	PermissionService.togglePermission(user,project,AccessType.VISIBLE,true);
-    	PermissionService.togglePermission(user,project,AccessType.LISTED,true);
     	
     	return project;
 	}

@@ -30,6 +30,10 @@ public class Project extends PermissionedModel {
 	@OneToMany(mappedBy="project", cascade=CascadeType.ALL)
 	public List<Template> templates = new LinkedList<Template>();
 	
+	@OneToMany(mappedBy="model", cascade=CascadeType.ALL)
+	@GsonTransient
+	public List<Permission> permissions = new LinkedList<Permission>();
+	
 	public static Project get(String name) {
 		return (Project)Project.find("byName", name).first();
 	}

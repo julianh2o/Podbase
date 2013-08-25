@@ -6,6 +6,7 @@ define(
 			template: _.template( tmpl ),
 			
 			initialize: function(opts) {
+				this.access = opts.access;
 				this.project = opts.project;
 				this.setTemplate(opts.template);
 			},
@@ -26,7 +27,7 @@ define(
 				}
 				this.editTemplate.attributes = this.editTemplate.attributes.sort(sortAttributes);
 				
-				this.model = {template:this.editTemplate};
+				this.model = {template:this.editTemplate, access: this.access, Util: Util};
 				this.render();
 				
 				$(".template-entry input",this.el).on("blur",$.proxy(this.onFieldBlur,this));

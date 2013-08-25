@@ -14,6 +14,22 @@ define(
 				this.model = {projects:Link.getProjects().getData(), showAdd:showAdd};
 				this.render();
 				
+				if (!Util.permits(Link.getCurrentUserPermissions().getData(),"DELETE_PROJECT")) {
+					$(".delete-project",this.el).hide();
+				}
+				
+				$(".delete-project",this.el).click(function() {
+					var id = $(this).closest("tr").data("project-id");
+					var name = $(this).closest("tr").data("project-name");
+					var yes = confirm("Are you sure you want to delete '"+name+"'?");
+					
+					if (yes) {
+						Link.deleteProject(id).post(function() {
+							Link.getProjects().pull();
+						});
+					}
+				});
+				
 				$(".add",this.el).click(function() {
 					var name = prompt("Enter a name for your project.");
 					if (!name) return;

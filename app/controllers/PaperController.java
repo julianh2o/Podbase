@@ -27,7 +27,7 @@ import models.User;
 
 @With(Security.class)
 public class PaperController extends ParentController {
-	@PaperAccess(AccessType.VISIBLE)
+	@PaperAccess(AccessType.LISTED)
 	public static void render(long imagesetid, int size) {
 		ImageSet imageset = ImageSet.findById(imagesetid);
     	List<DatabaseImage> images = ImageSetMembership.getImages(imageset.images);
@@ -39,12 +39,12 @@ public class PaperController extends ParentController {
     	
     	if (user.isRoot()) renderJSON(Paper.findAll());
     	
-    	Set<Paper> papers = PermissionService.filter(PermissionService.getModelsForUser(user, AccessType.VISIBLE), Paper.class);
+    	Set<Paper> papers = PermissionService.filter(PermissionService.getModelsForUser(user, AccessType.LISTED), Paper.class);
     	
     	renderJSON(papers);
     }
     
-	@PaperAccess(AccessType.VISIBLE)
+	@PaperAccess(AccessType.LISTED)
     public static void getPaper(Paper paper) {
     	renderJSON(paper);
     }
@@ -55,9 +55,6 @@ public class PaperController extends ParentController {
     	
     	User user = Security.getUser();
     	PermissionService.togglePermission(user,paper,AccessType.OWNER,true);
-    	PermissionService.togglePermission(user,paper,AccessType.VISIBLE,true);
-    	PermissionService.togglePermission(user,paper,AccessType.LISTED,true);
-    	PermissionService.togglePermission(user,paper,AccessType.MANAGE_PERMISSIONS,true);
     	
     	ok();
     }
@@ -68,12 +65,12 @@ public class PaperController extends ParentController {
     	ok();
     }
     
-	@PaperAccess(AccessType.EDITOR)
+	@PaperAccess(AccessType.LISTED)
     public static void getImageSet(ImageSet imageset) {
     	renderJSON(imageset);
     }
     
-	@PaperAccess(AccessType.EDITOR)
+	@PaperAccess(AccessType.EDIT_ANALYSIS_METADATA)
     public static void addImageToSet(ImageSet imageset, Path path) {
     	for (ImageSetMembership mem : imageset.images) {
     		DatabaseImage img = mem.image;
@@ -88,7 +85,7 @@ public class PaperController extends ParentController {
     	ok();
     }
     
-	@PaperAccess(AccessType.EDITOR)
+	@PaperAccess(AccessType.EDIT_ANALYSIS_METADATA)
     public static void removeImageFromSet(ImageSet imageset, Path path) {
     	DatabaseImage image = DatabaseImage.forPath(path);
     	

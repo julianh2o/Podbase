@@ -70,7 +70,7 @@ public class ImageBrowser extends ParentController {
 		render();
 	}
 	
-	@ModelAccess(AccessType.VISIBLE)
+	@ModelAccess(AccessType.LISTED)
 	public static void fetchProjectPath(Project project, Path path) throws FileNotFoundException {
 		List<Path> paths = PathService.listPaths(path);
 		
@@ -82,12 +82,12 @@ public class ImageBrowser extends ParentController {
 		renderJSON(wrappedFiles);
 	}
 	
-	@ModelAccess(AccessType.EDITOR)
+	@ModelAccess(AccessType.SET_VISIBLE)
 	public static void setVisible(Project project, DatabaseImage image, boolean visible) {
 		ProjectVisibleImage.setVisible(project,image,visible);
 	}
 	
-	@ModelAccess(AccessType.EDITOR)
+	@ModelAccess(AccessType.SET_VISIBLE)
 	public static void setMultipleVisible(Project project, String ids, boolean visible) {
 		for (String id : ids.split(",")) {
 			long longid = Long.parseLong(id);
@@ -108,7 +108,7 @@ public class ImageBrowser extends ParentController {
 		return ip;
 	}
 	
-	@ModelAccess(AccessType.VISIBLE)
+	@ModelAccess(AccessType.LISTED)
 	public static void imageMetadata(Path path) throws IOException {
 		ImagePlus image = getImage(path);
 		
@@ -118,8 +118,10 @@ public class ImageBrowser extends ParentController {
 		renderJSON(info);
 	}
 	
-	@ModelAccess(AccessType.VISIBLE)
+	@ModelAccess(AccessType.LISTED)
 	public static void resolveFile(Path path, String mode, Project project, Float scale, Integer width, Integer height, Float brightness, Float contrast, Boolean histogram, Integer slice) throws IOException {
+		if (!PermissionService.userCanAccessPath(Security.getUser(),path)) forbidden();
+		
 		if (params._contains("download")) response.setHeader("Content-Disposition", "attachment; filename="+path.getFileName());
 		
 		if (!PathService.isImage(path)) {
@@ -164,6 +166,7 @@ public class ImageBrowser extends ParentController {
 		renderImage(imageOut);
 	}
 	
+	//TODO remove me
 	public static void checkHash(Path path) throws IOException {
 		DatabaseImage image = DatabaseImage.forPath(path);
 		StringBuffer sb = new StringBuffer();
@@ -173,8 +176,10 @@ public class ImageBrowser extends ParentController {
 		renderText(sb.toString());
 	}
 	
-	@ModelAccess(AccessType.VISIBLE)
+	@ModelAccess(AccessType.LISTED)
 	public static void downloadAttributes(Project project, Path path, boolean dataMode) {
+		if (!PermissionService.userCanAccessPath(Security.getUser(),path)) forbidden();
+		
 		DatabaseImage image = DatabaseImage.forPath(path);
 		TemplateAssignment assignment = TemplateController.templateForPath(project, path);
 		Template template = assignment==null?null:assignment.template;
@@ -189,6 +194,8 @@ public class ImageBrowser extends ParentController {
 	}
 	
 	public static void importAttributes(Project project, Path path, File file, boolean dataMode) throws IOException {
+		if (!PermissionService.userCanAccessPath(Security.getUser(),path)) forbidden();
+		
 		DatabaseImage dbi = DatabaseImage.forPath(path);
 		String data = FileUtils.readFileToString(file);
 		
@@ -244,7 +251,7 @@ public class ImageBrowser extends ParentController {
 		jsonOk();
 	}
 	
-	@ModelAccess(AccessType.VISIBLE)
+	@ModelAccess(AccessType.LISTED)
 	public static void fetchInfo(Project project, Path path, boolean dataMode) {
 		TemplateAssignment assignment = TemplateController.templateForPath(project, path);
 		Template template = assignment==null?null:assignment.template;
@@ -255,10 +262,7 @@ public class ImageBrowser extends ParentController {
 	
 	//TODO Access control is done in the method.. maybe this could be enhanced?
 	public static void updateImageAttribute(ImageAttribute attribute, String value, boolean dataMode) {
-		User user = Security.getUser();
-		
-		if (!PermissionService.hasInheritedAccess(user,attribute.project,AccessType.EDITOR)) forbidden();
-		if (dataMode && !PermissionService.hasInheritedAccess(user,attribute.project,AccessType.DATA_EDITOR)) forbidden();
+		if (!permitMetadataEdit(attribute.project, dataMode)) forbidden();
 		
 		if (attribute.value == value) return;
 		
@@ -281,14 +285,19 @@ public class ImageBrowser extends ParentController {
 		renderJSON(attribute);
 	}
 	
-	public static void deleteImageAttribute(ImageAttribute attribute) {
+	@Util
+	public static boolean permitMetadataEdit(Project project, boolean dataMode) {
 		boolean permitted;
-		if (attribute.data) {
-			permitted = PermissionService.hasInheritedAccess(Security.getUser(),attribute.project, AccessType.DATA_EDITOR);
+		if (dataMode) {
+			permitted = PermissionService.hasInheritedAccess(Security.getUser(),project, AccessType.EDIT_DATA_METADATA);
 		} else {
-			permitted = PermissionService.hasInheritedAccess(Security.getUser(),attribute.project, AccessType.EDITOR);
+			permitted = PermissionService.hasInheritedAccess(Security.getUser(),project, AccessType.EDIT_ANALYSIS_METADATA);
 		}
-		if (!permitted) forbidden();
+		return permitted;
+	}
+	
+	public static void deleteImageAttribute(ImageAttribute attribute) {
+		if (!permitMetadataEdit(attribute.project, attribute.data)) forbidden();
 		
 		attribute.delete();
 		
@@ -297,8 +306,9 @@ public class ImageBrowser extends ParentController {
 		ok();
 	}
 	
-	@ModelAccess(AccessType.EDITOR)
 	public static void createAttribute(Project project, Path path, String attribute, String value, boolean dataMode) {
+		if (!permitMetadataEdit(project, dataMode)) forbidden();
+		
 		DatabaseImage image = DatabaseImage.forPath(path);
 		ImageAttribute attr = image.addAttribute(project, attribute, value, dataMode);
 		
@@ -316,8 +326,9 @@ public class ImageBrowser extends ParentController {
 		}
 	}
 	
-	@ModelAccess(AccessType.EDITOR)
 	public static void pasteAttributes(Project project, Path path, String jsonAttributes, boolean overwrite, boolean dataMode) {
+		if (!permitMetadataEdit(project, dataMode)) forbidden();
+		
 		Stopwatch sw = new Stopwatch();
 		sw.start("loading image");
 		DatabaseImage image = DatabaseImage.forPath(path);
@@ -367,7 +378,7 @@ public class ImageBrowser extends ParentController {
 		ImportExportService.importData(project, path);
 	}
 	
-	@ModelAccess(AccessType.VISIBLE)
+	@ModelAccess(AccessType.LISTED)
 	public static void findImportables(Path path) {
 		renderJSON(ImportExportService.findImportables(path));
 	}
@@ -377,7 +388,7 @@ public class ImageBrowser extends ParentController {
 		ImportExportService.importDirectoryRecursive(project, path);
 	}
 	
-	@ModelAccess(AccessType.PROJECT_FILE_UPLOAD)
+	@ModelAccess(AccessType.FILE_UPLOAD)
 	public static void upload(File file, Path path) {
 		File destination = path.resolve(file.getName()).toFile();
 		try {
@@ -388,13 +399,13 @@ public class ImageBrowser extends ParentController {
 		ok();
 	}
 	
-	@ModelAccess(AccessType.PROJECT_FILE_DELETE)
+	@ModelAccess(AccessType.FILE_UPLOAD)
 	public static void createDirectory(Path path) {
 		path.toFile().mkdir();
 		ok();
 	}
 	
-	@ModelAccess(AccessType.PROJECT_FILE_DELETE)
+	@ModelAccess(AccessType.FILE_DELETE)
 	public static void deleteFile(Path path) {
 		path.toFile().delete();
 		ok();

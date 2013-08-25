@@ -25,6 +25,10 @@ public class Paper extends PermissionedModel {
 	@OneToOne
 	public ImageSet imageset;
 	
+	@OneToMany(mappedBy="model", cascade=CascadeType.ALL)
+	@GsonTransient
+	public List<Permission> permissions = new LinkedList<Permission>();
+	
 	public Paper(String name) {
 		super();
 		this.name = name;

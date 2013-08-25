@@ -10,9 +10,25 @@ define(
 			},
 			
 			refresh : function() {
-				var showAdd = _.contains(Link.getCurrentUserPermissions().getData(),"CREATE_PROJECT");
+				var showAdd = Util.permits(Link.getCurrentUserPermissions().getData(),"CREATE_PAPER");
 				this.model = {papers:Link.getPapers().getData(), showAdd:showAdd};
 				this.render();
+				
+				if (!Util.permits(Link.getCurrentUserPermissions().getData(),"DELETE_PAPER")) {
+					$(".delete-paper",this.el).hide();
+				}
+				
+				$(".delete-paper",this.el).click(function() {
+					var id = $(this).closest("tr").data("id");
+					var name = $(this).closest("tr").data("name");
+					var yes = confirm("Are you sure you want to delete '"+name+"'?");
+					
+					if (yes) {
+						Link.deletePaper(id).post(function() {
+							Link.getPapers().pull();
+						});
+					}
+				});
 				
 				$(".add",this.el).click(function() {
 					var name = prompt("Enter a name for your paper.");

@@ -7,7 +7,6 @@ GET     /entry/{projectId}                     Application.entry
 GET     /paper/{paperId}                        Application.paper
 GET     /renderImageset/{imagesetId}            PaperController.render
 GET     /project                                ProjectController.getProjects
-PUT     /project                                ProjectController.newProjects
 
 *		/data{<.*>path}						ImageBrowser.resolveFile
 

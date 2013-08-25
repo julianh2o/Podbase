@@ -85,7 +85,7 @@ public class PermissionController extends ParentController {
     	if (user == null) error("User not found");
     	
     	PermissionService.togglePermission(user,model,AccessType.LISTED,true);
-    	PermissionService.togglePermission(user,model,AccessType.VISIBLE,true);
+    	PermissionService.togglePermission(user,model,AccessType.PARTICIPANT,true);
     	
     	jsonOk();
     }

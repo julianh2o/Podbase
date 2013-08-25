@@ -63,7 +63,7 @@ define(
 			templatesLoaded : function() {
 				this.templates = Link.getTemplates({projectId:this.project.id}).getData();
 				this.access = Link.getAccess({modelId:this.project.id}).getData();
-				this.canChooseTemplate = Util.permits(this.access,"PROJECT_MANAGE_TEMPLATES");
+				this.canChooseTemplate = Util.permits(this.access,"SET_TEMPLATE");
 				
 				this.refresh();
 				

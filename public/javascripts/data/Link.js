@@ -38,6 +38,9 @@ define(['data/Loader'],function(Loader) {
 		this.setMultipleVisible = new Loader("@{ImageBrowser.setMultipleVisible}?project.id={projectId}&ids={ids}&visible={visible}");
 		this.imageMetadata = new Loader("@{ImageBrowser.imageMetadata}?path={path}");
 		this.resolveFile = new Loader("@{ImageBrowser.resolveFile}?path={path}&mode={mode}&project.id={projectId}&scale={scale}&width={width}&height={height}&brightness={brightness}&contrast={contrast}&histogram={histogram}&slice={slice}");
+		this.checkHash = new Loader("@{ImageBrowser.checkHash}?path={path}");
+		this.downloadAttributes = new Loader("@{ImageBrowser.downloadAttributes}?project.id={projectId}&path={path}&dataMode={dataMode}");
+		this.importAttributes = new Loader("@{ImageBrowser.importAttributes}?project.id={projectId}&path={path}&file={file}&dataMode={dataMode}");
 		this.fetchInfo = new Loader("@{ImageBrowser.fetchInfo}?project.id={projectId}&path={path}&dataMode={dataMode}");
 		this.updateImageAttribute = new Loader("@{ImageBrowser.updateImageAttribute}?attribute.id={attributeId}&value={value}&dataMode={dataMode}");
 		this.deleteImageAttribute = new Loader("@{ImageBrowser.deleteImageAttribute}?attribute.id={attributeId}");
@@ -126,6 +129,8 @@ define(['data/Loader'],function(Loader) {
 		this.deleteTemplate = new Loader("@{TemplateController.deleteTemplate}?template.id={templateId}");
 		this.duplicateTemplate = new Loader("@{TemplateController.duplicateTemplate}?template.id={templateId}&newName={newName}");
 		this.renameTemplate = new Loader("@{TemplateController.renameTemplate}?template.id={templateId}&newName={newName}");
+		this.exportTemplate = new Loader("@{TemplateController.exportTemplate}?template.id={templateId}");
+		this.importTemplate = new Loader("@{TemplateController.importTemplate}?project.id={projectId}&file={file}");
 		this.setFolderTemplate = new Loader("@{TemplateController.setFolderTemplate}?project.id={projectId}&template.id={templateId}&path={path}");
 		this.clearFolderTemplate = new Loader("@{TemplateController.clearFolderTemplate}?project.id={projectId}&path={path}");
 		this.getTemplateForPath = new Loader("@{TemplateController.getTemplateForPath}?project.id={projectId}&path={path}");

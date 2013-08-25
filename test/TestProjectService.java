@@ -36,10 +36,10 @@ public class TestProjectService extends UnitTest {
 		Project p1 = Project.get("test");
 		Project p2 = Project.get("rawr");
 		
-    	PermissionService.togglePermission(u1,p1,AccessType.VISIBLE,true);
+    	PermissionService.togglePermission(u1,p1,AccessType.LISTED,true);
     	
-    	PermissionService.togglePermission(u2,p1,AccessType.VISIBLE,true);
-    	PermissionService.togglePermission(u2,p2,AccessType.VISIBLE,true);
+    	PermissionService.togglePermission(u2,p1,AccessType.LISTED,true);
+    	PermissionService.togglePermission(u2,p2,AccessType.LISTED,true);
 	}
 
 	@Test

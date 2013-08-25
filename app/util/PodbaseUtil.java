@@ -60,6 +60,7 @@ public class PodbaseUtil {
 			JsonObject json = new JsonObject();
 			json.addProperty("name", obj.name());
 			json.addProperty("description", obj.description);
+			json.addProperty("aggregate", obj.aggregate);
 			json.add("type", context.serialize(obj.types));
 			return json;
 		}

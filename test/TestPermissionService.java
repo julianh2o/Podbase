@@ -47,9 +47,9 @@ public class TestPermissionService extends UnitTest {
 		User u1 = User.get("test1@test.com");
 		Project p1 = Project.get("test");
 		
-		PermissionService.addPermission(u1,p1,AccessType.VISIBLE);
+		PermissionService.addPermission(u1,p1,AccessType.LISTED);
 		
-		assertTrue(hasPermission(u1,p1,AccessType.VISIBLE));
+		assertTrue(hasPermission(u1,p1,AccessType.LISTED));
 	}
 	
 	@Test

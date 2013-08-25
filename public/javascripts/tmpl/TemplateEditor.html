@@ -1,8 +1,17 @@
 <div>
 	<b>Template: </b><%= template.name %>
-	( <a href="#" class="delete-template">delete</a> )
-	( <a href="#" class="duplicate-template">duplicate</a> )
+	<% if (Util.permits(access,"DELETE_TEMPLATES")) { %>
+		( <a href="#" class="delete-template">delete</a> )
+	<% } %>
+	
+	<% if (Util.permits(access,"CREATE_TEMPLATES")) { %>
+		( <a href="#" class="duplicate-template">duplicate</a> )
+	<% } %>
+	
+	<% if (Util.permits(access,"EDIT_TEMPLATES")) { %>
 	( <a href="#" class="rename-template">rename</a> )
+	<% } %>
+	
 	( <a href="@{TemplateController.exportTemplate}?template.id=<%=template.id%>" class="export-template">export</a> )
 </div>
 <br/>
@@ -10,34 +19,41 @@
 <div class="template-editor">
 	<% _.each(template.attributes,function(attr,index) { %>
 		<div class='row template-entry' data-index="<%= index %>">
-			<div class="pull-left">
-				<span class="handle">
-					<i class="icon-resize-vertical"/>
-				</a>
+			<% if (Util.permits(access,"EDIT_TEMPLATES")) { %>
+				<div class="pull-left">
+					<span class="handle">
+						<i class="icon-resize-vertical"/>
+					</a>
+				</div>
+			<% } %>
+			
+			<div class='pull-left field'>
+				<input type='checkbox' name='hidden' <%= Util.permits(access,"EDIT_TEMPLATES")?'':'disabled' %> value="true" title="hidden" <%= attr.hidden ? "checked" : "" %> />
 			</div>
 			
 			<div class='pull-left field'>
-				<input type='checkbox' name='hidden' value="true" title="hidden" <%= attr.hidden ? "checked" : "" %> />
+				<input type='text' name='name' <%= Util.permits(access,"EDIT_TEMPLATES")?'':'disabled' %> class='seamless' placeholder="Field" value="<%= attr.name %>"/>
 			</div>
 			
 			<div class='pull-left field'>
-				<input type='text' name='name' class='seamless' placeholder="Field" value="<%= attr.name %>"/>
+				<textarea name='description' <%= Util.permits(access,"EDIT_TEMPLATES")?'':'disabled' %> class="description-textarea" placeholder="Description"><%= attr.description %></textarea>
 			</div>
 			
-			<div class='pull-left field'>
-				<textarea name='description' class="description-textarea" placeholder="Description"><%= attr.description %></textarea>
-			</div>
-			
-			<div clas="pull-left">
-				<a href="#" class="remove">
-					<i class="icon-remove"/>
-				</a>
-			</div>
+			<% if (Util.permits(access,"EDIT_TEMPLATES")) { %>
+				<div clas="pull-left">
+					<a href="#" class="remove">
+						<i class="icon-remove"/>
+					</a>
+				</div>
+			<% } %>
 		</div>
 	<% }); %>
 </div>
-<div class="row">
-	<div class="pull-right">
-		<a href="#" class="add">Add Field</a>
+
+<% if (Util.permits(access,"EDIT_TEMPLATES")) { %>
+	<div class="row">
+		<div class="pull-right">
+			<a href="#" class="add">Add Field</a>
+		</div>
 	</div>
-</div>
+<% } %>

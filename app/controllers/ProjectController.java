@@ -29,7 +29,7 @@ public class ProjectController extends ParentController {
     	renderJSON(projects);
     }
     
-    @ModelAccess(AccessType.VISIBLE)
+    @ModelAccess(AccessType.LISTED)
     public static void getProject(Project project) {
     	renderJSON(project);
     }
@@ -40,7 +40,7 @@ public class ProjectController extends ParentController {
     	ok();
     }
     
-    @ModelAccess(AccessType.EDITOR)
+    @ModelAccess(AccessType.SET_DATA_MODE)
     public static void setDataMode(Project project, boolean dataMode) {
     	project.dataMode = dataMode;
     	ok();

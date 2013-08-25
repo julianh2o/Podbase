@@ -6,6 +6,7 @@ define(
 			template: _.template( tmpl ),
 			
 			initialize: function() {
+				this.access = this.options.access;
 				this.project = this.options.project;
 				this.link = Link.getTemplates(this.project.id);
 				this.link.asap($.proxy(this.refresh,this))
@@ -30,7 +31,7 @@ define(
 			refresh : function() {
 				$(this).trigger("TemplateDeselected");
 				
-				this.model = {templates:Link.getTemplates(this.project.id).getData()};
+				this.model = {Util: Util, access: this.access, templates:Link.getTemplates(this.project.id).getData()};
 				this.render();
 				
 				if (this.selected) this.templateSelected($("a[data-id="+this.selected.id+"]",this.el));

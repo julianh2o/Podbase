@@ -14,14 +14,16 @@
 	</div>
 <% } %>
 
-<div class="row">
-	<div class="pull-right">
-		<div class="upload-link">
-			<div class="upload-cover">Import Template</div>
-			<input class="template-upload file-upload" type="file" name="file" data-url="@{TemplateController.importTemplate}" multiple>
-		</div> | 
-		
-		
-		<a href="#" class="add">Add Template</a>
+<% if (Util.permits(access,"CREATE_TEMPLATES")) { %>
+	<div class="row">
+		<div class="pull-right">
+			<div class="upload-link">
+				<div class="upload-cover">Import Template</div>
+				<input class="template-upload file-upload" type="file" name="file" data-url="@{TemplateController.importTemplate}" multiple>
+			</div> | 
+			
+			
+			<a href="#" class="add">Add Template</a>
+		</div>
 	</div>
-</div>
+<% } %>

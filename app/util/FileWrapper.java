@@ -67,11 +67,11 @@ public class FileWrapper {
 	}
 	
 	public static List<FileWrapper> visibilityFilter(Project project, User user, List<FileWrapper> files) {
-		if (PermissionService.hasInheritedAccess(user,project,AccessType.EDITOR)) {
-			return files;
-		}
+		if (PermissionService.hasInheritedAccess(user,project,AccessType.VIEW_ALL_IMAGES)) return files;
 		
 		List<FileWrapper> filtered = new LinkedList<FileWrapper>();
+		if (!PermissionService.hasInheritedAccess(user,project,AccessType.VIEW_VISIBLE_IMAGES)) return filtered;
+		
 		for (FileWrapper f : files) {
 			if (f.visible || f.isDir) filtered.add(f);
 		}

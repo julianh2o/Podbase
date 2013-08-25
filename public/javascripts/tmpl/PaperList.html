@@ -1,13 +1,18 @@
 <h1>Papers</h1>
-<ul>
+<table class="paper-table">
 	<% _.each(papers,function(paper) { %>
-		<li>
-			<a href="/paper/<%= paper.id %>">
-				<%= paper.name %><br/>
-			</a>
-		</li>
+		<tr data-id="<%= paper.id %>" data-name="<%= paper.name %>">
+			<td>
+				<a href="/entry/<%= paper.id %>">
+					<%= paper.name %>
+				</a>
+			</td>
+			<td>
+				<a href="#" class="delete-paper">Delete</a>
+			</td>
+		</tr>
 	<% }); %>
-</ul>
+</table>
 <hr/>
 
 <% if (showAdd) { %>

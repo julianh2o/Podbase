@@ -9,6 +9,7 @@ define(
 				this.browser = this.options.browser;
 				this.project = this.options.project;
 				this.dataMode = this.options.dataMode;
+				this.access = this.options.access;
 				this.loadPreview(this.options.file);
 			},
 			
@@ -30,7 +31,8 @@ define(
 					this.files = null;
 				}
 				
-				this.model = {file:this.file,files:this.files,fileCount:this.fileCount};
+				this.canEdit = (this.dataMode && Util.permits(this.access,"EDIT_DATA_METADATA")) || (!this.dataMode && Util.permits(this.access,"EDIT_ANALYSIS_METADATA"));
+				this.model = {file:this.file,files:this.files,fileCount:this.fileCount, access: this.access, Util: Util, dataMode: this.dataMode, canEdit: this.canEdit};
 				
 				this.render();
 				

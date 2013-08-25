@@ -73,7 +73,7 @@ public class TestBootstrap extends Job {
 		        Project project = new Project(f.getName()).save();
 		        
 		        new Permission(c,project,AccessType.OWNER).save();
-		        new Permission(authenticated,project,AccessType.VISIBLE).save();
+		        new Permission(authenticated,project,AccessType.PARTICIPANT).save();
 		        new Permission(authenticated,project,AccessType.LISTED).save();
 		        
 		        Template template = new Template(project, f.getName()+"_demo_template").save();
@@ -91,8 +91,8 @@ public class TestBootstrap extends Job {
         if (sandbox != null) {
 	        PermissionService.addPermission(guest, sandbox, AccessType.OWNER);
 	        PermissionService.addPermission(guest, sandbox, AccessType.LISTED);
-	        PermissionService.addPermission(guest, sandbox, AccessType.VISIBLE);
-	        PermissionService.addPermission(guest, sandbox, AccessType.EDITOR);
+	        PermissionService.addPermission(guest, sandbox, AccessType.PARTICIPANT);
+	        PermissionService.addPermission(guest, sandbox, AccessType.EDIT_ANALYSIS_METADATA);
         } else {
         	System.out.println("Sandbox project not found!");
         }
@@ -100,7 +100,7 @@ public class TestBootstrap extends Job {
         Project pub = Project.find("byName", "Public").first();
         if (pub != null) {
 	        PermissionService.addPermission(guest, pub, AccessType.LISTED);
-	        PermissionService.addPermission(guest, pub, AccessType.VISIBLE);
+	        PermissionService.addPermission(guest, pub, AccessType.PARTICIPANT);
         } else {
         	System.out.println("Public project not found!");
         }
@@ -109,8 +109,8 @@ public class TestBootstrap extends Job {
     private void addUsersToProject(Project project, List<User> users) {
         for (User u : users) {
 	        new Permission(u,project,AccessType.LISTED).save();
-	        new Permission(u,project,AccessType.VISIBLE).save();
-	        new Permission(u,project,AccessType.EDITOR).save();
+	        new Permission(u,project,AccessType.PARTICIPANT).save();
+	        new Permission(u,project,AccessType.EDIT_ANALYSIS_METADATA).save();
         }
     }
     
