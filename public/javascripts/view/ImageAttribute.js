@@ -8,6 +8,7 @@ define(
 				this.attributeName = options.attr;
 				this.hidden = options.hidden;
 				this.link = options.link;
+				this.canEdit = options.canEdit;
 				
 				//TODO come up with a better way of doing this (this is required only for createAttribute
 				this.projectId = options.projectId;
@@ -28,13 +29,14 @@ define(
 				this.model = {name:this.attributeName,hidden:this.hidden, values:this.attributes};
 				this.render();
 				
-				$(".value .delete-attribute",this.el).click($.proxy(this.triggerDeleteAttribute,this));
 				
-				$(".value",this.el).click($.proxy(this.triggerEditValue,this));
-				//this.$attribute.dblclick($.proxy(this.triggerEditAttribute,this));
-				
-				//$(this.el).find(".delete").click($.proxy(this.handleDelete,this));
-				//this.$attribute.toggleClass("novalue",this.dbo.id == undefined);
+				if (this.canEdit) {
+					$(".value .delete-attribute",this.el).click($.proxy(this.triggerDeleteAttribute,this));
+					
+					$(".value",this.el).click($.proxy(this.triggerEditValue,this));
+				} else {
+					$(".delete-attribute",this.el).hide();
+				}
 			},
 			
 			triggerDeleteAttribute : function(e) {

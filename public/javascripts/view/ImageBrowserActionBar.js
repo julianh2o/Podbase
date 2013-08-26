@@ -13,7 +13,6 @@ define(
 				
 				this.dataMode = this.options.dataMode
 				
-				
 				if (this.dataMode === undefined || !(this.access["EDIT_ANALYSIS_METADATA"] || this.access["EDIT_DATA_METADATA"])) {
 					$(".data-mode",this.el).hide();
 				} else if (!this.access["SET_DATA_MODE"]){

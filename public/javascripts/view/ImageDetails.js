@@ -167,6 +167,7 @@ define(
 				if (attributes.length == 0) return;
 				var hidden = attributes[0].hidden;
 				var imageAttribute = new ImageAttribute({
+					canEdit: this.canEdit,
 					attr:attributeName,
 					attrs:attributes,
 					hidden:hidden,

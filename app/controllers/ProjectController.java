@@ -43,6 +43,7 @@ public class ProjectController extends ParentController {
     @ModelAccess(AccessType.SET_DATA_MODE)
     public static void setDataMode(Project project, boolean dataMode) {
     	project.dataMode = dataMode;
+    	project.save();
     	ok();
     }
     

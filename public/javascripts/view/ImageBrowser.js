@@ -10,7 +10,7 @@ define(
 				this.access = this.options.access;
 				this.dataMode = this.project.dataMode;
 				
-				this.dataMode = this.dataMode && this.access["EDIT_DATA_METADATA"] !== undefined;
+				this.dataMode = this.dataMode;
 				
 				this.render();
 				
