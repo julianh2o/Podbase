@@ -18,6 +18,13 @@ define(
 				this.model = {user:this.user};
 				this.render();
 				
+				var userId = this.user.id;
+				$(".mimic-user",this.el).click(function() {
+					Link.mimicUser(userId).post(function() {
+						window.location.reload();
+					});
+				});
+				
 				this.userPermissionsEditor = Util.createView( $(".permissions",this.el), UserPermissionsEditor, {type:"user",user:this.user,modelObject:podbase, showRemove:false});
 			},
 			
