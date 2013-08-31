@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import access.AccessType;
 
@@ -72,8 +73,14 @@ public class FileWrapper {
 		List<FileWrapper> filtered = new LinkedList<FileWrapper>();
 		if (!PermissionService.hasInheritedAccess(user,project,AccessType.VIEW_VISIBLE_IMAGES)) return filtered;
 		
+		Set<Path> visibleDirectories = ProjectVisibleImage.getVisibleDirectories(project);
+		
 		for (FileWrapper f : files) {
-			if (f.visible || f.isDir) filtered.add(f);
+			if (f.visible) {
+				filtered.add(f);
+			} else if (f.isDir && visibleDirectories.contains(PathService.getRelativePath(PathService.resolve(f.path)))){
+				filtered.add(f);
+			}
 		}
 		
 		return filtered;

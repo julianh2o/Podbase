@@ -84,6 +84,10 @@ public class PathService {
         return pathRelative;
 	}
 	
+	public static File relativePathToFile(Path path) {
+		return getRootImageDirectory().resolve(path).toFile();
+	}
+	
 	public static String getRelativeString(Path path) {
 		return "/"+getRelativePath(path).toString();
 	}
@@ -127,6 +131,16 @@ public class PathService {
 		}
 		
 		return false;
+	}
+	
+	public static List<Path> getParentDirectories(Path path) {
+		path = getRelativePath(path);
+		List<Path> directories = new LinkedList<Path>();
+		while (!getRootImageDirectory().equals(path) && path != null) {
+			if (relativePathToFile(path).isDirectory()) directories.add(path);
+			path = path.getParent();
+		}
+		return directories;
 	}
 	
 	//TODO make this more efficient

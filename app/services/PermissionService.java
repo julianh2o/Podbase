@@ -34,6 +34,7 @@ import models.Paper;
 import models.Permission;
 import models.PermissionedModel;
 import models.Project;
+import models.ProjectVisibleImage;
 import models.User;
 
 public class PermissionService {
@@ -223,6 +224,7 @@ public class PermissionService {
     	if (user.isRoot()) return true;
     	
     	DatabaseImage image = DatabaseImage.forPath(path);
+    	
     	Set<PermissionedModel> models = getModelsForUser(user,AccessType.VIEW_ALL_IMAGES);
     	for(PermissionedModel model : models) {
     		if (model instanceof Paper) {
@@ -245,7 +247,29 @@ public class PermissionService {
     		}
     	}
     	
-    	models = getModelsForUser(user,AccessType.VIEW_ALL_IMAGES);
+    	models = getModelsForUser(user,AccessType.VIEW_VISIBLE_IMAGES);
+    	for(PermissionedModel model : models) {
+    		if (model instanceof Paper) {
+    			Paper p = (Paper)model;
+	    		//System.out.println("paper "+p.name);
+    			for (ImageSetMembership entry : p.imageset.images) {
+    				if (entry.image.equals(image)) {
+    					return true;
+    				}
+    			}
+    		} else if (model instanceof Project){
+    			Project p = (Project)model;
+	    		if (ProjectVisibleImage.get(p, image) != null) {
+	    		//System.out.println("project "+p.name);
+	    			for (Directory dir : p.directories) {
+	    				//System.out.println("testing "+dir.getPath().toString());
+	    				if (image.getPath().startsWith(dir.getPath())) {
+	    					return true;
+	    				}
+	    			}
+	    		}
+    		}
+    	}
     	
     	return false;
 	}
