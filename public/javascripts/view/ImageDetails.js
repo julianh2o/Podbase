@@ -108,6 +108,8 @@ define(
 				
 				this.render();
 				
+				$(".attributes",this.el).scroll($.proxy(this.attributesScrolled,this));
+				
 				if (!this.file) return;
 				
 				if (this.link) {
@@ -127,6 +129,15 @@ define(
 				$(".toggle-hidden",this.el).click($.proxy(this.toggleHiddenAttributes,this));
 				
 				this.$body.toggleClass("show-hidden",!this.hideHidden);
+				
+				if (this.scrollLocation) {
+					$(".attributes").scrollTop(this.scrollLocation);
+				}
+			},
+			
+			attributesScrolled : function(e) {
+				var $el = $(".attributes",this.el);
+				this.scrollLocation = $el.scrollTop();
 			},
 			
 			toggleHiddenAttributes : function(e) {
