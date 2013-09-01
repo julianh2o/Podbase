@@ -1,0 +1,184 @@
+PODBASE2 USERS MANUAL
+
+Click_Pencil_Icon_2_Read: HELP page (these instructions)
+
+
+I.  HOME PAGE
+
+As a regular user, granted at least viewing provieges to images and metadata on a project, you will see upon logon the following options:
+
+1.  Links to facilities for changing password (upper right corner), to the manual (lower left), to the Podbase open-source code, to the creator's home page, and for reporting a bug via GitHub (the standard medium for information exchange in Podbase).
+
+2.  A list of links to projects to which you have access (left side)
+
+3.  A link that gets you back to the home page from any page displaying the title, disguised as two face-to-face copepods forming the "db" of the Podbase title (courtesy of Bri)
+
+
+II.  IMAGE BROWSER TAB
+Click a project name to gain access to the project work space.  This will replace the project list with a work space headed by the Image Browser tab (other tabs may appear depending on access lavels granted to you -- see below) and three windows:  the Browser window (left), the Image Thumbnail window (upper right) and the Metadata window (lower right)
+
+A.  IMAGE BROWSING
+
+In the Browser window, browse available images by navigating through the directory tree.  When you reach the desired image, click on it to select, and a thumbnail will appear in the View window.
+	1.  Mousing over the thumbnail brings up a larger version
+	2.  Double clicking the thumbnail brings up an adjustable image with these options:
+		"Move" allows click-and-drag repositioning and scroll-wheel enlargement
+		"Measure" allows clicking and dragging across a scale bar, followed by
+			click and drag between two points with distance read-out (scale value
+                  must be enterd in the window at the top)
+		"Adjust" allows brightness and contrast adjustment, either via a slider, or by 
+			typing a number in the appropriate window
+		"Url" gives a clickable link to the adjusted view, or copy and paste it
+			into a separate browser window
+	3.  "View image" link brings up additional enlargement options
+	4.  "Download image" link for downloading to a file or opening with a program (e.g. Photoshop)
+	5.  "Set visible" (if user is granted permission) makes image public
+	6.  "Browser link and thumbnail" window has editable-text links to the browser  
+		window and the image that can be copy/pasted into summary HTML pages. 
+	7.  "Toggle hidden attributes" reveals/hides susceptible metadata attributes
+	8.  "Add new attribute" [for persons with Data_Edit pemission?] - adds an attribute box 
+		labeled by what is typed in the set-up screen, then the "value" of the attribute can be 
+		entered in the regular data field.  The added atribute carries over into the Analysis mode.
+		It does not become incorporated in the tamplate -- i.e. it is image-specific.  It can
+		be viewed by all aothorized to view the metadata for that image.
+
+
+B.  METADATA EDITING
+
+	If you are authorized (EDIT_DATA_METADATA), click in the field to the right of the field name (), and it will open for editing, with a cursor bar at the entry point.  Editing is like any other text processing operation.  Click outside the edit box when done to close and save.  There is no "Undo."  Similar editing for preparing metadata for open access is authorized by the permission EDIT_ANALYSIS_METADATA.
+
+C.  TEMPLATE CHOICE
+
+	If you are given "SET_TEMPLATE" permission, you can select the template used for a project by clicking the drop-down arrow to the right of the "Template" window at the top of the browser window
+
+D.  UPLOAD
+
+	1.   You must (normally) be registered as an "owner" of a project to upload
+
+	2.  Navigate in the Browser window to the desired folder to be uploaded to.
+
+	3.  Click the Upload link at the bottom of Browser window.  An upload screen 
+		will appear
+
+	4.  Drag and drop the desired file onto the screen.  The name of the uploaded
+		file will appear below the "upload" link.
+
+	5.  Alternatively, click the "Drag files or click to upload" link to bring up a
+		browser window for locating the desired file
+
+	6.  Continue dragging and dropping as needed.
+
+	7.  Click "delete" link next to any uploaded file needing to be discarded
+
+	8.  Click the close box to terminate the upload session
+
+
+E.  REPORTING BUGS
+
+	1.  Click on the link "Report a bug" at the lower left of the browser window
+	2.  When the GitHub log-in screen appears, enter your user name and password
+	3.  Select a title for your bug report, then enter the description 
+		(see See <A HREF="">GitHub-for-dummies</A> for more information of Issue management)
+
+II.  TEMPLATE MANAGER TAB
+
+
+PODBASE2 INSTRUCTIONS
+
+I.  IMAGE BROWSER TAB
+
+A.  IMAGE BROWSING
+
+Browse available images by navigating through the directory tree in the Browser window.  When you reach the desired image, click on it to select, and a thumbnail will appear in the View window.
+	1.  Mousing over the thumbnail brings up a larger version
+	2.  Double clicking the thumbnail brings up an adjustable image with these options:
+		"Move" allows click-and-drag repositioning and scroll-wheel enlargement
+		"Measure" allows clicking and dragging across a scale bar, followed by
+			click and drag between two points with distance read-out (scale value
+                  must be enterd in the window at the top)
+		"Adjust" allows brightness and contrast adjustment
+		"Url" gives a clickable link to the adjusted view, or copy and paste
+			into a separate browser window
+	3.  "View image" link brings up additional enlargement options
+	4.  "Download image" link for downloading to a file or opening with a program (e.g. Photoshop)
+	5.  "Set visible" (if user is granted permission) makes image public
+	6.  "Browser link and thumbnail" window has editable-text links to the browser  
+		window and the image that can be copy/pasted into summary HTML pages. 
+	7.  "Toggle hidden attributes" reveals/hides susceptible metadata attributes
+	8.  "Add new attribute" [for persons with Edit pemission?][changes template?]  
+
+
+B.  METADATA EDITING
+
+	1. Click a field to activate it (enlarges the text-entry box) and edit normally.
+		Finalize the text and close the box by clicking elsewhere on the screen.
+	2. Delete the entry in that field by clicking the "X" at the right
+	3. Copy the entire metadata block (including hidden) using the Copy link in the View window
+	4. Paste the entire emtadata block over another image's block using Paste link
+		(a warning that you are about to destroy the original metadata will appear)
+	5.  Export the metadata to a .yml (text) file using the Export Metadata link
+	6.  Import replacement metadata (.yml format) for the image being viewed using the 
+		Import Metadata link
+
+C.  TEMPLATE CHOICE
+
+	Click the drop-down window just above the Browser window and Search windows.
+	Select tge desired template.  Modify the template (if authorized) in the 
+	Template Managment tab
+
+D.  UPLOAD
+
+	1.   You must (normally) be registered as an "owner" or "administrator" of a project to upload
+
+	2.  Navigate in the Browser window to the desired folder to be uploaded to.
+
+	3.  Click the Upload link at the bottom of Browser window.  An upload screen 
+		will appear
+
+	4.  Drag and drop the desired file onto the screen.  The name of the uploaded
+		file will appear below the "upload" link.
+
+	5.  Alternatively, click the "Drag files or click to upload" link to bring up a
+		browser window for locating the desired file
+
+	6.  Continue dragging and dropping as needed.
+
+	7.  Click "delete" link next to any uploaded file needing to be discarded
+
+	8.  Click the close box to terminate the upload session
+
+
+E.  REPORTING BUGS
+
+
+
+III.  TEMPLATE MANAGER TAB
+	This tab is available if you have a "Template Editor" role, or one of the permissions  	
+	VIEW_TEMPLATES is granted.  Provided this is granted, additional permissions may also
+	be available: DELETE_TEMPLATES, EDIT_TEMPLATES, and CREATE_TEMPLATES 
+
+	1.  The entry screen has a list of templates available to the project at the left.
+
+	2.  At the bottom of the list are links to 
+		Import Template from a .template file on your disk [if CREATE_TEMPLATES is granted]
+			[this is a text file, but not formatted for easy reading; can be used to transfer
+			templates between projects or for archiving, using the "Export" link for a 
+			particular template]
+		Add Template, to create a new template from scratch (a name will be asked for)
+
+	3.  Click on a named template to siplay the attributer list
+
+	4.  The first text field is the attribute name; 
+	    The second is a brief description of wha should go in that field 
+		(can click and drag the lower right corner to expand the view).
+	    An "X" shows at the right if you have Edit permisssion, for deleting the entry
+	    The check boxes on the left indicate hidden attributes
+	    The double-headed arrows at the left can be clicked and dragged to move the position
+		of the entry around 
+
+	5. Links along the top allow for deleting (if DELETE_TEMPLATES is granted), duplicating 
+		 (if CREATE_TEMPLATES is granted), renaming and exporting the template.
+
+IV.  PROJECT PERMISSIONS TAB - available if "MANAGE_PEMISSIONS" is granted.  See Owner's Manual
+
+	
