@@ -1,0 +1,11 @@
+PODBASE2- GETTING STARTED
+
+1.  Whan you are granted access to Podbase images, you will receive first a log-on notice along 
+with a temporary password via your chosen email address.  Log on (https://podbase.net) and 
+immediately cange your password (Change password link in the upper right corner).  WARNING: 
+some email clients tag the incoming email as spam, so you may need to check your spam folder
+ if you don't receive the expected information.
+
+2. In order to log bug reports, you need to register for GitHub, the open-access program 
+repository on which the code for Podbase is stored and which also contains the Podbase manuals.  
+See <A HREF="appendix-II_github.txt">GitHub-for-dummies</A>.
