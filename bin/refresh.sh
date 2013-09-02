@@ -11,5 +11,6 @@ $PLAY stop
 rm server.pid
 git pull
 $PLAY dependencies
+$PLAY evolutions:apply
 nohup $PLAY start --%prod
 #tail -f logs/system.out logs/application.log
