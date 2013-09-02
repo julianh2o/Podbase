@@ -91,6 +91,7 @@ define(
 				}
 				*/
 				
+				$(".attributes",this.el).block();
 				$.post("@{ImageBrowser.pasteAttributes()}",{
 					"project.id" : this.project.id,
 					path : this.file.path,

@@ -9,6 +9,7 @@ import play.cache.Cache;
 import play.db.jpa.JPA;
 import play.modules.search.Search;
 import play.mvc.*;
+import services.PathService;
 
 import java.text.DecimalFormat;
 import java.util.*;
@@ -52,5 +53,14 @@ public class Application extends ParentController {
 	
 	public static void rebuildIndex() throws Exception {
 		new SearchIndexMaintenance().now();
+	}
+	
+	public static void testInsert() {
+		Project p = Project.find("byName", "TestProject").first();
+		DatabaseImage dbi = DatabaseImage.forPath(PathService.resolve("/TestProject/CW080113_Acartia1_10x_BF.jpg"));
+		
+		long time = System.currentTimeMillis();
+		dbi.addAttribute(p, "test key", "value", true);
+		System.out.println("Insert took: "+(System.currentTimeMillis() - time)+"ms");
 	}
 }
