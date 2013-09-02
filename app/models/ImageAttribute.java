@@ -5,6 +5,7 @@
 package models;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -24,9 +25,11 @@ public class ImageAttribute extends TimestampModel {
 	@GsonTransient
 	public Project project;
 	
+	@Column(columnDefinition="char(60)")
 	public String attribute;
 	
 	@Field
+	@Column(columnDefinition="char(255)")
 	public String value;
 	
 	public int ordering;

@@ -8,7 +8,6 @@ eclipse/
 .classpath
 .settings
 test-result/
-db/*
 data
 logs/*
 server.pid

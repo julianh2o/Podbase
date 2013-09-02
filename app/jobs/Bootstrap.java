@@ -30,7 +30,8 @@ public class Bootstrap extends Job {
 		}
         
 		System.out.println("Bootstrapping database!");
-        new Podbase().save();
+		Podbase podbase = new Podbase();
+		podbase.save();
         
         String rootPassword = Play.configuration.getProperty("podbase.root.password",DEFAULT_ROOT_PASSWORD);
         if (rootPassword.equals(DEFAULT_ROOT_PASSWORD)) System.out.println("Warning: Using default root password!");
