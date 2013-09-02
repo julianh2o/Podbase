@@ -1,0 +1,156 @@
+PODBASE2 ADMINISTRATOR'S MANUAL
+
+This document describes the various administrative levels available in Podbase2.  In practice, 
+these are "Roles" consisting  of clusters of check-list style permissions granted under the
+Permisssions tab, visible to authorized users. 
+
+1.  The highest is "Root" with authority to delete projects 
+	and papers [but not yet users], invite new users and grant "super-user" powers.
+	For individual projects, it can assign the role of "Owner", and along with Owners
+	can grant the roles of "Manager" and "Template Editor."
+	Permission management is granted singly by Root and subsets are granted
+	for users with roles of "Owner" "Manager" and "Template editor" 
+		
+2.  Next highest is "Owner" -- normally the P.I. on a project, with broad authority over a 
+	particular project.  
+
+3.  Third is "Manager" -- ordinarily someone closely involved in obtaining the images and 
+	responsible for assessing the correctness of entered metadata.
+
+4.  Template Editor" is a separate role, for convenience, gathering all of the template-manipulation
+	permisssions together.  These may, as with other permissions, be granted singly as well.
+
+5.  A user with one or more of the Adninistrator's powers will see one or two extra tabs 
+	on his/her home page beside the Browser tab:  Manage Templates tab and Permissions tab.
+
+
+
+	Under the Permissions tab, several "Roles" check boxes may be used as a quick way to 
+select a particular set of permissions, but in general, all of these permsissions can be 
+individually set or reset.  They are listed under the lowest-level role that grants them en mass: 
+
+================================================================================================
+ 	
+ROLE - MANAGER: [NOT IMPLEMENTED YET]
+	A Manager has elevated access rights to a project. A Manager has control over most aspects, 
+as listed in the following specific permissions granted when the Manager role box in the
+Permissions tab is clicked by an administrator with Permissions authorization:
+
+	FILE_DELETE: 		
+		The user can delete files (images and text files) from this project
+
+	FILE_UPLOAD: 		
+		The user can upload files (images and text files)to this project
+            (see UPLOAD above for instructions)
+
+	VIEW_TEMPLATES
+		User will have a "Template Manager" tab and can see and download the templates 
+		for a project.  Other permissions are granted under the Template Manager role.
+
+	SET_TEMPLATE:		
+		The user can change the template associated with directories
+
+	EDIT_DATA_METADATA:
+		The user can enter, edit and/or delete the original metadata for this
+		project (using "Data mode")
+
+	[VIEW PERMISSIONS
+		The user (usually a Manager) is allowed to view, but not modify, the permisssions
+		for a particular user and project (including his/her own) - NOT IMPLEMENTED YET]
+
+	VIEW_ALL_IMAGES
+		The user can browse through, see and download all images and original metadata 
+		in a project (does not grant editing rights)
+
+	VIEW_VISIBLE_IMAGES
+		The user can browse through, see and download all images and open-access metadata 
+		in a project that have been Set Visible by someone with permisssion to do so.
+		This can be used to provide a preview of images about to be released to OPEN status.
+		Actual release to OPEN requires assigning "guest" user to the project, with
+		only VIEW_VISIBLE_IMAGES set -- not VIEW_ALL_IMAGESD.
+
+	LISTED:
+		The user has been associated with the project in question.  Being LISTED
+		doesn't grant any access whatsoever. It means only that the "add user"
+		button has been used to add the user to the project list so that an 
+		Owner can set permissions appropriately.
+
+================================================================================================
+
+ROLE - OWNER:
+	The user is considered an owner of this project.  In addition to the privileges of a 
+Manager, the Owner can add/remove users, manage permissions (except for	 him/herself), as  
+well as other privileges listed below:
+
+	EDIT_ANALYSIS_METADATA
+		The user can enter, edit and/or delete the PUBLIC metadataset for this project 
+		to prepare it for OPEN (currenty called "VISIBLE") status (using "Analysis mode").
+		Changes made in Analysis mode do not transfer to the Data mode metadata display.
+ 
+	MANAGE_PERMISSIONS:
+		The user is authorized to manage permissions for this project 
+			[except for him/herself -- NOT IMPLEMENTED YET]
+
+	SET_VISIBLE:				
+		The user has permisssion to toggle "visibility" for images.  Actually control of
+		"visibility" (OPEN and pre-open) is made in the View window for each image. 
+		Setting VISIBLE tags the image in the browser window with a "[V}" preceding the name.
+
+	SET_DATA_MODE:
+		The user can toggle the data mode for a project: Data or Analysis (the latter for
+		preparing a project for OPEN access.
+
+	NO_WATERMARK:
+		The user can view images without the watermark
+
+================================================================================================
+
+ROLE - TEMPLATE EDITOR
+	The template editor controls which templates (attribute llists and definitions) are 
+available to a project, creates new ones as needed, changes the order of appearance of 
+attribute fields and determines which fields will be "hiddden" until called forth.
+
+	DELETE_TEMPLATES 
+		The user can delete templates
+
+	EDIT_TEMPLATES
+		The user can edit templates
+
+	CREATE_TEMPLATES
+		The user can create templates ether through the Add template link or the Import link
+
+================================================================================================
+ROLE - ROOT
+	Root controls all Podbase functions (ROOT Grants ultimate access).  Those that are specific 
+to Root are:
+
+1. Power to delete projects (Delete link next to project name)
+
+2. Power to create new projects (Add new project link)
+
+3. Power to add new users (Add user link)
+
+	Users are added by clicking the link, then entering their email address (which serves 
+as a user name) into the data-inout box.  Clicking "OK" sends the new user log-on instructions 
+along with a temporary password. NOTE THAT CURRENTLY SOME MAIL CLIENTS CLASSIFY THE MAIL AS SPAM
+
+4. Power to grant to specific "super-" users the following blanket powers over all projects:
+ 	MANAGE_PERMISSIONS:	to manage all permissions regardless of project
+	CREATE_USERS:		to create (but not delete) new users
+	CREATE_PAPER:		to create papers on any project
+	DELETE_PROJECT:		to delete projects
+	CREATE_PROJECT:		to create new projects
+
+5.  For specific projects, Root can assign the roles of  "Owner," "Manager" [NOT YET IMPLEMENTED]
+and "Template Editor" 
+	 
+
+POWERS CURRENTY NOT AVAILABLE:
+
+	1.  Delete a user
+
+	2.  Reset a user's password (could be done by deleting the user and reinviting him/her)
+
+	3.  The ability to see whether a new user has actually activated their account.
+
+[NOTE:  THe highest level of administration is charged with creating new projects and inviting/deleting users]

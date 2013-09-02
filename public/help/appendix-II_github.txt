@@ -1,0 +1,79 @@
+GitHub for Dummies
+
+GitHub is an open-access program repository on which the code for Podbase is stored and which also contains the Podbase manuals and the registry of bug reports.  For first-time users, follow the instructions in the section below for registering with GitHub.  To post a bug report, proceed as follows:
+
+*CREATE A NEW ISSUE (bug registration)*
+
+	1. Click "Report a bug" link at the lower left corner of the browser window
+
+		Alternatively go to: https://github.com/julianh2o/Podbase and log in if necessary
+		In the right sidebar, click "Issues" 
+		On the top right of the screen, click the green button "New Issue"
+
+	2. Fill out the title and any comments you have describing the task or error you're dealing with.  Be sure you specify which image you were working with when you encountered the problem (copy and paste the URL bar for the image). DO not say simply "does not work" -- describe what happens and what actions you took leading up to the error.
+
+	3.  Click "Submit new issue."
+
+	4.  You can also flag the nature of the issue, close issues, add comments
+to issues, edit the original issue, open a closed issue, etc. etc.
+
+
+*MANAGING ISSUES*
+
+
+	1. Milestones
+
+GitHub has a "milestones" feature to that allows separating out issues by catgegory (e.g. priority)
+
+Select a bug and then at the top, click the milestones dropdown and select one of the registered categories (e.g. "Podbase Prority 1 Issues")
+
+This gives an easy way of tracking these items.
+
+
+*REGISTERING AS A PODBASE GITHUB USER*
+
+	To work actively with the Podbase repository (including logging bugs), you must be 
+registered as a user of Podbase repositories.  
+
+	1. Point your browser at:
+
+	https://github.com/organizations/julianH2o/Podbase
+		[this does not work right]
+
+	2. Click the green "Sign In For Free" button at the upper right.
+
+	3.  Fill in a user name, your email address and choose a password, then click "Create an account."
+
+	4. Search for Podbase in the search window.  It should come up with julianh2o/Podbase.   Click the name (link)
+
+	5.  Click "Issues" on the right sidebar to gain access to the issues page for logging bugs, etc.  
+
+	6.  To get your own account assiciated with Podbase, contact Dan (danh@pbrc.hawaii.edu) [who will doubtless contact Julian]
+
+	7.  Once registered, you can either sign in to your own account on GitHub via https://github.com/, and then transfer to the Podbase group by clicking the drop-down button with your user name at the upper left corner and selecting Podbase, or you can go directly there via the link above.
+
+
+
+*ACCESS/DOWNLOAD THE LATEST VERSION OF A PODBASE PROGRAM*
+
+     1. Go to: https://github.com/organizations/ and log in if necessary
+
+     2. In the right sidebar (under "Repositories"), click julisnh2o/Podbase. 
+[this did not work for Dan the last time he tried but searching for julianh2o/podbase 
+via a link at the bottom of the error page works]
+
+     3.  Alternatively, Go to: https://github.com/julianh2o/Podbase
+
+     4. In the main part of the screen, there is a list of files and
+directories. Navigate this list until you find the file/script that you need
+
+     5. Click on the file you need and then click (in the top right corner of the
+main window) "raw"
+
+     6. You can now save this file (control-s or apple-s) to where you'd like it
+to be. Be sure to maintain the original extension (e.g .jar for Java files)
+
+
+>
+> Julian
+>
