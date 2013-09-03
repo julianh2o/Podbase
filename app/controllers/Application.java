@@ -32,7 +32,7 @@ public class Application extends ParentController {
     @ModelAccess(AccessType.LISTED)
     public static void entry(Long projectId) {
     	Project project = Project.findById(projectId);
-    	if (project == null) index();
+    	if (project == null) error("Project not found!");
     	render(project);
     }
     

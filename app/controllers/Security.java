@@ -33,7 +33,6 @@ public class Security extends Secure.Security {
 	
     @Before
     static void checkAccess() throws Throwable {
-    	System.out.println("checking access");
         User u = getUser();
         
         if (u.isRoot()) return;
@@ -99,7 +98,6 @@ public class Security extends Secure.Security {
     }
     
 	protected static void redirectToLogin() {
-		System.out.println("redirecting to login");
 		if (request.isAjax()) forbidden();
 		
 		if (!getUser().isGuest()) forbidden();
