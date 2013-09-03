@@ -28,7 +28,7 @@ import models.User;
 public class Security extends Secure.Security {
 	static void db(Object s) {
 		//Uncomment to debug
-		System.out.println(s);
+		//System.out.println(s);
 	}
 	
     @Before
