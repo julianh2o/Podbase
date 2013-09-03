@@ -58,7 +58,7 @@ public class User extends TimestampModel {
 	}
 	
 	public boolean isGuest() {
-		return this.email == "guest";
+		return this.email.equals("guest");
 	}
 	
 	public boolean isAuthenticated() {

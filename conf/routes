@@ -18,6 +18,7 @@ GET     /project                                ProjectController.getProjects
 *      	/admin									module:crud
 
 # Import Secure routes
+POST        /login          					PodbaseSecure.authenticate
 *      /  						                module:secure
 
 GET /@search/? modules.search.Administration.index

@@ -8,12 +8,13 @@ import play.data.validation.Required;
 import play.libs.Crypto;
 
 public class PodbaseSecure extends ParentController {
-    public static void authenticate(@Required String username, String password, boolean remember, String redirect) throws Throwable {
+    public static void authenticate(@Required String username, String password, String hash, boolean remember) throws Throwable {
         Boolean allowed = false;
         allowed = Security.authenticate(username, password);
         
+    	String redirectUrl = flash.get("url");
+        
         if(validation.hasErrors() || !allowed) {
-        	String redirectUrl = flash.get("url");
         	flash.put("url", redirectUrl);
             
             flash.error("secure.error");
@@ -27,6 +28,10 @@ public class PodbaseSecure extends ParentController {
             response.setCookie("rememberme", Crypto.sign(username) + "-" + username, "30d");
         }
         
-        redirect(redirect == null ? "/" : redirect);
+        if (redirectUrl == null) redirectUrl = "/";
+        
+        if (hash != null) redirectUrl += hash;
+        
+        redirect(redirectUrl);
     }
 }
