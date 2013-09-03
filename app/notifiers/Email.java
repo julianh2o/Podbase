@@ -8,10 +8,12 @@ import models.User;
 import play.mvc.Mailer;
 
 public class Email extends Mailer {
-	public static void newAccount(User user) {
-		setSubject("Podbase Account Creation");
+	public static void newAccount(User sender, User user) {
+		setSubject("Podbase.net: User Account Creation");
 		addRecipient(user.email);
-		setFrom("Podbase <robot@podbase.net>");
+		setFrom("Podbase.net <admin@podbase.net>");
 		send(user);
+		
+		send(sender);
 	}
 }

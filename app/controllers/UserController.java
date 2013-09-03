@@ -54,7 +54,7 @@ public class UserController extends ParentController {
 		user.save();
 		
 		Activation.generateActivationCode(user, 30);
-		Email.newAccount(user);
+		Email.newAccount(Security.getUser(),user);
 		
 		renderJSON(user);
 	}
@@ -62,7 +62,7 @@ public class UserController extends ParentController {
 	public static void resendActivation(String email) {
 		User user = User.find("byEmail", email).first();
 		Activation.generateActivationCode(user, 30);
-		Email.newAccount(user);
+		Email.newAccount(Security.getUser(),user);
 		
 		renderText("Your activation code has been re-sent to: "+email);
 	}
