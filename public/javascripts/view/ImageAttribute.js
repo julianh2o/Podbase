@@ -95,6 +95,7 @@ define(
 				var id = $el.data("id");
 				var index = $el.data("index");
 				var attribute = this.attributes[index];
+				this.attributes[index].value = value;
 				
 				this.showLoading();
 				

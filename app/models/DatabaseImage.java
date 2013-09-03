@@ -60,8 +60,6 @@ public class DatabaseImage extends TimestampModel {
 	public ImageAttribute addAttribute(Project project, String key, String value, boolean dataMode, Integer ordering) {
 		if (ordering == null) ordering = this.attributes.size();
 		ImageAttribute attr = new ImageAttribute(project, this, key, value, dataMode, ordering).save();
-		this.attributes.add(attr);
-		this.save();
 		return attr;
 	}
 	

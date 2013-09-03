@@ -64,8 +64,15 @@ define(
 				var overwrite = null;
 				_.each(pasted,function(item) {
 					var existing = byAttribute[item.attribute];
-					var alreadyExists = existing && existing.value && existing.value != "";
-					if (overwrite == null) {
+					
+					if (existing && existing.length) {
+						existing = _.reject(existing,function(a) {
+							return a.value == "" || a.value == item.value;
+						});
+					}
+					
+					var alreadyExists = existing.length != 0;
+					if (alreadyExists && overwrite == null) {
 						overwrite = confirm("Overwrite existing attributes?");
 					}
 						
@@ -105,6 +112,7 @@ define(
 				this.canEdit = (!this.dataMode && this.access["EDIT_ANALYSIS_METADATA"]) || (this.dataMode && this.access["EDIT_DATA_METADATA"]);
 				this.attributes = this.link ? this.link.getData() : null;
 				
+				
 				this.model = {file:this.file,attributes:this.attributes,canEdit:this.canEdit,dataMode:this.dataMode};
 				
 				this.render();
@@ -114,6 +122,14 @@ define(
 				if (!this.file) return;
 				
 				if (this.link) {
+//					_.each(this.attributes,function(item) {
+//						console.log(item.attribute,item.value);
+//					});
+//					this.link.getData("byAttribute")["rawr"][0].value = "moomoo";
+//					_.each(this.attributes,function(item) {
+//						console.log(item.attribute,item.value);
+//					});
+					
 					this.$body = $(".attributes",this.el);
 					var self = this;
 					_.each(this.link.getData("byAttribute"),function(attributes,key) {
