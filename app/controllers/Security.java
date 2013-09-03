@@ -100,6 +100,8 @@ public class Security extends Secure.Security {
 	protected static void redirectToLogin() {
 		if (request.isAjax()) forbidden();
 		
+		if (!getUser().isGuest()) forbidden();
+		
 		String url = "GET".equals(request.method) ? request.url : "/";
 		flash.put("url", url);
 		redirect("/login");
