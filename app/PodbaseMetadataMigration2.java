@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import models.DatabaseImage;
@@ -34,6 +35,8 @@ import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.yaml.snakeyaml.Yaml;
 
+import play.Play;
+
 import services.ImageService;
 import services.PathService;
 
@@ -46,16 +49,27 @@ public class PodbaseMetadataMigration2 {
 	static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:s");
 	static String NOW = sdf.format(new Date());
 	
-	public static int imagePathIndex = 0;
+	public static int imagePathIndex = 30770;
 	public static HashMap<Path,Integer> imagePathMap = new HashMap<Path,Integer>();
+	public static HashMap<Integer,Integer> projectIdMap = new HashMap<Integer,Integer>();
 	public static List<String> missingImages = new LinkedList<String>();
 	
 	public static void main(String[] args) throws Exception {
 		System.out.println("Running data migration");
 		
+		String projectString = FileUtils.readFileToString(new File("projects.txt"));
+		Map<String,Integer> projectIdMapping = new HashMap<String,Integer>();
+		for (String line : projectString.split("\n")) {
+			String[] split = line.split(":");
+			int id = Integer.parseInt(split[0].trim());
+			String name = split[1].trim();
+			projectIdMapping.put(name, id);
+		}
+		
 		System.out.println("Reading projects..");
 		List<ProjectEntry> projects = dataFromFile("./migrate/projects.data",ProjectEntry.class);
-//		HashMap<Integer,String> projectMap = parseProjectMap(projects);
+		projectIdMap = parseProjectMap(projects,projectIdMapping);
+		
 		System.out.println("Found "+projects.size()+ " projects.");
 		
 		System.out.println("Reading tags..");
@@ -72,33 +86,34 @@ public class PodbaseMetadataMigration2 {
 		
 		int entryCount = tags.size() + templates.size() + templateFields.size();
 		
-		System.out.println("Generating Project SQL");
-		String projectSql = generateSql((List<AbstractEntry>)(List<?>)projects);
+		//System.out.println("Generating Project SQL");
+		//String projectSql = generateSql((List<AbstractEntry>)(List<?>)projects);
 		System.out.println("Generating Attribute SQL");
 		String imageAttributes = generateSql((List<AbstractEntry>)(List<?>)tags);
 		System.out.println("Generating Image SQL");
 		String databaseImages = generateDatabaseImageSql();
-		System.out.println("Generating Directory SQL");
-		String directorySql = generateDirectorySql(projects);
+		//System.out.println("Generating Directory SQL");
+		//String directorySql = generateDirectorySql(projects);
 		
-		System.out.println("Generating Template SQL");
-		String templateSql = generateSql((List<AbstractEntry>)(List<?>)templates);
-		System.out.println("Generating Field SQL");
-		String fieldsSql = generateSql((List<AbstractEntry>)(List<?>)templateFields);
+		//System.out.println("Generating Template SQL");
+		//String templateSql = generateSql((List<AbstractEntry>)(List<?>)templates);
+		//System.out.println("Generating Field SQL");
+		//String fieldsSql = generateSql((List<AbstractEntry>)(List<?>)templateFields);
 		
 		System.out.println("Writing database.sql");
 		BufferedWriter bw = new BufferedWriter(new FileWriter(new File("./database.sql")));
-		bw.append(projectSql);
-		bw.append("\n\n");
+		//bw.append(projectSql);
+		//bw.append("\n\n");
 		bw.append(databaseImages);
 		bw.append("\n\n");
-		bw.append(directorySql);
-		bw.append("\n\n");
+		//bw.append(directorySql);
+		//bw.append("\n\n");
 		bw.append(imageAttributes);
 		bw.append("\n\n");
-		bw.append(templateSql);
-		bw.append("\n\n");
-		bw.append(fieldsSql);
+//		bw.append(templateSql);
+//		bw.append("\n\n");
+//		bw.append(fieldsSql);
+//		bw.append("\n\n");
 		bw.close();
 		
 		System.out.println("Writing missingImages.txt");
@@ -123,7 +138,7 @@ public class PodbaseMetadataMigration2 {
 			int imageId = entry.getValue();
 			
 			//id,now,now,imported,path
-			sb.append(String.format("(%d,'%s','%s',0x0,'%s','%s')",imageId,NOW,NOW,PathService.getRelativeString(path),PathService.calculateImageHash(path)));
+			sb.append(String.format("(%d,'%s','%s','%s',0x0,'%s')",imageId,NOW,NOW,PathService.calculateImageHash(path),PathService.getRelativeString(path)));
 			first = false;
 		}
 		
@@ -231,13 +246,13 @@ public class PodbaseMetadataMigration2 {
 		System.out.println(out);
 	}
 
-//	public static HashMap<Integer,String> parseProjectMap(List<ProjectEntry> entries) {
-//		HashMap<Integer,String> projectMap = new HashMap<Integer,String>();
-//		for(ProjectEntry entry : entries) {
-//			projectMap.put(entry.projectId, entry.name);
-//		}
-//		return projectMap;
-//	}
+	public static HashMap<Integer,Integer> parseProjectMap(List<ProjectEntry> entries, Map<String,Integer> projectIdMapping) {
+		HashMap<Integer,Integer> idMap = new HashMap<Integer,Integer>();
+		for(ProjectEntry entry : entries) {
+			idMap.put(entry.projectId, projectIdMapping.get(entry.name));
+		}
+		return idMap;
+	}
 	
 	public void printEntries(List<? extends AbstractEntry> entries) {
 		System.out.println("Printing "+entries.size()+" entries!");
@@ -389,7 +404,7 @@ public class PodbaseMetadataMigration2 {
 				}
 				
 				int ordering = 0;
-				return String.format("(%d,'%s','%s','%s',0x1,0x0,%d,'%s',%d,NULL,%d)",generateId(),NOW,NOW,escape(key),ordering,escape(value),imageId,projectId);
+				return String.format("(%d,'%s','%s','%s',0x1,0x0,%d,'%s',%d,NULL,%d)",generateId(),NOW,NOW,escape(key),ordering,escape(value),imageId,projectIdMap.get(projectId));
 			} catch (FileNotFoundException fnf) {
 				missingImages.add(path);
 				return null;

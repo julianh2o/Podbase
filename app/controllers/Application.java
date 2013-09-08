@@ -11,12 +11,23 @@ import play.modules.search.Search;
 import play.mvc.*;
 import services.PathService;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.Map.Entry;
+
+import access.Access;
 import access.AccessType;
 import access.ModelAccess;
 
 import javax.persistence.Query;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.ivy.util.FileUtil;
 
 import jobs.SearchIndexMaintenance;
 
@@ -55,12 +66,128 @@ public class Application extends ParentController {
 		new SearchIndexMaintenance().now();
 	}
 	
-	public static void testInsert() {
-		Project p = Project.find("byName", "TestProject").first();
-		DatabaseImage dbi = DatabaseImage.forPath(PathService.resolve("/TestProject/CW080113_Acartia1_10x_BF.jpg"));
+//	public static void testInsert() {
+//		Project p = Project.find("byName", "TestProject").first();
+//		DatabaseImage dbi = DatabaseImage.forPath(PathService.resolve("/TestProject/CW080113_Acartia1_10x_BF.jpg"));
+//		
+//		long time = System.currentTimeMillis();
+//		dbi.addAttribute(p, "test key", "value", true);
+//		System.out.println("Insert took: "+(System.currentTimeMillis() - time)+"ms");
+//	}
+	
+	public static void findOrphanedData() {
+		List<DatabaseImage> all = DatabaseImage.findAll();
+		StringBuffer sb = new StringBuffer();
 		
-		long time = System.currentTimeMillis();
-		dbi.addAttribute(p, "test key", "value", true);
-		System.out.println("Insert took: "+(System.currentTimeMillis() - time)+"ms");
+		Set<Path> duplicateDetection = new HashSet<Path>();
+		for (DatabaseImage image : all) {
+			if (!PathService.isValidPath(image.getStringPath())) {
+				sb.append("Invalid Path: "+image.getStringPath()+"\n");
+				continue;
+			}
+			
+			Path path = image.getPath();
+			if (duplicateDetection.contains(path)) {
+				sb.append("Duplicate Path: "+image.getStringPath()+"\n");
+			}
+			duplicateDetection.add(path);
+			File f = path.toFile();
+			if (!f.exists()) {
+				sb.append("Missing: "+image.getStringPath()+"\n");
+				continue;
+			}
+			
+			if (f.isDirectory()) sb.append("Directory: "+image.getStringPath()+"\n");
+		}
+		
+		renderText(sb.toString());
+	}
+	
+	@Access(AccessType.CREATE_PAPER)
+	public static void fixOrphanedData() throws IOException {
+		List<DatabaseImage> all = DatabaseImage.findAll();
+		
+		HashMap<Path,List<DatabaseImage>> imagesByPath = new HashMap<Path,List<DatabaseImage>>();
+		
+		List<DatabaseImage> imageDeleteList = new LinkedList<DatabaseImage>();
+		
+		for (DatabaseImage image : all) {
+			if (!PathService.isValidPath(image.getStringPath())) {
+				imageDeleteList.add(image);
+				continue;
+			}
+			
+			Path path = image.getPath();
+			if (!imagesByPath.containsKey(path)) imagesByPath.put(path, new LinkedList<DatabaseImage>());
+			imagesByPath.get(path).add(image);
+			File f = path.toFile();
+			if (!f.exists()) {
+				//imageDeleteList.add(image);
+				continue;
+			}
+			
+			if (f.isDirectory()) {
+				imageDeleteList.add(image);
+			}
+		}
+		
+		for (Entry<Path,List<DatabaseImage>> entry : imagesByPath.entrySet()) {
+			List<DatabaseImage> images = entry.getValue();
+			if (images.size() > 1) {
+				for(DatabaseImage image : images) {
+					if (image != images.get(0)) {
+						if (image.attributes.size() > 0) System.out.println(image.attributes.size());
+						for (ImageAttribute attr : image.attributes) {
+							attr.image = images.get(0);
+							attr.save();
+						}
+						
+						imageDeleteList.add(image);
+					}
+				}
+			}
+		}
+		
+		if (imageDeleteList.size() == 0) {
+			renderText("No Images to delete!");
+			return;
+		}
+		
+		StringBuffer imageList = new StringBuffer();
+		StringBuffer attributeList = new StringBuffer();
+		for (DatabaseImage image : imageDeleteList) {
+			imageList.append(","+image.id);
+			for (ImageAttribute attr : image.attributes) {
+				if (attr.linkedAttribute != null) {
+					attr.linkedAttribute.linkedAttribute = null;
+					attr.linkedAttribute.save();
+					attr.linkedAttribute = null;
+					attr.save();
+				}
+				attributeList.append(","+attr.id);
+			}
+		}
+		BufferedWriter bw = new BufferedWriter(new FileWriter(new File("./deleteImages.sql")));
+		
+		String projectVisibleImageSql = String.format("DELETE FROM ProjectVisibleImage WHERE image_id IN (%s);",imageList.toString().substring(1));
+		String imageSetSql = String.format("DELETE FROM ImageSetMembership WHERE image_id IN (%s);",imageList.toString().substring(1));
+		String imageSql = String.format("DELETE FROM DatabaseImage WHERE id IN (%s);",imageList.toString().substring(1));
+		
+		bw.write(projectVisibleImageSql);
+		bw.write("\n");
+		bw.write(imageSetSql);
+		bw.write("\n");
+		
+		if (attributeList.length() != 0) {
+			String attributeSql = String.format("DELETE FROM ImageAttribute WHERE id IN (%s);",attributeList.toString().substring(1));
+			bw.write(attributeSql);
+			bw.write("\n");
+		}
+		
+		bw.write(imageSql);
+		bw.write("\n");
+		bw.close();
+		
+		renderText(String.format("Marked %d images for deletion.",imageDeleteList.size()));
 	}
 }

@@ -74,7 +74,7 @@ public class PaperController extends ParentController {
     public static void addImageToSet(ImageSet imageset, Path path) {
     	for (ImageSetMembership mem : imageset.images) {
     		DatabaseImage img = mem.image;
-    		if (img.path.equals(path)) {
+    		if (img.getPath().equals(path)) {
     			error("Image already in set");
     			return;
     		}

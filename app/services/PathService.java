@@ -98,7 +98,7 @@ public class PathService {
 		return path.getParent().resolve(fileNameTrunk+"."+ext);
 	}
 	
-	private static boolean isValidPath(String path) {
+	public static boolean isValidPath(String path) {
 		if (!path.startsWith("/")) return false;
 		if (path.length() == 1) return true;
 		if (path.endsWith("/")) return false;

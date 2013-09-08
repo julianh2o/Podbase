@@ -25,7 +25,7 @@ import util.PodbaseUtil;
 @Indexed
 public class DatabaseImage extends TimestampModel {
 	@Field
-	public String path;
+	private String path;
 	public String hash;
 	
 	@OneToMany(mappedBy="image", cascade=CascadeType.ALL)
@@ -65,6 +65,10 @@ public class DatabaseImage extends TimestampModel {
 	
 	public Path getPath() {
 		return PathService.resolve(this.path);
+	}
+	
+	public String getStringPath() {
+		return this.path;
 	}
 	
 	public static DatabaseImage forPath(Path path) {
