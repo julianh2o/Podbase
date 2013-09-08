@@ -105,7 +105,9 @@ public class Application extends ParentController {
 	
 	@Access(AccessType.CREATE_PAPER)
 	public static void fixOrphanedData() throws IOException {
+		System.out.println("Fixing Orphaned Data...");
 		List<DatabaseImage> all = DatabaseImage.findAll();
+		System.out.println("Found "+all.size()+" total images.");
 		
 		HashMap<Path,List<DatabaseImage>> imagesByPath = new HashMap<Path,List<DatabaseImage>>();
 		
@@ -130,6 +132,7 @@ public class Application extends ParentController {
 				imageDeleteList.add(image);
 			}
 		}
+		System.out.println("Initial triage complete.");
 		
 		StringBuffer moveAttributes = new StringBuffer();
 		for (Entry<Path,List<DatabaseImage>> entry : imagesByPath.entrySet()) {
@@ -152,10 +155,11 @@ public class Application extends ParentController {
 					for (ImageAttribute attr : attributes) {
 						attrIds.append(","+attr.id);
 					}
-					moveAttributes.append(String.format("UPDATE ImageAttribute SET image_id=%d WHERE id IN (%s)\n",images.get(0).id,attrIds.substring(1)));
+					moveAttributes.append(String.format("UPDATE ImageAttribute SET image_id=%d WHERE id IN (%s);\n",images.get(0).id,attrIds.substring(1)));
 				}
 			}
 		}
+		System.out.println("Attribute reassignment complete.");
 		
 		if (imageDeleteList.size() == 0) {
 			renderText("No Images to delete!");
@@ -176,6 +180,7 @@ public class Application extends ParentController {
 				attributeList.append(","+attr.id);
 			}
 		}
+		System.out.println("Writing deleteImages.sql");
 		BufferedWriter bw = new BufferedWriter(new FileWriter(new File("./deleteImages.sql")));
 		
 		String projectVisibleImageSql = String.format("DELETE FROM ProjectVisibleImage WHERE image_id IN (%s);",imageList.toString().substring(1));
@@ -200,6 +205,7 @@ public class Application extends ParentController {
 		bw.write("\n");
 		bw.close();
 		
+		System.out.println("Fixing Orphans Complete, execute deleteImages.sql");
 		renderText(String.format("Marked %d images for deletion.",imageDeleteList.size()));
 	}
 }
