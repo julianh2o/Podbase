@@ -135,6 +135,7 @@ public class Application extends ParentController {
 		System.out.println("Initial triage complete.");
 		
 		StringBuffer moveAttributes = new StringBuffer();
+		List<DatabaseImage> imageDuplicateDeleteList = new LinkedList<DatabaseImage>();
 		for (Entry<Path,List<DatabaseImage>> entry : imagesByPath.entrySet()) {
 			List<DatabaseImage> images = entry.getValue();
 			if (images.size() > 1) {
@@ -146,7 +147,7 @@ public class Application extends ParentController {
 							attributes.add(attr);
 						}
 						
-						imageDeleteList.add(image);
+						imageDuplicateDeleteList.add(image);
 					}
 				}
 				
@@ -161,7 +162,7 @@ public class Application extends ParentController {
 		}
 		System.out.println("Attribute reassignment complete.");
 		
-		if (imageDeleteList.size() == 0) {
+		if (imageDeleteList.size() == 0 && imageDuplicateDeleteList.size() == 0) {
 			renderText("No Images to delete!");
 			return;
 		}
@@ -180,6 +181,11 @@ public class Application extends ParentController {
 				attributeList.append(","+attr.id);
 			}
 		}
+		
+		for (DatabaseImage image : imageDuplicateDeleteList) {
+			imageList.append(","+image.id);
+		}
+		
 		System.out.println("Writing deleteImages.sql");
 		BufferedWriter bw = new BufferedWriter(new FileWriter(new File("./deleteImages.sql")));
 		
