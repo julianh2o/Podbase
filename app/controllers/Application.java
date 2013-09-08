@@ -131,19 +131,28 @@ public class Application extends ParentController {
 			}
 		}
 		
+		StringBuffer moveAttributes = new StringBuffer();
 		for (Entry<Path,List<DatabaseImage>> entry : imagesByPath.entrySet()) {
 			List<DatabaseImage> images = entry.getValue();
 			if (images.size() > 1) {
+				List<ImageAttribute> attributes = new LinkedList<ImageAttribute>();
 				for(DatabaseImage image : images) {
 					if (image != images.get(0)) {
-						if (image.attributes.size() > 0) System.out.println(image.attributes.size());
+						//if (image.attributes.size() > 0) System.out.println(image.attributes.size());
 						for (ImageAttribute attr : image.attributes) {
-							attr.image = images.get(0);
-							attr.save();
+							attributes.add(attr);
 						}
 						
 						imageDeleteList.add(image);
 					}
+				}
+				
+				if (attributes.size() > 0) {
+					StringBuffer attrIds = new StringBuffer();
+					for (ImageAttribute attr : attributes) {
+						attrIds.append(","+attr.id);
+					}
+					moveAttributes.append(String.format("UPDATE ImageAttribute SET image_id=%d WHERE id IN (%s)\n",images.get(0).id,attrIds.substring(1)));
 				}
 			}
 		}
@@ -176,6 +185,9 @@ public class Application extends ParentController {
 		bw.write(projectVisibleImageSql);
 		bw.write("\n");
 		bw.write(imageSetSql);
+		bw.write("\n");
+		
+		bw.write(moveAttributes.toString());
 		bw.write("\n");
 		
 		if (attributeList.length() != 0) {
