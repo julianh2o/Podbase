@@ -71,7 +71,7 @@ define(
 						});
 					}
 					
-					var alreadyExists = existing.length != 0;
+					var alreadyExists = existing && existing.length != 0;
 					if (alreadyExists && overwrite == null) {
 						overwrite = confirm("Overwrite existing attributes?");
 					}
