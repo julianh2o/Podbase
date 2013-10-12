@@ -67,7 +67,7 @@ define(
 					
 					if (existing && existing.length) {
 						existing = _.reject(existing,function(a) {
-							return a.value == "" || a.value == item.value;
+							return !a.value ||  a.value == "" || a.value == item.value;
 						});
 					}
 					

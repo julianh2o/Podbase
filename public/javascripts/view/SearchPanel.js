@@ -10,16 +10,24 @@ define(
 				
 				this.render();
 				
-				this.$searchField = $(".image-search-field",this.el).on("keyup keydown keypress",$.proxy(this.queryUpdated,this));
+				this.$searchField = $(".image-search-field",this.el).on("keyup keydown keypress",$.proxy(this.fieldEvent,this));
 				this.$resultsPanel = $(".results-panel",this.el).hide();
 				
 				this.$searchField.on("focus",$.proxy(this.showResults,this));
 				
 				this.query = null;
 				this.results = [];
+				this.timer = null;
+			},
+			
+			fieldEvent : function() {
+				if (this.timer != null) clearTimeout(this.timer);
+				this.timer = setTimeout($.proxy(this.queryUpdated,this),500);
 			},
 			
 			queryUpdated : function() {
+				this.timer = null;
+				
 				var val = this.$searchField.val();
 				
 				if (this.query == val) return;

@@ -15,6 +15,8 @@ import javax.persistence.Transient;
 
 import play.modules.search.Field;
 import play.modules.search.Indexed;
+import play.modules.search.Search;
+import play.modules.search.store.FilesystemStore;
 
 import com.google.gson.annotations.Expose;
 
@@ -55,6 +57,7 @@ public class ImageAttribute extends TimestampModel {
 
 	public ImageAttribute(Project project, DatabaseImage image, String attribute, String value, boolean data, int ordering, boolean templated, boolean hidden) {
 		super();
+		((FilesystemStore)Search.getCurrentStore()).sync = true;
 		this.project = project;
 		this.image = image;
 		this.attribute = attribute;

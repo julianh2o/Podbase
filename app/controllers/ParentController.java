@@ -41,7 +41,7 @@ public class ParentController extends Controller {
     	long delta = currentTime - (Long)renderArgs.get("renderStart");
     	renderArgs.put("renderStop", currentTime);
     	renderArgs.put("renderTime", delta);
-    	//System.out.println("Pagetimer: "+delta+" ms "+request.url);
+    	System.out.println("Pagetimer: "+delta+" ms "+request.url);
     }
 	
 	@Util
