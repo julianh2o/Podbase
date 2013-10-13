@@ -4,7 +4,7 @@
 	</div>
 	<div class="span9 values">
 		<% _.each(values,function(item,index) { %>
-			<div class="value <%= item.templated ? 'templated' : '' %> <%= item.data ? 'data' : 'analysis' %>" data-value="<%= item.value %>" data-id="<%= item.id %>" data-index="<%= index %>">
+			<div class="value <%= item.templated ? 'templated' : '' %> <%= item.data ? 'data' : 'analysis' %>" data-id="<%= item.id %>" data-index="<%= index %>">
 				<%= item.value %>
 				<span class="delete-attribute"><i class="icon-remove"/></span>
 			</div>

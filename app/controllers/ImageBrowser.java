@@ -73,6 +73,10 @@ public class ImageBrowser extends ParentController {
 	@ModelAccess(AccessType.LISTED)
 	public static void fetchProjectPath(Project project, Path path) throws FileNotFoundException {
 		List<Path> paths = PathService.listPaths(path);
+		if (paths == null) {
+			renderJSON(new LinkedList<FileWrapper>());
+			return;
+		}
 		
 		paths = PathService.filterImagesAndDirectories(paths);
 		

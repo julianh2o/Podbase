@@ -184,6 +184,7 @@ public class PathService {
 	public static List<Path> listPaths(Path path) {
 		File parent = path.toFile();
 		List<Path> paths = new LinkedList<Path>();
+		if (!parent.exists()) return null;
 		for (File f : parent.listFiles()) {
 			paths.add(f.toPath());
 		}

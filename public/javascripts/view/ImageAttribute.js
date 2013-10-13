@@ -28,7 +28,12 @@ define(
 				
 				this.model = {name:this.attributeName,hidden:this.hidden, values:this.attributes};
 				this.render();
-				
+				var self = this;
+				$(this.el).find("[data-index]").each(function() {
+					var index = $(this).data("index");
+					$(this).data("item",self.attributes[index]);
+					$(this).data("value",self.attributes[index].value);
+				});
 				
 				if (this.canEdit) {
 					$(".value .delete-attribute",this.el).click($.proxy(this.triggerDeleteAttribute,this));
