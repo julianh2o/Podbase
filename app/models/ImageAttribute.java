@@ -57,7 +57,7 @@ public class ImageAttribute extends TimestampModel {
 
 	public ImageAttribute(Project project, DatabaseImage image, String attribute, String value, boolean data, int ordering, boolean templated, boolean hidden) {
 		super();
-		((FilesystemStore)Search.getCurrentStore()).sync = true;
+		((FilesystemStore)Search.getCurrentStore()).sync = false;
 		this.project = project;
 		this.image = image;
 		this.attribute = attribute;
