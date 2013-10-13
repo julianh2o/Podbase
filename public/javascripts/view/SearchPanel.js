@@ -21,11 +21,13 @@ define(
 			},
 			
 			fieldEvent : function() {
+				console.log("field event!");
 				if (this.timer != null) clearTimeout(this.timer);
 				this.timer = setTimeout($.proxy(this.queryUpdated,this),500);
 			},
 			
 			queryUpdated : function() {
+				console.log("query updated");
 				this.timer = null;
 				
 				var val = this.$searchField.val();

@@ -34,6 +34,7 @@ public class TaskCompletionEstimator {
 	LinkedList<Long> slidingWindow;
 	
 	long lastTick = -1;
+	long startTime = -1;
 	
 	public TaskCompletionEstimator(int window, int resolution, int expectedTicks) {
 		this.window = window;
@@ -44,6 +45,7 @@ public class TaskCompletionEstimator {
 	}
 	
 	public void tick() {
+		if (startTime == -1) startTime = System.currentTimeMillis();
 		if (currentTick % resolution == 0) recordTick();
 		currentTick++;
 	}
@@ -60,17 +62,19 @@ public class TaskCompletionEstimator {
 	}
 	
 	//Returns the average tick time in milliseconds
-	public float getAverageTick() {
+	public double getAverageTick() {
+		if (slidingWindow.size() == 0) return 0;
+		
 		long sum = 0;
 		for (Long l : slidingWindow) {
 			sum += l;
 		}
-		return (sum / slidingWindow.size()) / resolution;
+		return (sum / (double)slidingWindow.size()) / (double)resolution;
 	}
 	
 	//Returns the estimated remaining time in milliseconds
 	public long getEstimate() {
-		float averageTick = getAverageTick();
+		double averageTick = getAverageTick();
 		
 		int remainingTicks = this.expectedTicks - currentTick;
 		
@@ -79,13 +83,25 @@ public class TaskCompletionEstimator {
 	
 	//formats HH:MM:SS estimated completion time
 	public String getFormattedEstimate() {
-		long s = getEstimate() / 1000;
+		return formatInterval(getEstimate());
+	}
+	
+	public String formatInterval(long millis) {
+		long s = millis/1000;
 		return String.format("%d:%02d:%02d", s/3600, (s%3600)/60, (s%60));
 	}
 
 	public String getStatusLine() {
-		String perTick = new DecimalFormat("#.####").format(getAverageTick()/1000.0);
-		return String.format("[%d/%d] %s s/tick  (eta %s)",getCurrentTick(),getExpectedTicks(),perTick,getFormattedEstimate());
+		String perTick;
+		if (getAverageTick() > 2000) {
+			perTick = new DecimalFormat("#.#####").format(getAverageTick()/1000.0);
+			perTick = String.format("%s s/tick",perTick);
+		} else {
+			perTick = new DecimalFormat("#.#####").format(getAverageTick());
+			perTick = String.format("%s ms/tick",perTick);
+		}
+		long elapsed = System.currentTimeMillis() - startTime;
+		return String.format("%s elapsed - [%d/%d] %s  (eta %s)",formatInterval(elapsed),getCurrentTick(),getExpectedTicks(),perTick,getFormattedEstimate());
 	}
 	
 	public int getCurrentTick() {
