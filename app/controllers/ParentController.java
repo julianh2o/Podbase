@@ -11,6 +11,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.apache.log4j.Logger;
+
 import com.google.gson.Gson;
 
 import play.Play;
@@ -23,6 +25,8 @@ import play.mvc.Util;
 import util.PodbaseUtil;
 
 public class ParentController extends Controller {
+    private static Logger performance = Logger.getLogger("PERFORMANCE");
+    	
     @Before
     static void setPageAttributes() {
 		renderArgs.put("user", Security.getUser());
@@ -41,7 +45,7 @@ public class ParentController extends Controller {
     	long delta = currentTime - (Long)renderArgs.get("renderStart");
     	renderArgs.put("renderStop", currentTime);
     	renderArgs.put("renderTime", delta);
-    	System.out.println("Pagetimer: "+delta+" ms "+request.url);
+    	performance.info("Pagetimer: "+delta+" ms "+request.url);
     }
 	
 	@Util
