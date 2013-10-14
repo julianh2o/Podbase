@@ -57,7 +57,7 @@ define(['data/Loader'],function(Loader) {
 		// ############################################
 		// PodbaseSecure.java
 		// ############################################
-		this.authenticate = new Loader("@{PodbaseSecure.authenticate}?String={String}&password={password}&remember={remember}&redirect={redirect}");
+		this.authenticate = new Loader("@{PodbaseSecure.authenticate}?String={String}&password={password}&hash={hash}&remember={remember}");
 		
 		
 		// ############################################
@@ -113,6 +113,10 @@ define(['data/Loader'],function(Loader) {
 		this.loadJavascript = new Loader("@{Application.loadJavascript}?path={path}");
 		this.getCurrentUser = new Loader("@{Application.getCurrentUser}");
 		this.rebuildIndex = new Loader("@{Application.rebuildIndex}");
+		this.indexImage = new Loader("@{Application.indexImage}?path={path}");
+		this.testInsert = new Loader("@{Application.testInsert}");
+		this.findOrphanedData = new Loader("@{Application.findOrphanedData}");
+		this.fixOrphanedData = new Loader("@{Application.fixOrphanedData}");
 		
 		
 		// ############################################
