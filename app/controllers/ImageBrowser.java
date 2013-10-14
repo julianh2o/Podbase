@@ -359,6 +359,8 @@ public class ImageBrowser extends ParentController {
 					iattr.delete();
 				}
 				sw.stop("delete all");
+				
+				existingMap.remove(attr.attribute);
 			}
 			
 			if (attr.value.trim().isEmpty()) continue;
