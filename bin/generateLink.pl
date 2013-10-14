@@ -6,6 +6,10 @@
 $ARGV[0] =~ m/\/([^\/]*?).java$/;
 $className = $1;
 while(<>) {
+    if (/^\/\//) {
+        next
+    }
+
 	if (/public static void (.*)\((.*)\)/) {
 		$method = $1;
 		print "this.$method = ";

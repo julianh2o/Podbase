@@ -112,9 +112,6 @@ define(['data/Loader'],function(Loader) {
 		this.paper = new Loader("@{Application.paper}?paperId={paperId}");
 		this.loadJavascript = new Loader("@{Application.loadJavascript}?path={path}");
 		this.getCurrentUser = new Loader("@{Application.getCurrentUser}");
-		this.rebuildIndex = new Loader("@{Application.rebuildIndex}");
-		this.indexImage = new Loader("@{Application.indexImage}?path={path}");
-		this.testInsert = new Loader("@{Application.testInsert}");
 		this.findOrphanedData = new Loader("@{Application.findOrphanedData}");
 		this.fixOrphanedData = new Loader("@{Application.fixOrphanedData}");
 		
