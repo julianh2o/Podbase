@@ -29,6 +29,7 @@ import javax.imageio.ImageIO;
 import notifiers.Email;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
 
 import controllers.ParentController;
 
@@ -171,10 +172,12 @@ public class ImageService {
 		if (pixels instanceof byte[]) {
 			byte[] data = (byte[])pixels;
 			
+			int sample = data.length /2 ;
 			for (int i=0; i<data.length; i++) {
-				int pixel = (int)data[i] + 128;
+				int pixel = (int)(data[i] << 24) >>> 24;
 				pixel = (int)(pixel * mul + add);
-				data[i] = (byte)(Math.min(255, Math.max(0,pixel))-128);
+				pixel = Math.min(255, Math.max(0,pixel));
+				data[i] = (byte)((pixel << 24) >> 24);
 			}
 		} else if (pixels instanceof short[]) {
 			System.out.println("short - THIS PROBABLY DOESNT WORK");
@@ -195,6 +198,7 @@ public class ImageService {
 				data[i] = (float)Math.min(255, Math.max(0,pixel));
 			}
 		} else if (pixels instanceof int[]) {
+			System.out.println("ints");
 			int[] data = (int[])pixels;
 			
 			for (int i=0; i<data.length; i++) {

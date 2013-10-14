@@ -19,14 +19,14 @@ define(
 					min: -150,
 					max: 150,
 					step: 1,
-					slide: $.proxy(this.sliderUpdated,this)
+					slide: $.proxy(this.sliderUpdated,this,"brightness")
 				});
 				
 				this.$contrastSlider = $(".contrast-slider",this.el).slider({
 					min: -150,
 					max: 150,
 					step: 1,
-					slide: $.proxy(this.sliderUpdated,this)
+					slide: $.proxy(this.sliderUpdated,this,"contrast")
 				});
 				
 				this.$brightness = $(".brightness",this.el);
@@ -40,11 +40,16 @@ define(
 				this.updateUI(viewer.state);
 			},
 			
-			sliderUpdated : function(e,slider) {
+			sliderUpdated : function(kind,e,ui) {
 				if (this.disableUpdates) return;
 				
-				this.viewer.state.brightness = this.$brightnessSlider.slider("value")
-				this.viewer.state.contrast = this.$contrastSlider.slider("value");
+				if (kind == "brightness") {
+					this.viewer.state.brightness = ui.value;
+				}
+				
+				if (kind == "contrast") {
+					this.viewer.state.contrast = ui.value;
+				}
 				
 				this.viewer.stateUpdated();
 				
