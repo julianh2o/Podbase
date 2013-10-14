@@ -32,8 +32,6 @@ define(
 				
 				var val = this.$searchField.val();
 				
-				if (this.query == val) return;
-				
 				this.query = val;
 				
 				if (val == "") {
@@ -74,6 +72,7 @@ define(
 				this.$resultsPanel.hide();
 				this.$resultsPanel.empty();
 				this.results = [];
+				this.query = "";
 				$(".image-search-field").val("");
 			}
 		});

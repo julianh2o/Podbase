@@ -21,6 +21,7 @@ import controllers.ParentController;
 
 import access.AccessType;
 
+import play.modules.search.Query;
 import play.modules.search.Query.SearchException;
 import play.modules.search.Search;
 import play.mvc.Util;
@@ -37,19 +38,18 @@ import models.Project;
 import models.User;
 
 public class SearchService {
-	public static Set<DatabaseImage> performSimpleSearch(String query) throws Exception {
+	public static Set<DatabaseImage> performSimpleSearch(String value, Project project) throws Exception {
 		try {
 			Set<DatabaseImage> results = new HashSet<DatabaseImage>();
 			
-			if (query.trim().length() == 0) return results;
+			if (value.trim().length() == 0) return results;
 			
-			String lucene = "value:"+query+"*";
-			List<ImageAttribute> found = Search.search(lucene, ImageAttribute.class).fetch();
+			String lucene = String.format("project:%d AND value:%s*",project.id.longValue(),value);
+			Query query = Search.search(lucene, ImageAttribute.class);
+			List<ImageAttribute> found = query.all().fetch();
 			
-			//lucene = "path:"+query+"*";
-			//Search.search(lucene, DatabaseImage.class).fetch();
 
-			List<DatabaseImage> imageResults = DatabaseImage.find("byPathLike","%"+query+"%").fetch(); 
+			List<DatabaseImage> imageResults = DatabaseImage.find("byPathLike","%"+value+"%").fetch(); 
 
 			for (DatabaseImage image : imageResults) {
 				results.add(image);

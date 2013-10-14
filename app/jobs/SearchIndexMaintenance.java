@@ -27,6 +27,12 @@ import models.*;
 //@Every("1h")
 public class SearchIndexMaintenance extends Job {
     public void doJob() throws Exception {
+    	System.out.println("Rebuilding all indexes..");
+    	Search.rebuildAllIndexes();
+    	System.out.println("Indexes rebuilt!");
+    }
+    
+    public void doJobOld() throws Exception {
     	try {
 	    	long start = System.currentTimeMillis();
 	    	

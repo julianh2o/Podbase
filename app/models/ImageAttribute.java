@@ -25,6 +25,7 @@ import com.google.gson.annotations.Expose;
 public class ImageAttribute extends TimestampModel {
 	@ManyToOne
 	@GsonTransient
+	@Field
 	public Project project;
 	
 	@Column(columnDefinition="char(60)")

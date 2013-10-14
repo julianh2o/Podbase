@@ -94,7 +94,11 @@ public class PathService {
 	
 	public static Path replaceExtension(Path path, String ext) {
 		String fileName = path.getFileName().toString();
-		String fileNameTrunk = fileName.substring(0,fileName.lastIndexOf('.'));
+		int index = fileName.lastIndexOf('.');
+		
+		if (index == -1) return path.getParent().resolve(fileName+"."+ext);
+		
+		String fileNameTrunk = fileName.substring(0,index);
 		return path.getParent().resolve(fileNameTrunk+"."+ext);
 	}
 	

@@ -8,6 +8,7 @@ import play.*;
 import play.cache.Cache;
 import play.db.jpa.JPA;
 import play.modules.search.Search;
+import play.modules.search.store.FilesystemStore;
 import play.mvc.*;
 import services.PathService;
 
@@ -62,9 +63,18 @@ public class Application extends ParentController {
 		renderJSON(user);
 	}
 	
-	public static void rebuildIndex() throws Exception {
-		new SearchIndexMaintenance().now();
-	}
+//	public static void rebuildIndex() throws Exception {
+//		new SearchIndexMaintenance().now();
+//	}
+	
+//	public static void indexImage(Path path) throws Exception {
+//		((FilesystemStore)Search.getCurrentStore()).sync = true;
+//		DatabaseImage dbi = DatabaseImage.forPath(path);
+//		for (ImageAttribute attr : dbi.attributes) {
+//			System.out.println("indexing.. "+attr.value);
+//			Search.index(attr);
+//		}
+//	}
 	
 //	public static void testInsert() {
 //		Project p = Project.find("byName", "TestProject").first();
