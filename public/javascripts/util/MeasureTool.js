@@ -104,10 +104,12 @@ define(
 					g.lineTo(end.x,end.y);
 					g.stroke();
 					
-					var length = this.calibration.start.dist(this.calibration.end);
+					var cstart = this.calibration.start.boxToAbsolute(state.pan,state.effectiveDim());
+					var cend = this.calibration.end.boxToAbsolute(state.pan,state.effectiveDim());
+					var length = cstart.dist(cend);
 					var lpx = length / this.calibrationLength;
 					
-					var dist = this.measure.start.dist(this.measure.end);
+					var dist = start.dist(end);
 					var unitsDist = (dist / lpx).toFixed(2);
 					
 					g.font="20px Arial";

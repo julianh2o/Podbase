@@ -198,7 +198,6 @@ public class ImageService {
 				data[i] = (float)Math.min(255, Math.max(0,pixel));
 			}
 		} else if (pixels instanceof int[]) {
-			System.out.println("ints");
 			int[] data = (int[])pixels;
 			
 			for (int i=0; i<data.length; i++) {
