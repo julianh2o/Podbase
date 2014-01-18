@@ -12,8 +12,7 @@ public class Email extends Mailer {
 		setSubject("Podbase.net: User Account Creation");
 		addRecipient(user.email);
 		setFrom("Podbase.net <admin@podbase.net>");
+
 		send(user);
-		
-		send(sender);
 	}
 }
