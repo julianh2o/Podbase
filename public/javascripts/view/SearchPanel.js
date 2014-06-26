@@ -10,6 +10,7 @@ define(
 				
 				this.render();
 				
+				this.$busyIndicator = $(".busy-spinner",this.el);
 				this.$searchField = $(".image-search-field",this.el).on("keyup keydown keypress",$.proxy(this.fieldEvent,this));
 				this.$resultsPanel = $(".results-panel",this.el).hide();
 				
@@ -18,16 +19,15 @@ define(
 				this.query = null;
 				this.results = [];
 				this.timer = null;
+				this.requestCount = 0;
 			},
 			
 			fieldEvent : function() {
-				console.log("field event!");
 				if (this.timer != null) clearTimeout(this.timer);
 				this.timer = setTimeout($.proxy(this.queryUpdated,this),500);
 			},
 			
 			queryUpdated : function() {
-				console.log("query updated");
 				this.timer = null;
 				
 				var val = this.$searchField.val();
@@ -40,6 +40,9 @@ define(
 					return;
 				}
 				
+				
+				this.requestCount++;
+				this.$busyIndicator.show();
 				Link.doSearch(this.project.id,val).post({
 					success:$.proxy(this.resultsReceived,this),
 					error:$.proxy(this.searchError,this)
@@ -47,10 +50,16 @@ define(
 			},
 			
 			searchError : function() {
+				this.requestCount--;
+				if (this.requestCount == 0) this.$busyIndicator.hide();
+				
 				this.$searchField.css("color","red");
 			},
 			
 			resultsReceived : function(results) {
+				this.requestCount--;
+				if (this.requestCount == 0) this.$busyIndicator.hide();
+				
 				this.$searchField.css("color","black");
 				
 				this.results = results;
