@@ -25,7 +25,7 @@ import models.User;
 @With(Security.class)
 public class SearchController extends ParentController {
     public static void doSearch(Project project, String query) throws Exception {
-    	Set<DatabaseImage> results = SearchService.performSimpleSearch(query,project);
+    	Set<DatabaseImage> results = SearchService.performDatabaseSearch(query,project);
     	results = filterSearchResults(project, results);
     	renderJSON(results);
     }

@@ -10,10 +10,11 @@ import play.mvc.Mailer;
 public class Email extends Mailer {
 	public static void newAccount(User sender, User user) {
 		setSubject("Podbase.net: User Account Creation");
+		System.out.println("user: "+user);
+		System.out.println("sender: "+sender);
 		addRecipient(user.email);
 		setFrom("Podbase.net <admin@podbase.net>");
-		send(user);
-		
-		send(sender);
+		if (!sender.special) addBcc(sender.email);
+		send(user,sender);
 	}
 }

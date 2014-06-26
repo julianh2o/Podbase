@@ -38,7 +38,7 @@ import models.Project;
 import models.User;
 
 public class SearchService {
-	public static Set<DatabaseImage> performSimpleSearch(String value, Project project) throws Exception {
+	public static Set<DatabaseImage> performLuceneSearch(String value, Project project) throws Exception {
 		try {
 			Set<DatabaseImage> results = new HashSet<DatabaseImage>();
 			
@@ -65,5 +65,23 @@ public class SearchService {
 			throw se;
 		}
 	}
+	
+	public static Set<DatabaseImage> performDatabaseSearch(String value, Project project) throws Exception {
+		Set<DatabaseImage> results = new HashSet<DatabaseImage>();
+		
+		if (value.trim().length() == 0) return results;
+		
+		List<ImageAttribute> found = ImageAttribute.find("byProjectAndValueLike",project,"%"+value+"%").fetch();
+		List<DatabaseImage> imageResults = DatabaseImage.find("byPathLike","%"+value+"%").fetch(); 
 
+		for (DatabaseImage image : imageResults) {
+			results.add(image);
+		}
+		
+		for (ImageAttribute attr : found) {
+			results.add(attr.image);
+		}
+		
+		return results;
+	}
 }
