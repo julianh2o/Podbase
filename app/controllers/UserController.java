@@ -52,9 +52,13 @@ public class UserController extends ParentController {
 		
 		User user = new User(email,null);
 		user.save();
+		System.out.println("user: "+user);
 		
 		Activation.generateActivationCode(user, 30);
+		System.out.println("user: "+user);
+		System.out.println("securityuser: "+Security.getUser());
 		Email.newAccount(Security.getUser(),user);
+		System.out.println("user: "+user);
 		
 		renderJSON(user);
 	}

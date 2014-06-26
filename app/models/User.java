@@ -54,7 +54,7 @@ public class User extends TimestampModel {
 	}
 	
 	public String toString() {
-		return email + " ["+created+"]";
+		return "[User: "+email +"]";
 	}
 	
 	public boolean isGuest() {
