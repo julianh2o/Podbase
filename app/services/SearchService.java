@@ -71,7 +71,8 @@ public class SearchService {
 		
 		if (value.trim().length() == 0) return results;
 		
-		List<ImageAttribute> found = ImageAttribute.find("byProjectAndValueLike",project,"%"+value+"%").fetch();
+		List<ImageAttribute> found = ImageAttribute.find("byValueLike","%"+value+"%").fetch();
+		//List<ImageAttribute> found = ImageAttribute.find("byProjectAndValueLike",project,"%"+value+"%").fetch();
 		List<DatabaseImage> imageResults = DatabaseImage.find("byPathLike","%"+value+"%").fetch(); 
 
 		for (DatabaseImage image : imageResults) {
