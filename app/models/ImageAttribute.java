@@ -32,7 +32,7 @@ public class ImageAttribute extends TimestampModel {
 	public String attribute;
 	
 	@Field
-	@Column(columnDefinition="char(255)")
+	@Column(columnDefinition="text")
 	public String value;
 	
 	public int ordering;
