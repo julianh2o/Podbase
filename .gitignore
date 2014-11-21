@@ -13,6 +13,7 @@ logs/*
 server.pid
 migrate*
 build.xml
+nohup.out
 
 *.class
 *.jar
