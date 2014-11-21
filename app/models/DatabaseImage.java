@@ -76,7 +76,19 @@ public class DatabaseImage extends TimestampModel {
 		
 		String rel = PathService.getRelativeString(path);
 		DatabaseImage image = DatabaseImage.find("path",rel).first();
-		if (image != null) return image;
+		
+		if (image != null) {
+			if (image.hash == null) {
+				System.err.println("Found image, but image hash is null! (creating image hash)");
+				try {
+					image.hash = PathService.calculateImageHash(path);
+					image.save();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+			return image;
+		}
 		
 		try {
 			String imageHash = PathService.calculateImageHash(path);
