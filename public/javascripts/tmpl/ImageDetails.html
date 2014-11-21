@@ -3,6 +3,18 @@
 		No image selected.
 	</div>
 <% } else { %>
+	<div class="row-fluid">
+		<a href="#" class="span6 toggle-hidden">
+			Toggle hidden attributes
+		</a>
+			
+		<% if (canEdit) { %>
+			<a href="#" class="span6 add alignRight">
+				Add New Attribute
+			</a>
+		<% } %>
+	</div>
+	
 	<div class="attributes"></div>
 	
 	<div class="row-fluid">
