@@ -32,7 +32,7 @@ define(
 			
 			userDecorator : function(event,user,$el) {
 				if (user.lastActive) {
-					console.log(user.email);
+					console.log(serverTime,moment(user.lastActive).unix(),serverTime-moment(user.lastActive).unix());
 					var timeSince = serverTime-moment(user.lastActive).unix();
 					var text = "";
 					if (timeSince < 1500) text = "online";
