@@ -18,7 +18,7 @@ define(
 				$(".search-replace-link",this.el).click($.proxy(this.showSearchReplace,this));
 				
 				this.$searchReplaceDialog = $('.search-replace-dialog',this.el).modal({show:false});
-				this.$searchField = this.$searchReplaceDialog.find(".search-field");
+				this.$searchForReplaceField = this.$searchReplaceDialog.find(".search-field");
 				this.$replaceField = this.$searchReplaceDialog.find(".replace-field");
 				this.$searchWithin = $(".search-within",this.el);
 				$(".do-search",this.el).click($.proxy(this.doSearchForReplace,this));
@@ -26,7 +26,7 @@ define(
 				this.$searchReplaceResults = $(".search-replace-results",this.el);
 				this.$searchReplaceResultTemplate = $(".search-replace-result-template",this.el);
 				this.$doReplaceButton = this.$searchReplaceDialog.find(".do-replace");
-				this.$replaceField.add(this.$searchField).keyup($.proxy(function(event) {
+				this.$replaceField.add(this.$searchForReplaceField).keyup($.proxy(function(event) {
 				    if(event.keyCode == 13){
 				    	this.doSearchForReplace();
 				    }
@@ -126,10 +126,9 @@ define(
 				
 				this.requestCount++;
 				this.$busyIndicator.show();
-				Link.doSearch(this.project.id,val).post({
-					success:$.proxy(this.resultsReceived,this),
-					error:$.proxy(this.searchError,this)
-				});
+				Link.doSearch(this.project.id,val).post()
+					.done($.proxy(this.resultsReceived,this))
+					.error($.proxy(this.searchError,this));
 			},
 			
 			searchError : function() {
