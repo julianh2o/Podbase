@@ -1,23 +1,4 @@
 <div class="row-fluid">
-	<div class="preview-image span5">
-		<% if (!file && !files) { %>
-			<img src='http://placehold.it/200x200'>
-		<% } else if (file && file.isDir){ %>
-			<img src='http://placehold.it/200x200'>
-		<% } else if (files.length > 1) { %>
-			<img src='http://placehold.it/200x200'>
-		<% } else if (file.isImage) { %>
-			<a href='@{ImageViewer.index()}<%= file.path %>'>
-				<img class="full-image" data-src="/data<%= file.path %>?mode=fit&width=500&height=500">
-				<img src='/data<%= file.path %>?mode=thumb'>
-			</a>
-		<% } else { %>
-			<a href='/data<%= file.path %>'>
-				<img src='/public/images/document.png' height="200px">
-			</a>
-		<% } %>
-	</div>
-	
 	<div class="image-info span7">
 		<% if (!file && !files) { %>
 			<div class="no-selection faint">
@@ -87,4 +68,24 @@
 			<% } %>
 		<% } %>
 	</div>
+	
+	<div class="preview-image span5">
+		<% if (!file && !files) { %>
+			<img src='http://placehold.it/200x200'>
+		<% } else if (file && file.isDir){ %>
+			<img src='http://placehold.it/200x200'>
+		<% } else if (files.length > 1) { %>
+			<img src='http://placehold.it/200x200'>
+		<% } else if (file.isImage) { %>
+			<a href='@{ImageViewer.index()}<%= file.path %>'>
+				<img class="full-image" data-src="/data<%= file.path %>?mode=fit&width=500&height=500">
+				<img src='/data<%= file.path %>?mode=thumb'>
+			</a>
+		<% } else { %>
+			<a href='/data<%= file.path %>'>
+				<img src='/public/images/document.png' height="200px">
+			</a>
+		<% } %>
+	</div>
+	
 </div>

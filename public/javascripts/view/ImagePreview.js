@@ -97,7 +97,9 @@ define(
 			imageHoverIn : function() {
 				if (this.overs == 0) {
 					var src = this.$hoverImage.data("src");
-					if (!this.$hoverImage.attr("src")) this.$hoverImage.attr("src",src);
+					if (!this.$hoverImage.attr("src")) {
+						this.$hoverImage.attr("src",src);
+					}
 					this.$hoverImage.show();
 				}
 				this.overs++;
