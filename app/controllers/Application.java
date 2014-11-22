@@ -36,9 +36,14 @@ import models.*;
 
 @With(Security.class)
 public class Application extends ParentController {
-
     public static void index() {
     	render();
+    }
+    
+    public static void heartbeat() {
+    	User user = Security.getUser();
+    	user.lastActive = new Date();
+    	user.save();
     }
     
     @ModelAccess(AccessType.LISTED)

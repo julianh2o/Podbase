@@ -18,7 +18,10 @@ public class User extends TimestampModel {
 	@Email
 	public String email;
 	
+	@GsonTransient
 	public String password;
+	
+	public Date lastActive;
 	
 	@OneToOne(optional=true,cascade=CascadeType.ALL)
 	public Activation activation;

@@ -22,12 +22,25 @@ define(
 				}
 				
 				this.users = Link.getAllUsers().getData();
-				this.userList = Util.createView( $(".userlist",this.el), UserList, {users:this.users});
+				this.userList = Util.createView( $(".userlist",this.el), UserList, {users:this.users, decorator: this.userDecorator});
 				this.userPanel = Util.createView( $(".management",this.el), UserManagementPanel);
 				
 				$(this.userList).on("UserSelected",$.proxy(this.userSelected,this));
 				
 				$(".add",this.el).click($.proxy(this.createUserClicked,this));
+			},
+			
+			userDecorator : function(event,user,$el) {
+				if (user.lastActive) {
+					console.log(user.email);
+					var timeSince = moment().unix()-moment(user.lastActive).unix();
+					var text = "";
+					if (timeSince < 1500) text = "online";
+					var $decoration = $("<span class='decoration'>");
+					$decoration.text(text);
+					$el.append($decoration);
+				}
+				//if (user.lastActive && moment(user.lastActive) )
 			},
 			
 			userSelected : function(e,userId,user) {

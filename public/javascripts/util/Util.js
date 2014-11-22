@@ -96,6 +96,9 @@ define(
 			},
 			permits : function(access,permission) {
 				return This.permissionsAsMap(access)[permission];
+			},
+			sendHeartbeat : function() {
+				$.get("@{Application.heartbeat}");
 			}
 		}
 		

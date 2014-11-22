@@ -118,7 +118,7 @@ public class UserController extends ParentController {
 	}
 	
 	public static void mimicUser(User user) {
-		if (Security.getUser().isRoot() || Play.id.equals("dev")) {
+		if (Security.getUser().isRoot() || Play.id.contains("dev")) {
 			session.put("username", user.email);
 			ok();
 		} else {

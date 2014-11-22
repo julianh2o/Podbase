@@ -8,12 +8,19 @@ define(
 			initialize: function() {
 				this.users = this.options.users;
 				
+				if (this.options.decorator) $(this).on("DecorateUser",this.options.decorator);
 				if (this.users) this.setUsers(this.users);
 			},
 			
 			setUsers : function(users) {
 				this.model = {users:users};
 				this.render();
+				
+				_.each($(".user",this.el),$.proxy(function(el) {
+					var $el = $(el);
+					var user = this.model.users[$el.data("index")];
+					$(this).trigger("DecorateUser",[user,$el]);
+				}),this);
 				
 				$(".user",this.el).click($.proxy(this.userClicked,this));
 			},

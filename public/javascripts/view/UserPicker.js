@@ -9,7 +9,7 @@ define(
 			template: _.template( tmpl ),
 			
 			initialize: function(options) {
-				if (frameworkId != "dev") return;
+				if (frameworkId.indexOf("dev") === -1) return;
 				Link.getAllUsers().asap($.proxy(this.refresh,this));
 			},
 			
