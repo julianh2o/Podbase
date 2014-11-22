@@ -57,4 +57,8 @@ public class Project extends PermissionedModel {
 		this.save();
 		return template;
 	}
+	
+	public String toString() {
+		return this.name;
+	}
 }

@@ -70,7 +70,7 @@ public class Security extends Secure.Security {
         	
 	        for (AccessType a : modelAccess.value()) {
 	        	boolean hasPermission = projectAccessSet.contains(a);
-	        	if (!hasPermission) redirectToLogin();
+	        	if (!hasPermission) redirectToLogin("You do not have view permission for "+model.toString());
 	        }
         }
         
@@ -98,9 +98,12 @@ public class Security extends Secure.Security {
     }
     
 	protected static void redirectToLogin() {
-		if (request.isAjax()) forbidden();
+		redirectToLogin("You do not have sufficient priveledges to access this URL. Try logging in or navigating from the home page.");
+	}
+	protected static void redirectToLogin(String message) {
+		if (request.isAjax()) forbidden(message);
 		
-		if (!getUser().isGuest()) forbidden();
+		if (!getUser().isGuest()) forbidden(message);
 		
 		String url = "GET".equals(request.method) ? request.url : "/";
 		flash.put("url", url);

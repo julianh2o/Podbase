@@ -41,4 +41,8 @@ public class Paper extends PermissionedModel {
 		paper.save();
 		return paper;
 	}
+	
+	public String toString() {
+		return this.name;
+	}
 }
