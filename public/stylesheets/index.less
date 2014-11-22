@@ -287,11 +287,45 @@ select.file-select {
 	position: relative;
 }
 
-input.image-search-field {
+.search-replace-results {
+	span {
+		display: inline-block;
+	}
+	.relative-path {
+		width: 50%;
+	}
+	
+	.original {
+		width: 23%;
+	}
+	
+	.replaced {
+		width: 25%;
+	}
+}
+
+input.search-field-style {
 	height: 9px;
 	width: 95%;
 	padding: 5px 5px;
 	border-radius: 15px;
+}
+
+.replace-field {
+	width: 95%;
+	height: 9px;
+	padding: 5px 5px;
+	margin-top: 3px;
+}
+
+.do-search {
+	float: right;
+	margin-top: 3px;
+	margin-right: 16px;
+}
+
+input.image-search-field {
+	width: 75%;
 }
 
 .search-icon {

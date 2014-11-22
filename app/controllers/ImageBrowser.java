@@ -322,6 +322,39 @@ public class ImageBrowser extends ParentController {
 		renderJSON(attribute);
 	}
 	
+	public static void attributeSearchReplace(Path path, String search, String replace, boolean recursive, boolean confirmReplace) {
+		System.out.println("path: "+path);
+		Project project = PathService.projectForPath(path);
+		if (!permitMetadataEdit(project, true) || !permitMetadataEdit(project,true)) forbidden();
+		
+		String rel = PathService.getRelativeString(path);
+		String imageQuery = String.format("SELECT i FROM DatabaseImage i WHERE path LIKE '%s' AND path NOT LIKE '%s' AND hash IS NOT NULL",rel+"/%",rel+"/%/%");
+		if (recursive) imageQuery = String.format("SELECT i FROM DatabaseImage i WHERE path LIKE '%s' AND hash IS NOT NULL",rel+"/%");
+		
+		System.out.println("rel: "+rel);
+		System.out.println("imageQuery: "+imageQuery);
+		String query = String.format("SELECT a FROM ImageAttribute a WHERE a.image IN (%s) AND a.value LIKE '%s'",imageQuery,'%'+search+'%');
+		List<ImageAttribute> attributes = ImageAttribute.find(query).fetch();
+		
+		List<HashMap<String,Object>> out = new LinkedList<HashMap<String,Object>>();
+		for(ImageAttribute attr : attributes) {
+			HashMap<String,Object> entry = new HashMap<String,Object>();
+			entry.put("image", attr.image.getStringPath());
+			entry.put("attribute", attr);
+			entry.put("id", attr.id);
+			entry.put("before", attr.value);
+			String result = attr.value.replaceAll(search, replace);
+			if (confirmReplace) {
+				attr.value = result;
+				attr.save();
+			}
+			entry.put("after", result);
+			out.add(entry);
+		}
+		
+		renderJSON(out);
+	}
+	
 	@Util
 	public static boolean permitMetadataEdit(Project project, boolean dataMode) {
 		boolean permitted;

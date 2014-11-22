@@ -6,6 +6,7 @@ define(
 			template: _.template( tmpl ),
 			
 			initialize: function() {
+				window.imageBrowser = this;
 				this.project = this.options.project;
 				this.access = this.options.access;
 				this.dataMode = this.project.dataMode;
@@ -67,6 +68,10 @@ define(
 				$(".upload-files",this.el).click($.proxy(this.uploadFilesClicked,this));
 				
 				this.loadHashPath();
+			},
+			
+			getPath : function() {
+				return this.fileBrowser.path;
 			},
 			
 			copyAttributes : function() {

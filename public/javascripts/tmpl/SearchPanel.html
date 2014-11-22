@@ -1,6 +1,38 @@
 <div class="search-panel">
 	<img src="/public/images/busy.gif" class="busy-spinner" />
-	<input type="search" class="image-search-field" placeholder="Search"><span class="search-icon"><i class="icon-search"></i></span>
+	<input type="search" class="image-search-field search-field-style" placeholder="Search"><span class="search-icon"><i class="icon-search"></i></span>
+	<a class="search-replace-link" href="#">Replace</a>
 	
 	<div class="results-panel panel"></div>
+</div>
+
+<div class="search-replace-dialog modal hide fade">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3>Search and Replace</h3>
+	</div>
+	
+	<div class="modal-body">
+		<b>Search within:</b> <span class="search-within"></span><br/>
+		<b>Search recursively: </b><input class="search-recursively" type="checkbox" /><br/>
+		<input type="search" class="search-field search-field-style" placeholder="Search"><span class="search-icon"><i class="icon-search"></i></span>
+		<input type="text" class="replace-field" placeholder="Replace With">
+		<a href="#" class="btn btn-primary do-search">Search</a>
+		<div class="clear" />
+		
+		<div class="search-replace-results panel"></div>
+		
+		<div class="hide">
+			<div class="search-replace-result-template">
+				<span class="relative-path"></span>
+				<span class="original"></span>
+				<span class="replaced"</span>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal-footer">
+		<a href="#" class="btn" data-dismiss="modal">Cancel</a>
+		<a href="#" class="btn btn-primary do-replace">Replace Occurrences</a>
+	</div>
 </div>

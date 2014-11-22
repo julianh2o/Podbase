@@ -15,11 +15,89 @@ define(
 				this.$resultsPanel = $(".results-panel",this.el).hide();
 				
 				this.$searchField.on("focus",$.proxy(this.showResults,this));
+				$(".search-replace-link",this.el).click($.proxy(this.showSearchReplace,this));
+				
+				this.$searchReplaceDialog = $('.search-replace-dialog',this.el).modal({show:false});
+				this.$searchField = this.$searchReplaceDialog.find(".search-field");
+				this.$replaceField = this.$searchReplaceDialog.find(".replace-field");
+				this.$searchWithin = $(".search-within",this.el);
+				$(".do-search",this.el).click($.proxy(this.doSearchForReplace,this));
+				$(".do-replace",this.el).click($.proxy(this.doSearchReplace,this));
+				this.$searchReplaceResults = $(".search-replace-results",this.el);
+				this.$searchReplaceResultTemplate = $(".search-replace-result-template",this.el);
+				this.$doReplaceButton = this.$searchReplaceDialog.find(".do-replace");
+				this.$replaceField.add(this.$searchField).keyup($.proxy(function(event) {
+				    if(event.keyCode == 13){
+				    	this.doSearchForReplace();
+				    }
+				},this));
 				
 				this.query = null;
 				this.results = [];
 				this.timer = null;
 				this.requestCount = 0;
+			},
+			
+			showSearchReplace : function() {
+				this.$searchWithin.text(window.imageBrowser.getPath());
+				this.$searchReplaceDialog.find("input").val("");
+				this.$doReplaceButton.hide();
+				this.$searchReplaceResults.hide();
+				this.$searchReplaceDialog.modal("show");
+			},
+			
+			doSearchForReplace : function() {
+				var path = this.$searchWithin.text();
+				var recursively = $(".search-recursively",this.el).prop("checked");
+				var search = this.$searchField.val();
+				var replace = this.$replaceField.val();
+				
+				$.post("@{ImageBrowser.attributeSearchReplace()}",{
+					path : path,
+					search: search,
+					replace : replace,
+					recursively : recursively,
+					confirmReplace : false,
+				},$.proxy(this.searchForReplaceResults,this));
+			},
+			
+			doSearchReplace : function() {
+				var path = this.$searchWithin.text();
+				var recursively = $(".search-recursively",this.el).prop("checked");
+				var search = this.$searchField.val();
+				var replace = this.$replaceField.val();
+				
+				$.post("@{ImageBrowser.attributeSearchReplace()}",{
+					path : path,
+					search: search,
+					replace : replace,
+					recursively : recursively,
+					confirmReplace : true,
+				},$.proxy(this.searchReplaceComplete,this));
+			},
+			
+			searchReplaceComplete : function() {
+				this.$searchReplaceDialog.modal("show");
+			},
+			
+			searchForReplaceResults : function(data) {
+				var $results = this.$searchReplaceResults.empty();
+				var $template = this.$searchReplaceResultTemplate;
+				if (data.length != 0) {
+					this.$searchReplaceResults.show();
+					this.$doReplaceButton.show();
+				} else {
+					this.$searchReplaceResults.hide();
+					this.$doReplaceButton.hide();
+					return;
+				}
+				_.each(data,function(item) {
+					var $element = $template.clone();
+					$element.find(".relative-path").text(item.image);
+					$element.find(".original").text(item.before)
+					$element.find(".replaced").text(item.after);
+					$results.append($element);
+				});
 			},
 			
 			fieldEvent : function() {
