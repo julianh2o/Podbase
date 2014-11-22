@@ -202,4 +202,17 @@ public class PathService {
 		return md5;	
 	}
 	
+	public static Path calculateHashFolderPath(Path baseDir, String requestHash) {
+		int levels = 2;
+		int size = 2;
+		
+		int index = 0;
+		Path currentDir = baseDir;
+		for (int i=0; i<levels; i++) {
+			String folderName = requestHash.substring(index,index+size);
+			index += size;
+			currentDir = currentDir.resolve(folderName);
+		}
+		return currentDir.resolve(requestHash.substring(index));
+	}
 }

@@ -17,10 +17,13 @@ import java.lang.reflect.Type;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.apache.commons.codec.binary.Base64;
+
 import models.Activation;
 import models.DatabaseImage;
 import models.GsonTransient;
 import models.ImageAttribute;
+import models.Project;
 import access.AccessType;
 import access.VirtualAccessType;
 
@@ -109,4 +112,16 @@ public class PodbaseUtil {
 		return gson;
 	}
 
+	public static String argumentString(Object... arguments) {
+		StringBuilder hashable = new StringBuilder();
+		for (Object o : arguments) {
+			hashable.append(o == null ? "NULL" : o.toString());
+			hashable.append(",");
+		}
+		return hashable.toString();
+	}
+
+	public static String argumentHash(Object... arguments) {
+		return new String(Base64.encodeBase64(org.apache.commons.codec.digest.DigestUtils.md5(argumentString(arguments).getBytes())));
+	}
 }

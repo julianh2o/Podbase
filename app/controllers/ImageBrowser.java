@@ -8,7 +8,6 @@ import play.*;
 import play.modules.search.Search;
 import play.mvc.*;
 import play.mvc.Http.Response;
-
 import groovy.lang.DeprecationException;
 import ij.IJ;
 import ij.ImagePlus;
@@ -33,8 +32,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -125,6 +129,7 @@ public class ImageBrowser extends ParentController {
 	@ModelAccess(AccessType.LISTED)
 	public static void resolveFile(Path path, String mode, Project project, Float scale, Integer width, Integer height, Float brightness, Float contrast, Boolean histogram, Integer slice) throws IOException {
 		if (!PermissionService.userCanAccessPath(Security.getUser(),path)) forbidden();
+		Boolean noWatermark = PermissionService.hasInheritedAccess(Security.getUser(), PathService.projectForPath(path), AccessType.NO_WATERMARK);
 		
 		if (params._contains("download")) response.setHeader("Content-Disposition", "attachment; filename="+path.getFileName());
 		
@@ -132,6 +137,23 @@ public class ImageBrowser extends ParentController {
 			renderBinary(path.toFile());
 			return;
 		}
+		
+		String argumentString = PodbaseUtil.argumentString(path,mode,scale,width,height,brightness,contrast,histogram,slice,noWatermark);
+		String argumentHash = PodbaseUtil.argumentHash(path,mode,scale,width,height,brightness,contrast,histogram,slice,noWatermark);
+		Path cachedImagePath = PathService.calculateHashFolderPath(Paths.get("./tmp/cache/"),argumentHash+".png");
+		Path cacheMetadataPath = PathService.calculateHashFolderPath(Paths.get("./tmp/cache/"),argumentHash+".txt");
+		File cachedImageFile = cachedImagePath.toFile();
+		if (cacheMetadataPath.toFile().exists()) {
+			String cachedArguments = FileUtils.readFileToString(cacheMetadataPath.toFile());
+			if (cachedArguments.equals(argumentString)) {
+				//cache hit
+				//System.out.println("Cache HIT");
+				BufferedImage bi = ImageIO.read(cachedImageFile);
+				renderImage(bi);
+			}
+		}
+		//System.out.println("cache miss");
+		//cache miss
 		
 		ImagePlus image = getImage(path);
 		if (slice != null) {
@@ -163,10 +185,20 @@ public class ImageBrowser extends ParentController {
 			//image = ImageService.appendImages(image,hist);
 		}
 		
-		//TODO cache this
 		BufferedImage imageOut = image.getBufferedImage();
-		boolean noWatermark = PermissionService.hasInheritedAccess(Security.getUser(), PathService.projectForPath(path), AccessType.NO_WATERMARK);
 		if (!noWatermark) imageOut = ImageService.addWatermark(imageOut);
+		try {
+			if (!cachedImageFile.exists()) {
+				cachedImageFile.getParentFile().mkdirs();
+				cachedImageFile.createNewFile();
+				cacheMetadataPath.toFile().createNewFile();
+			}
+			ImageIO.write(imageOut, "png", cachedImageFile);
+			FileUtils.write(cacheMetadataPath.toFile(), argumentString);
+		} catch (IOException e) {
+			System.err.println("Failed to write cached image");
+			e.printStackTrace();
+		}
 		renderImage(imageOut);
 	}
 	
@@ -260,6 +292,7 @@ public class ImageBrowser extends ParentController {
 		TemplateAssignment assignment = TemplateController.templateForPath(project, path);
 		Template template = assignment==null?null:assignment.template;
 		DatabaseImage image = DatabaseImage.forPath(path);
+		if (image == null) return;
 		
 	    renderJSON( DatabaseImageService.compileAttributesForImage(project, image, template, dataMode, true) );
 	}
