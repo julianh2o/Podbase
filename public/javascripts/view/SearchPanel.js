@@ -77,12 +77,14 @@ define(
 			},
 			
 			searchReplaceComplete : function() {
-				this.$searchReplaceDialog.modal("show");
+				$("html").trigger("ReloadImageDetails");
+				this.$searchReplaceDialog.modal("hide");
 			},
 			
 			searchForReplaceResults : function(data) {
 				var $results = this.$searchReplaceResults.empty();
 				var $template = this.$searchReplaceResultTemplate;
+				$results.append($template.clone().addClass("header"));
 				if (data.length != 0) {
 					this.$searchReplaceResults.show();
 					this.$doReplaceButton.show();
@@ -91,11 +93,14 @@ define(
 					this.$doReplaceButton.hide();
 					return;
 				}
+				var path = this.$searchWithin.text();
 				_.each(data,function(item) {
 					var $element = $template.clone();
-					$element.find(".relative-path").text(item.image);
-					$element.find(".original").text(item.before)
-					$element.find(".replaced").text(item.after);
+					var rel = "."+item.image.substring(path.length);
+					$element.find(".relative-path").text(rel);
+					$element.find(".attribute").text(item.attribute.attribute);
+					$element.find(".original").html(item.beforePreview)
+					$element.find(".replaced").html(item.afterPreview);
 					$results.append($element);
 				});
 			},

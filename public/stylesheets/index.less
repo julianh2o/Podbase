@@ -287,20 +287,40 @@ select.file-select {
 	position: relative;
 }
 
+.fade.in.search-replace-dialog {
+	width: auto;
+	left: 10%;
+	right: 10%;
+	top: 20%;
+	margin: 0 0 0 0;
+}
+
+.div-table {
+	display: table;
+}
+
+.div-tr {
+	display: table-row;
+}
+
+.div-td {
+	display: table-cell;
+}
+
 .search-replace-results {
-	span {
-		display: inline-block;
-	}
-	.relative-path {
-		width: 50%;
+	width: 95%;
+	
+	.header {
+		font-weight: bold;
 	}
 	
-	.original {
-		width: 23%;
+	.div-td {
+		padding: 2px 12px;
+		border-left: 1px solid #ccc;
 	}
 	
-	.replaced {
-		width: 25%;
+	.div-td:first-child {
+		border: none;
 	}
 }
 
@@ -321,7 +341,7 @@ input.search-field-style {
 .do-search {
 	float: right;
 	margin-top: 3px;
-	margin-right: 16px;
+	margin-right: 4%;
 }
 
 input.image-search-field {

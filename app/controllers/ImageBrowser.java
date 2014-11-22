@@ -323,7 +323,6 @@ public class ImageBrowser extends ParentController {
 	}
 	
 	public static void attributeSearchReplace(Path path, String search, String replace, boolean recursive, boolean confirmReplace) {
-		System.out.println("path: "+path);
 		Project project = PathService.projectForPath(path);
 		if (!permitMetadataEdit(project, true) || !permitMetadataEdit(project,true)) forbidden();
 		
@@ -331,8 +330,6 @@ public class ImageBrowser extends ParentController {
 		String imageQuery = String.format("SELECT i FROM DatabaseImage i WHERE path LIKE '%s' AND path NOT LIKE '%s' AND hash IS NOT NULL",rel+"/%",rel+"/%/%");
 		if (recursive) imageQuery = String.format("SELECT i FROM DatabaseImage i WHERE path LIKE '%s' AND hash IS NOT NULL",rel+"/%");
 		
-		System.out.println("rel: "+rel);
-		System.out.println("imageQuery: "+imageQuery);
 		String query = String.format("SELECT a FROM ImageAttribute a WHERE a.image IN (%s) AND a.value LIKE '%s'",imageQuery,'%'+search+'%');
 		List<ImageAttribute> attributes = ImageAttribute.find(query).fetch();
 		
@@ -344,6 +341,10 @@ public class ImageBrowser extends ParentController {
 			entry.put("id", attr.id);
 			entry.put("before", attr.value);
 			String result = attr.value.replaceAll(search, replace);
+			String beforePreview = attr.value.replaceAll(search, "<b>"+search+"</b>");
+			String afterPreview = attr.value.replaceAll(search, "<b>"+replace+"</b>");
+			entry.put("beforePreview", beforePreview);
+			entry.put("afterPreview", afterPreview);
 			if (confirmReplace) {
 				attr.value = result;
 				attr.save();
