@@ -2,7 +2,7 @@
 	No user selected.
 <% } else { %>
 
-<%= user.email %> <span class="created">created <%= user.created %></span>
+<%= user.email %> <span class="created">created <%= moment(user.created).format('MMMM Do YYYY, h:mm:ss a') %></span>
 <br/>
 
 <% if (showRemove) { %>

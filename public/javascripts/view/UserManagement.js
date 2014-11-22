@@ -32,15 +32,16 @@ define(
 			
 			userDecorator : function(event,user,$el) {
 				if (user.lastActive) {
-					console.log(serverTime,moment(user.lastActive).unix(),serverTime-moment(user.lastActive).unix());
+					//console.log(serverTime,moment(user.lastActive).unix(),serverTime-moment(user.lastActive).unix());
 					var timeSince = serverTime-moment(user.lastActive).unix();
 					var text = "";
-					if (timeSince < 1500) text = "online";
-					var $decoration = $("<span class='decoration'>");
-					$decoration.text(text);
-					$el.append($decoration);
+					if (timeSince < 60*2) text = "online";
+					if (text != "") {
+						var $decoration = $("<span class='decoration'>");
+						$decoration.text(text);
+						$el.append($decoration);
+					}
 				}
-				//if (user.lastActive && moment(user.lastActive) )
 			},
 			
 			userSelected : function(e,userId,user) {

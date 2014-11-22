@@ -14,7 +14,7 @@
 		</td>
 		
 		<td>
-			<%= user.created %>
+			<%= moment(user.created).format('MMMM Do YYYY, h:mm:ss a') %>
 		</td>
 	</tr>
 	<% if (user.activation) { %>

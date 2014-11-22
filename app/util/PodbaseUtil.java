@@ -16,6 +16,7 @@ import java.io.File;
 import java.lang.reflect.Type;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -33,6 +34,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
@@ -91,6 +93,13 @@ public class PodbaseUtil {
 			return json;
 		}
 	}
+	
+	private static class DateAdaptor implements JsonSerializer<Date> {
+		@Override
+		public JsonElement serialize(Date obj, Type type, JsonSerializationContext context) {
+			return new JsonPrimitive(obj.getTime());
+		}
+	}
 
 	public static Gson getGsonExcludesGsonTransient() {
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
@@ -108,6 +117,7 @@ public class PodbaseUtil {
 			.registerTypeAdapter(AccessType.class, new AccessTypeAdaptor())
 			.registerTypeAdapter(VirtualAccessType.class, new VirtualAccessTypeAdaptor())
 			.registerTypeAdapter(Activation.class, new ActivationAdaptor())
+			.registerTypeAdapter(Date.class, new DateAdaptor())
 			.create();
 		return gson;
 	}
