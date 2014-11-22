@@ -32,6 +32,7 @@ public class ParentController extends Controller {
 		renderArgs.put("user", Security.getUser());
 	    renderArgs.put("frameworkId", Play.id);
 	    renderArgs.put("serverUrl", request.getBase());
+	    renderArgs.put("serverTime", System.currentTimeMillis() / 1000L);
     }
     
     @Before

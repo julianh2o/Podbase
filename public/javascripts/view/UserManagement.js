@@ -33,7 +33,7 @@ define(
 			userDecorator : function(event,user,$el) {
 				if (user.lastActive) {
 					console.log(user.email);
-					var timeSince = moment().unix()-moment(user.lastActive).unix();
+					var timeSince = serverTime-moment(user.lastActive).unix();
 					var text = "";
 					if (timeSince < 1500) text = "online";
 					var $decoration = $("<span class='decoration'>");
