@@ -8,6 +8,7 @@ define(
 			initialize: function() {
 				this.render();
 				
+				this.modelObject = this.options.model;
 				this.type = this.options.type;
 				
 				this.$users = $(".users",this.el);
@@ -24,7 +25,10 @@ define(
 				
 				$(".add-user",this.el).click($.proxy(this.addUserClicked,this));
 				
-				this.setModel(this.options.model);
+				Link.getCurrentUser().asap($.proxy(function() {
+					this.setModel(this.options.model);
+				},this));
+				
 			},
 			
 			addUserClicked : function(e) {
@@ -53,7 +57,11 @@ define(
 			},
 			
 			userSelected : function(event,userId,user) {
-				this.userPermissionsEditor.loadUser(user);
+				Link.getUserAccess(this.modelObject.id,user.id).invalidate().loadOnce($.proxy(function(link) {
+					var owner = _.groupBy(link.getData(),"name")["OWNER"] != null;
+					var canEditPermissions = Link.getCurrentUser().getData().email == "root" || owner || Link.getCurrentUser().getData().id != user.id;
+					this.userPermissionsEditor.loadUser(user,canEditPermissions);
+				},this));
 			}
 		});
 		

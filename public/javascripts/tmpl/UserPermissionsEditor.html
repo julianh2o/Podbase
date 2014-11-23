@@ -20,7 +20,7 @@
 				<tr>
 					<td class="checkbox-cell">
 						<% var permission = userPermissionMap[perm.name]; %>
-						<% var disabled = user.root || (permission && permission.impliedBy && permission.impliedBy.length); %>
+						<% var disabled = !canEdit || user.root || (permission && permission.impliedBy && permission.impliedBy.length); %>
 						<input id="<%= user.email+perm.name %>" type="checkbox" <%= disabled ? 'disabled' : '' %> name="permission" value="<%= perm.name %>" <%= userPermissionMap[perm.name]?"checked":"" %> >
 						</input>
 					</td>

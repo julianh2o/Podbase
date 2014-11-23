@@ -8,15 +8,16 @@ define(
 				this.type = this.options.type;
 				this.showRemove = this.options.showRemove;
 				this.modelObject = this.options.modelObject;
-				this.loadUser(this.options.user);
+				this.loadUser(this.options.user,this.options.canEdit);
 			},
 			
 			setModel : function(modelObject) {
 				this.modelObject = modelObject;
 			},
 			
-			loadUser : function(user) {
+			loadUser : function(user,canEdit) {
 				this.user = user;
+				this.canEdit = canEdit;
 				
 				if (this.user == null) {
 					this.model = {user:null};
@@ -29,7 +30,7 @@ define(
 				if (!link.isDataReady()) {
 					var self = this;
 					link.asap(function() {
-						self.loadUser(user);
+						self.loadUser(user,canEdit);
 					});
 					return;
 				}
@@ -49,7 +50,7 @@ define(
 				var possiblePermissions = Link.getAccessTypes().getData("byType")[this.type]
 				possiblePermissions = _.groupBy(permissionOrdering,"aggregate");
 				
-				this.model = {user:this.user, userPermissionMap:permissionMap, permissions:possiblePermissions, showRemove:this.showRemove};
+				this.model = {user:this.user, userPermissionMap:permissionMap, permissions:possiblePermissions, showRemove:this.showRemove, canEdit:this.canEdit};
 				
 				this.render();
 				

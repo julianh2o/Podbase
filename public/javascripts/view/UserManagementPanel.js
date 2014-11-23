@@ -7,7 +7,7 @@ define(
 			
 			initialize: function(options) {
 				this.setUser(options.user);
-				
+				Link.getCurrentUser().asap($.proxy(this.refresh,this));
 			},
 			
 			refresh : function() {
