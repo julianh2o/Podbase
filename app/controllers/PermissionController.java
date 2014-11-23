@@ -41,6 +41,11 @@ import models.User;
 public class PermissionController extends ParentController {
 	@ModelAccess(AccessType.MANAGE_PERMISSIONS)
     public static void setPermission(PermissionedModel model, User user, String permission, boolean value) {
+		User currentUser = Security.getUser();
+		if (!currentUser.isRoot() && !PermissionService.hasInheritedAccess(currentUser, model, AccessType.OWNER)) {
+			if (user.equals(currentUser)) forbidden(); //users cannot edit their own permissions
+			if (user.isGuest()) forbidden(); //users cannot edit guest's permissions
+		}
     	AccessType access = AccessType.valueOf(permission);
     	
     	PermissionService.togglePermission(user,model,access,value);
@@ -49,6 +54,11 @@ public class PermissionController extends ParentController {
     
 	@Access(AccessType.MANAGE_PERMISSIONS)
     public static void setUserPermission(User user, String permission, boolean value) {
+		User currentUser = Security.getUser();
+		if (!currentUser.isRoot()) {
+			if (user.equals(currentUser)) forbidden(); //user cannot edit their own permissions
+			if (user.isGuest()) forbidden(); //editing guest permissions is barred (except for root)
+		}
     	AccessType access = AccessType.valueOf(permission);
     	
     	PermissionService.togglePermission(user,null,access,value);
@@ -82,6 +92,10 @@ public class PermissionController extends ParentController {
     @ModelAccess(AccessType.OWNER)
     public static void addUserByEmail(PermissionedModel model, String email) {
     	User user = User.find("byEmail", email).first();
+		User currentUser = Security.getUser();
+		if (!currentUser.isRoot() && !PermissionService.hasInheritedAccess(currentUser, model, AccessType.OWNER)) {
+			if (user.isGuest()) forbidden("Only OWNER and root can add guest!");
+		}
     	if (user == null) error("User not found");
     	
     	PermissionService.togglePermission(user,model,AccessType.LISTED,true);

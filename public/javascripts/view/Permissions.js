@@ -38,7 +38,8 @@ define(
 				if (!email) return;
 				Link.addUserByEmail({modelId:this.modelObject.id,email:email}).post().done(function() {
 					Link.getListedUsers({modelId:self.modelObject.id}).pull();
-				}).fail(function() {
+				}).fail(function(data) {
+					console.log(data);
 					alert("User not found!");
 				});
 			},
@@ -47,19 +48,27 @@ define(
 				this.modelObject = modelObject;
 				this.userPermissionsEditor.setModel(modelObject);
 				
-				Link.getListedUsers({modelId:this.modelObject.id}).asap($.proxy(this.usersLoaded,this));
+				Link.loadAll([
+	                ["getUserAccess",{modelId:this.modelObject.id,userId:Link.getCurrentUser().getData().id}],
+	                ["getListedUsers",{modelId:this.modelObject.id}]
+	                ],$.proxy(this.usersLoaded,this),false);
 			},
 			
-			usersLoaded : function(link) {
-				var users = link.getData();
+			usersLoaded : function() {
+				var users = Link.getListedUsers(this.modelObject.id).getData();
 				this.userList.setUsers(users);
 				this.userPermissionsEditor.loadUser(null);
 			},
 			
 			userSelected : function(event,userId,user) {
 				Link.getUserAccess(this.modelObject.id,user.id).invalidate().loadOnce($.proxy(function(link) {
-					var owner = _.groupBy(link.getData(),"name")["OWNER"] != null;
-					var canEditPermissions = Link.getCurrentUser().getData().email == "root" || owner || Link.getCurrentUser().getData().id != user.id;
+					var currentUser = Link.getCurrentUser().getData();
+					var owner = _.groupBy(Link.getUserAccess(this.modelObject.id,currentUser.id).getData(),"name")["OWNER"] != null;
+					var canEditPermissions = true;
+					if (currentUser.id == user.id) canEditPermissions = false;
+					if (user.email == "guest") canEditPermissions = false;
+					if (owner) canEditPermissions = true;
+					if (currentUser.email == "root") canEditPermissions = true;
 					this.userPermissionsEditor.loadUser(user,canEditPermissions);
 				},this));
 			}

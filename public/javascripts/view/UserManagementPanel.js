@@ -25,7 +25,12 @@ define(
 					});
 				});
 				
-				var canEdit = Link.getCurrentUser().getData().email == "root" || Link.getCurrentUser().getData().id != this.user.id;
+				var canEdit = true;
+				var currentUser = Link.getCurrentUser().getData();
+				
+				if (currentUser.id == this.user.id) canEdit = false;
+				if (this.user.email == "guest") canEdit = false;
+				if (currentUser.email == "root") canEdit = true;
 				this.userPermissionsEditor = Util.createView( $(".permissions",this.el), UserPermissionsEditor, {type:"user",user:this.user,modelObject:podbase, showRemove:false, canEdit:canEdit});
 			},
 			
