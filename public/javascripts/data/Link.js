@@ -160,7 +160,7 @@ define(['data/Loader'],function(Loader) {
 			return _.reduce(data,function(memo,accessInfo) {
 				_.each(accessInfo.type,function(type) {
 					if (!memo[type]) memo[type] = [];
-					memo[type].unshift(accessInfo);
+					memo[type].push(accessInfo);
 				});
 				return memo;
 			},{});

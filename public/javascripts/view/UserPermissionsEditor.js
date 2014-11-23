@@ -48,7 +48,7 @@ define(
 				
 				var permissionOrdering = Link.getAccessTypes().getData();
 				var possiblePermissions = Link.getAccessTypes().getData("byType")[this.type]
-				possiblePermissions = _.groupBy(permissionOrdering,"aggregate");
+				possiblePermissions = _.groupBy(possiblePermissions,"aggregate");
 				
 				this.model = {user:this.user, userPermissionMap:permissionMap, permissions:possiblePermissions, showRemove:this.showRemove, canEdit:this.canEdit};
 				

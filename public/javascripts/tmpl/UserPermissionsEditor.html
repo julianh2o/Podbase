@@ -14,28 +14,30 @@
 <table class="user-permission-table">
 	<% _.each(['true','false'],function(key) { %>
 		<% items = permissions[key]; %>
-		<tr class="table-header"><td colspan=2><%= key=='true'?"Roles":"Permissions" %></td></tr>
-		<% _.each(items,function(perm) { %>
-			<% if (perm.name != "PARTICIPANT") { %>
-				<tr>
-					<td class="checkbox-cell">
-						<% var permission = userPermissionMap[perm.name]; %>
-						<% var disabled = !canEdit || user.root || (permission && permission.impliedBy && permission.impliedBy.length); %>
-						<input id="<%= user.email+perm.name %>" type="checkbox" <%= disabled ? 'disabled' : '' %> name="permission" value="<%= perm.name %>" <%= userPermissionMap[perm.name]?"checked":"" %> >
-						</input>
-					</td>
-					<td>
-						<label for="<%= user.email+perm.name %>">
-							<%= perm.name %>
-							<% if (permission && permission.impliedBy && permission.impliedBy.length) { %>
-								<span class="permission-implied-by">provided by <%= _.pluck(permission.impliedBy,"name").join(", ") %></span>
-							<% } %>
-							<span class="permission-description"><%= perm.description %></span>
-						</label>
-					</td>
-				</tr>
-			<% } %>
-		<% }); %>
+		<% if (items) { %>
+			<tr class="table-header"><td colspan=2><%= key=='true'?"Roles":"Permissions" %></td></tr>
+			<% _.each(items,function(perm) { %>
+				<% if (perm.name != "PARTICIPANT") { %>
+					<tr>
+						<td class="checkbox-cell">
+							<% var permission = userPermissionMap[perm.name]; %>
+							<% var disabled = !canEdit || user.root || (permission && permission.impliedBy && permission.impliedBy.length); %>
+							<input id="<%= user.email+perm.name %>" type="checkbox" <%= disabled ? 'disabled' : '' %> name="permission" value="<%= perm.name %>" <%= userPermissionMap[perm.name]?"checked":"" %> >
+							</input>
+						</td>
+						<td>
+							<label for="<%= user.email+perm.name %>">
+								<%= perm.name %>
+								<% if (permission && permission.impliedBy && permission.impliedBy.length) { %>
+									<span class="permission-implied-by">provided by <%= _.pluck(permission.impliedBy,"name").join(", ") %></span>
+								<% } %>
+								<span class="permission-description"><%= perm.description %></span>
+							</label>
+						</td>
+					</tr>
+				<% } %>
+			<% }); %>
+		<% } %>
 	<% }); %>
 </table>
 

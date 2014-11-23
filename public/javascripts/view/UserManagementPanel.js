@@ -25,7 +25,8 @@ define(
 					});
 				});
 				
-				this.userPermissionsEditor = Util.createView( $(".permissions",this.el), UserPermissionsEditor, {type:"user",user:this.user,modelObject:podbase, showRemove:false});
+				var canEdit = Link.getCurrentUser().getData().email == "root" || Link.getCurrentUser().getData().id != this.user.id;
+				this.userPermissionsEditor = Util.createView( $(".permissions",this.el), UserPermissionsEditor, {type:"user",user:this.user,modelObject:podbase, showRemove:false, canEdit:canEdit});
 			},
 			
 			setUser : function(user) {
