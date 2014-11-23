@@ -47,7 +47,8 @@ public enum AccessType {
 
 	//Aggregate Permissions
 	OWNER("The user is considered an owner of this entity and can perform any actions",new String[] {"paper","project"},true),
-	TEMPLATE_EDITOR("The user can manage templates",new String[] {"project"},true);
+	TEMPLATE_EDITOR("The user can manage templates",new String[] {"project"},true),
+	MANAGER("The user can fully manage the project",new String[] {"project"},true);
 	
 	public String description;
 	public String[] types;
@@ -75,31 +76,45 @@ public enum AccessType {
 	static {
 		//Grants the user access to all the template editing files
 		IMPLICATIONS.put(TEMPLATE_EDITOR, accessList(
-				SET_TEMPLATE,
-				VIEW_TEMPLATES,
-				CREATE_TEMPLATES,
-				EDIT_TEMPLATES,
-				DELETE_TEMPLATES
-			));
+			SET_TEMPLATE,
+			VIEW_TEMPLATES,
+			CREATE_TEMPLATES,
+			EDIT_TEMPLATES,
+			DELETE_TEMPLATES
+		));
 		
 		//Grants the user access to all of paper/project functionality
 		IMPLICATIONS.put(OWNER, accessList(
-				PARTICIPANT,
-				LISTED,
-				VIEW_VISIBLE_IMAGES,
-				VIEW_ALL_IMAGES,
-				NO_WATERMARK,
-				SET_DATA_MODE,
-				EDIT_DATA_METADATA,
-				EDIT_ANALYSIS_METADATA,
-				MANAGE_PERMISSIONS,
-				SET_TEMPLATE,
-				VIEW_TEMPLATES,
-				EDIT_TEMPLATES,
-				DELETE_TEMPLATES,
-				FILE_UPLOAD,
-				FILE_DELETE
-			));
+			PARTICIPANT,
+			LISTED,
+			VIEW_VISIBLE_IMAGES,
+			VIEW_ALL_IMAGES,
+			NO_WATERMARK,
+			SET_DATA_MODE,
+			EDIT_DATA_METADATA,
+			EDIT_ANALYSIS_METADATA,
+			MANAGE_PERMISSIONS,
+			SET_TEMPLATE,
+			VIEW_TEMPLATES,
+			EDIT_TEMPLATES,
+			DELETE_TEMPLATES,
+			FILE_UPLOAD,
+			FILE_DELETE
+		));
+		
+		IMPLICATIONS.put(MANAGER, accessList(
+			PARTICIPANT,
+			LISTED,
+			VIEW_VISIBLE_IMAGES,
+			EDIT_ANALYSIS_METADATA,
+			MANAGE_PERMISSIONS,
+			SET_VISIBLE,
+			SET_DATA_MODE,
+			NO_WATERMARK,
+			DELETE_TEMPLATES,
+			EDIT_TEMPLATES,
+			CREATE_TEMPLATES
+		));
 		
 //		for (AccessType type : AccessType.values()) {
 //			if (Arrays.asList(type.types).contains("paper") || Arrays.asList(type.types).contains("project")) {

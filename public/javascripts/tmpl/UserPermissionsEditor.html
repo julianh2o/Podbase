@@ -12,7 +12,8 @@
 <hr/>
 
 <table class="user-permission-table">
-	<% _.each(permissions,function(items,key) { %>
+	<% _.each(['true','false'],function(key) { %>
+		<% items = permissions[key]; %>
 		<tr class="table-header"><td colspan=2><%= key=='true'?"Roles":"Permissions" %></td></tr>
 		<% _.each(items,function(perm) { %>
 			<% if (perm.name != "PARTICIPANT") { %>

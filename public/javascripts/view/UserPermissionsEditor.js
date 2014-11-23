@@ -45,8 +45,9 @@ define(
 				var access = Link.getUserAccess(this.modelObject.id,this.user.id).getData();
 				var permissionMap = Util.permissionsAsMap(access);
 				
+				var permissionOrdering = Link.getAccessTypes().getData();
 				var possiblePermissions = Link.getAccessTypes().getData("byType")[this.type]
-				possiblePermissions = _.groupBy(possiblePermissions,"aggregate");
+				possiblePermissions = _.groupBy(permissionOrdering,"aggregate");
 				
 				this.model = {user:this.user, userPermissionMap:permissionMap, permissions:possiblePermissions, showRemove:this.showRemove};
 				
