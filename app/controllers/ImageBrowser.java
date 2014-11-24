@@ -374,6 +374,12 @@ public class ImageBrowser extends ParentController {
 	public static void deleteImageAttribute(ImageAttribute attribute) {
 		if (!permitMetadataEdit(attribute.project, attribute.data)) forbidden();
 		
+		if (attribute.linkedAttribute != null) {
+			attribute.linkedAttribute.linkedAttribute = null;
+			attribute.linkedAttribute.save();
+			attribute.linkedAttribute = null;
+			attribute.save();
+		}
 		attribute.delete();
 		
 		ImportExportService.tryExportData(attribute.image);
