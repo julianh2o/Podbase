@@ -4,13 +4,18 @@
 // See the LICENSE file for details.
 package models;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
 import play.modules.search.Field;
@@ -48,6 +53,10 @@ public class ImageAttribute extends TimestampModel {
 	@OneToOne
 	@GsonTransient
 	public ImageAttribute linkedAttribute;
+	
+	@OneToMany(mappedBy="attribute", cascade=CascadeType.ALL)
+	@OrderBy("created")
+	public List<AttributeHistoryItem> history;
 
 	@Transient
 	public boolean templated = false;
@@ -67,5 +76,16 @@ public class ImageAttribute extends TimestampModel {
 		this.ordering = ordering;
 		this.templated = templated;
 		this.hidden = hidden;
+		
+		this.history = new LinkedList<AttributeHistoryItem>();
+	}
+	
+	public void updateAttribute(User user, String newValue, String comment) {
+		if (history.size() != 0 || !this.value.isEmpty()) {
+			AttributeHistoryItem hist = new AttributeHistoryItem(this,user,this.value,newValue,comment).save();
+			this.history.add(hist);
+		}
+		this.value = newValue;
+		this.save();
 	}
 }

@@ -238,6 +238,7 @@ public class ImageBrowser extends ParentController {
 		Map<String,String> importedAttributes = ImportExportService.deserialzeAttributes(data);
 		
 		//remove all existing attributes
+		//TODO rewrite this so that history is persisted
 		List<ImageAttribute> existingAttributes = DatabaseImageService.attributesForImageAndMode(project,dbi,dataMode);
 		for (ImageAttribute attr : existingAttributes) {
 			if (attr.linkedAttribute != null) {
@@ -297,8 +298,7 @@ public class ImageBrowser extends ParentController {
 	    renderJSON( DatabaseImageService.compileAttributesForImage(project, image, template, dataMode, true) );
 	}
 	
-	//TODO Access control is done in the method.. maybe this could be enhanced?
-	public static void updateImageAttribute(ImageAttribute attribute, String value, boolean dataMode) {
+	public static void updateImageAttribute(ImageAttribute attribute, String value, String comment, boolean dataMode) {
 		if (!permitMetadataEdit(attribute.project, dataMode)) forbidden();
 		
 		if (attribute.value == value) return;
@@ -307,19 +307,24 @@ public class ImageBrowser extends ParentController {
 			ImageAttribute newAttribute = attribute.image.addAttribute(attribute.project,attribute.attribute,value,dataMode);
 			
 			newAttribute.linkedAttribute = attribute;
+			newAttribute.value = value;
 			newAttribute.save();
 			
 			attribute.linkedAttribute = newAttribute;
 			attribute.save();
 			
 			attribute = newAttribute;
+		} else {
+			attribute.updateAttribute(Security.getUser(), value, comment);
 		}
-		attribute.value = value;
-		attribute.save();
 		
 		ImportExportService.tryExportData(attribute.image);
 		
 		renderJSON(attribute);
+	}
+	
+	public static void fetchAttributeHistory(ImageAttribute attribute) {
+		renderJSON(attribute.history);
 	}
 	
 	public static void attributeSearchReplace(Path path, String search, String replace, boolean recursive, boolean confirmReplace) {
@@ -346,8 +351,7 @@ public class ImageBrowser extends ParentController {
 			entry.put("beforePreview", beforePreview);
 			entry.put("afterPreview", afterPreview);
 			if (confirmReplace) {
-				attr.value = result;
-				attr.save();
+				attr.updateAttribute(Security.getUser(), result, "[Updated by search/replace]");
 			}
 			entry.put("after", result);
 			out.add(entry);

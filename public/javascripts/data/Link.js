@@ -4,29 +4,16 @@
 define(['data/Loader'],function(Loader) {
 	var This = function() {
 		// ############################################
-		// PaperController.java
+		// Application.java
 		// ############################################
-		this.render = new Loader("@{PaperController.render}?imagesetid={imagesetid}&size={size}");
-		this.getPapers = new Loader("@{PaperController.getPapers}");
-		this.getPaper = new Loader("@{PaperController.getPaper}?paper.id={paperId}");
-		this.createPaper = new Loader("@{PaperController.createPaper}?name={name}");
-		this.deletePaper = new Loader("@{PaperController.deletePaper}?paper.id={paperId}");
-		this.getImageSet = new Loader("@{PaperController.getImageSet}?imageset.id={imagesetId}");
-		this.addImageToSet = new Loader("@{PaperController.addImageToSet}?imageset.id={imagesetId}&path={path}");
-		this.removeImageFromSet = new Loader("@{PaperController.removeImageFromSet}?imageset.id={imagesetId}&path={path}");
-		
-		
-		// ############################################
-		// Security.java
-		// ############################################
-		this.checkPermission = new Loader("@{Security.checkPermission}");
-		
-		
-		// ############################################
-		// ParentController.java
-		// ############################################
-		this.debug = new Loader("@{ParentController.debug}?objects={objects}");
-		this.renderImage = new Loader("@{ParentController.renderImage}?image={image}");
+		this.index = new Loader("@{Application.index}");
+		this.heartbeat = new Loader("@{Application.heartbeat}");
+		this.entry = new Loader("@{Application.entry}?projectId={projectId}");
+		this.paper = new Loader("@{Application.paper}?paperId={paperId}");
+		this.loadJavascript = new Loader("@{Application.loadJavascript}?path={path}");
+		this.getCurrentUser = new Loader("@{Application.getCurrentUser}");
+		this.findOrphanedData = new Loader("@{Application.findOrphanedData}");
+		this.fixOrphanedData = new Loader("@{Application.fixOrphanedData}");
 		
 		
 		// ############################################
@@ -42,7 +29,9 @@ define(['data/Loader'],function(Loader) {
 		this.downloadAttributes = new Loader("@{ImageBrowser.downloadAttributes}?project.id={projectId}&path={path}&dataMode={dataMode}");
 		this.importAttributes = new Loader("@{ImageBrowser.importAttributes}?project.id={projectId}&path={path}&file={file}&dataMode={dataMode}");
 		this.fetchInfo = new Loader("@{ImageBrowser.fetchInfo}?project.id={projectId}&path={path}&dataMode={dataMode}");
-		this.updateImageAttribute = new Loader("@{ImageBrowser.updateImageAttribute}?attribute.id={attributeId}&value={value}&dataMode={dataMode}");
+		this.updateImageAttribute = new Loader("@{ImageBrowser.updateImageAttribute}?attribute.id={attributeId}&value={value}&comment={comment}&dataMode={dataMode}");
+		this.fetchAttributeHistory = new Loader("@{ImageBrowser.fetchAttributeHistory}?attribute.id={attributeId}");
+		this.attributeSearchReplace = new Loader("@{ImageBrowser.attributeSearchReplace}?path={path}&search={search}&replace={replace}&recursive={recursive}&confirmReplace={confirmReplace}");
 		this.deleteImageAttribute = new Loader("@{ImageBrowser.deleteImageAttribute}?attribute.id={attributeId}");
 		this.createAttribute = new Loader("@{ImageBrowser.createAttribute}?project.id={projectId}&path={path}&attribute={attribute}&value={value}&dataMode={dataMode}");
 		this.pasteAttributes = new Loader("@{ImageBrowser.pasteAttributes}?project.id={projectId}&path={path}&jsonAttributes={jsonAttributes}&overwrite={overwrite}&dataMode={dataMode}");
@@ -55,9 +44,30 @@ define(['data/Loader'],function(Loader) {
 		
 		
 		// ############################################
-		// PodbaseSecure.java
+		// ImageViewer.java
 		// ############################################
-		this.authenticate = new Loader("@{PodbaseSecure.authenticate}?String={String}&password={password}&hash={hash}&remember={remember}");
+		this.index = new Loader("@{ImageViewer.index}?path={path}");
+		this.script = new Loader("@{ImageViewer.script}");
+		
+		
+		// ############################################
+		// PaperController.java
+		// ############################################
+		this.render = new Loader("@{PaperController.render}?imagesetid={imagesetid}&size={size}");
+		this.getPapers = new Loader("@{PaperController.getPapers}");
+		this.getPaper = new Loader("@{PaperController.getPaper}?paper.id={paperId}");
+		this.createPaper = new Loader("@{PaperController.createPaper}?name={name}");
+		this.deletePaper = new Loader("@{PaperController.deletePaper}?paper.id={paperId}");
+		this.getImageSet = new Loader("@{PaperController.getImageSet}?imageset.id={imagesetId}");
+		this.addImageToSet = new Loader("@{PaperController.addImageToSet}?imageset.id={imagesetId}&path={path}");
+		this.removeImageFromSet = new Loader("@{PaperController.removeImageFromSet}?imageset.id={imagesetId}&path={path}");
+		
+		
+		// ############################################
+		// ParentController.java
+		// ############################################
+		this.debug = new Loader("@{ParentController.debug}?objects={objects}");
+		this.renderImage = new Loader("@{ParentController.renderImage}?image={image}");
 		
 		
 		// ############################################
@@ -76,15 +86,9 @@ define(['data/Loader'],function(Loader) {
 		
 		
 		// ############################################
-		// UserController.java
+		// PodbaseSecure.java
 		// ############################################
-		this.getAllUsers = new Loader("@{UserController.getAllUsers}");
-		this.changePassword = new Loader("@{UserController.changePassword}?oldpassword={oldpassword}&newpassword={newpassword}");
-		this.createUser = new Loader("@{UserController.createUser}?email={email}");
-		this.resendActivation = new Loader("@{UserController.resendActivation}?email={email}");
-		this.doActivate = new Loader("@{UserController.doActivate}?activationCode={activationCode}");
-		this.completeActivation = new Loader("@{UserController.completeActivation}?user.id={userId}&activationCode={activationCode}&password={password}&confirm={confirm}");
-		this.mimicUser = new Loader("@{UserController.mimicUser}?user.id={userId}");
+		this.authenticate = new Loader("@{PodbaseSecure.authenticate}?String={String}&password={password}&hash={hash}&remember={remember}");
 		
 		
 		// ############################################
@@ -98,28 +102,15 @@ define(['data/Loader'],function(Loader) {
 		
 		
 		// ############################################
-		// ImageViewer.java
-		// ############################################
-		this.index = new Loader("@{ImageViewer.index}?path={path}");
-		this.script = new Loader("@{ImageViewer.script}");
-		
-		
-		// ############################################
-		// Application.java
-		// ############################################
-		this.index = new Loader("@{Application.index}");
-		this.entry = new Loader("@{Application.entry}?projectId={projectId}");
-		this.paper = new Loader("@{Application.paper}?paperId={paperId}");
-		this.loadJavascript = new Loader("@{Application.loadJavascript}?path={path}");
-		this.getCurrentUser = new Loader("@{Application.getCurrentUser}");
-		this.findOrphanedData = new Loader("@{Application.findOrphanedData}");
-		this.fixOrphanedData = new Loader("@{Application.fixOrphanedData}");
-		
-		
-		// ############################################
 		// SearchController.java
 		// ############################################
 		this.doSearch = new Loader("@{SearchController.doSearch}?project.id={projectId}&query={query}");
+		
+		
+		// ############################################
+		// Security.java
+		// ############################################
+		this.checkPermission = new Loader("@{Security.checkPermission}");
 		
 		
 		// ############################################
@@ -141,6 +132,18 @@ define(['data/Loader'],function(Loader) {
 		this.removeAttribute = new Loader("@{TemplateController.removeAttribute}?attribute.id={attributeId}");
 		this.updateAttributeOrder = new Loader("@{TemplateController.updateAttributeOrder}?template.id={templateId}&ids={ids}");
 		this.downloadTemplates = new Loader("@{TemplateController.downloadTemplates}");
+		
+		
+		// ############################################
+		// UserController.java
+		// ############################################
+		this.getAllUsers = new Loader("@{UserController.getAllUsers}");
+		this.changePassword = new Loader("@{UserController.changePassword}?oldpassword={oldpassword}&newpassword={newpassword}");
+		this.createUser = new Loader("@{UserController.createUser}?email={email}");
+		this.resendActivation = new Loader("@{UserController.resendActivation}?email={email}");
+		this.doActivate = new Loader("@{UserController.doActivate}?activationCode={activationCode}");
+		this.completeActivation = new Loader("@{UserController.completeActivation}?user.id={userId}&activationCode={activationCode}&password={password}&confirm={confirm}");
+		this.mimicUser = new Loader("@{UserController.mimicUser}?user.id={userId}");
 		
 		
 		

@@ -33,6 +33,9 @@ public enum AccessType {
 	SET_VISIBLE("The user can toggle visibility for images",new String[] {"paper","project"}),
 	EDIT_DATA_METADATA("The user can edit data-mode metadata",new String[] {"paper","project"}),
 	EDIT_ANALYSIS_METADATA("The user can edit analysis-mode metadata",new String[] {"paper","project"}),
+	
+	VIEW_DATA_HISTORY("This user can view the data-mode history of an image attribute", new String[] {"project"}),
+	VIEW_ANALYSIS_HISTORY("This user can view the analysis-mode history of an image attribute", new String[] {"project"}),
 
 	MANAGE_PERMISSIONS("The user is allowed to manage permissions for this entity",new String[] {"paper","project","user"}),
 	
@@ -92,6 +95,8 @@ public enum AccessType {
 			SET_DATA_MODE,
 			EDIT_DATA_METADATA,
 			EDIT_ANALYSIS_METADATA,
+			VIEW_DATA_HISTORY,
+			VIEW_ANALYSIS_HISTORY,
 			MANAGE_PERMISSIONS,
 			SET_TEMPLATE,
 			VIEW_TEMPLATES,

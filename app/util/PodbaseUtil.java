@@ -49,6 +49,7 @@ public class PodbaseUtil {
 			obj.addProperty("id", attr.id);
 			obj.add("created", context.serialize(attr.created));
 			obj.add("modified", context.serialize(attr.modified));
+			obj.addProperty("hasHistory", attr.history.size());
 			obj.addProperty("attribute", attr.attribute);
 			obj.addProperty("value", attr.value);
 			obj.addProperty("data", attr.data);

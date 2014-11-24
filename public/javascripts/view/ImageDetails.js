@@ -23,6 +23,9 @@ define(
 				
 				this.setFile(this.options.file);
 				
+				this.$attributeHistoryDialog = $(".attribute-history-dialog",this.el);
+				this.$attributeHistoryDialog.modal("hide");
+				
 				$("html").on("ReloadImageDetails",$.proxy(this.reload,this));
 			},
 			
@@ -38,7 +41,7 @@ define(
 				}
 				
 				this.link = Link.fetchInfo({projectId:this.project.id,path:this.file.path,dataMode:this.dataMode});
-				this.link.invalidate().asap( $.proxy(this.imageDetailsLoaded,this));
+				this.link.invalidate().loadOnce( $.proxy(this.imageDetailsLoaded,this));
 			},
 			
 			setFile : function(file) {
@@ -206,9 +209,25 @@ define(
 				});
 				
 				this.$body.append(imageAttribute.el);
+				$(".historyIndicator",imageAttribute.el).on("click",$.proxy(this.showAttributeHistory,this));
 				
 				$(imageAttribute.el).click($.proxy(this.selectAttribute,this));
 				
+			},
+			
+			showAttributeHistory : function(e) {
+				var $attributeHistory = this.$attributeHistoryDialog.find(".attribute-history");
+				$attributeHistory.empty();
+				
+				var attributeId = $(e.target).parent("a").data("attribute");
+				
+				Link.fetchAttributeHistory(attributeId).loadOnce(function(link) {
+					_.each(link.getData(),function(item) {
+						$attributeHistory.append("["+moment(item.created).format('MM/DD/YYYY h:mm:ss')+"] updated from <b>"+item.previousValue+"</b> to <b>"+item.newValue+"</b> by <b>"+item.user.email+"</b><br/>");
+					});
+				});
+				this.$attributeHistoryDialog.modal("show");
+				return false;
 			},
 			
 			selectAttribute : function(e) {

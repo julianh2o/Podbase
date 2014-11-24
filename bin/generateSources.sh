@@ -9,7 +9,7 @@ function main() {
 }
 
 function entab() {
-	sed 's/^/\t/g'
+	sed 's/^/	/g'
 }
 
 function fillTemplate() {
