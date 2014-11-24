@@ -35,15 +35,15 @@ public enum AccessType {
 	EDIT_ANALYSIS_METADATA("The user can edit analysis-mode metadata",new String[] {"paper","project"}),
 
 	MANAGE_PERMISSIONS("The user is allowed to manage permissions for this entity",new String[] {"paper","project","user"}),
+	
+	FILE_UPLOAD("The user can upload files",new String[] {"project"}),
+	FILE_DELETE("The user can delete files",new String[] {"project"}),
 
 	SET_TEMPLATE("The user can set the template used by a directory",new String[] {"project"}),
 	VIEW_TEMPLATES("The user can view templates",new String[] {"project"}),
 	CREATE_TEMPLATES("The user can edit templates",new String[] {"project"}),
 	EDIT_TEMPLATES("The user can edit templates",new String[] {"project"}),
 	DELETE_TEMPLATES("The user can delete templates",new String[] {"project"}),
-
-	FILE_UPLOAD("The user can upload files",new String[] {"project"}),
-	FILE_DELETE("The user can delete files",new String[] {"project"}),
 
 	//Aggregate Permissions
 	OWNER("The user is considered an owner of this entity and can perform any actions",new String[] {"paper","project"},true),
@@ -76,7 +76,6 @@ public enum AccessType {
 	static {
 		//Grants the user access to all the template editing files
 		IMPLICATIONS.put(TEMPLATE_EDITOR, accessList(
-			SET_TEMPLATE,
 			VIEW_TEMPLATES,
 			CREATE_TEMPLATES,
 			EDIT_TEMPLATES,
@@ -97,23 +96,26 @@ public enum AccessType {
 			SET_TEMPLATE,
 			VIEW_TEMPLATES,
 			EDIT_TEMPLATES,
+			CREATE_TEMPLATES,
 			DELETE_TEMPLATES,
 			FILE_UPLOAD,
-			FILE_DELETE
+			FILE_DELETE,
+			SET_VISIBLE
 		));
 		
 		IMPLICATIONS.put(MANAGER, accessList(
 			PARTICIPANT,
 			LISTED,
 			VIEW_VISIBLE_IMAGES,
+			VIEW_ALL_IMAGES,
+			EDIT_DATA_METADATA,
 			EDIT_ANALYSIS_METADATA,
-			MANAGE_PERMISSIONS,
 			SET_VISIBLE,
+			SET_TEMPLATE,
 			SET_DATA_MODE,
 			NO_WATERMARK,
-			DELETE_TEMPLATES,
-			EDIT_TEMPLATES,
-			CREATE_TEMPLATES
+			FILE_UPLOAD,
+			FILE_DELETE
 		));
 		
 //		for (AccessType type : AccessType.values()) {
