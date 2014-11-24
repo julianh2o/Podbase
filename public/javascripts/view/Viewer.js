@@ -95,6 +95,7 @@ define(
 						brightness: this.state.brightness,
 						contrast: this.state.contrast
 				}
+				if (this.state.slice != 1) map["slice"] = this.state.slice;
 				
 				url += "?" + $.param(map);;
 				
@@ -258,9 +259,10 @@ define(
 			},
 			
 			keyPress : function(e) {
-				if (e.keyCode == 91 | e.keyCode == 93) {
+				var key = e.keyCode || e.charCode;
+				if (key == 91 || key == 93) {
 					var previous = this.state.slice;
-					this.state.slice = this.state.slice + (e.keyCode == 91 ? -1 : 1)
+					this.state.slice = this.state.slice + (key == 91 ? -1 : 1)
 					this.state.slice = Math.max(1,Math.min(this.imageInfo.slices,this.state.slice));
 					if (previous == this.state.slice) return;
 					
