@@ -15,7 +15,8 @@ define(
 				this.$resultsPanel = $(".results-panel",this.el).hide();
 				
 				this.$searchField.on("focus",$.proxy(this.showResults,this));
-				$(".search-replace-link",this.el).click($.proxy(this.showSearchReplace,this));
+				this.$searchReplaceLink = $(".search-replace-link",this.el);
+				this.$searchReplaceLink.click($.proxy(this.showSearchReplace,this));
 				
 				this.$searchReplaceDialog = $('.search-replace-dialog',this.el).modal({show:false});
 				this.$searchForReplaceField = this.$searchReplaceDialog.find(".search-field");
@@ -36,6 +37,13 @@ define(
 				this.results = [];
 				this.timer = null;
 				this.requestCount = 0;
+				
+				var self = this;
+				this.access = Link.getAccess({modelId:this.project.id}).asap(function(link) {
+					var dataMetadata = Util.permits(link.getData(),"EDIT_DATA_METADATA");
+					var analysisMetadata = Util.permits(link.getData(),"EDIT_ANALYSIS_METADATA");
+					if (!(dataMetadata && analysisMetadata)) self.$searchReplaceLink.hide();
+				});
 			},
 			
 			showSearchReplace : function() {

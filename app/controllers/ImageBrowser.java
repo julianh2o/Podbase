@@ -324,7 +324,7 @@ public class ImageBrowser extends ParentController {
 	
 	public static void attributeSearchReplace(Path path, String search, String replace, boolean recursive, boolean confirmReplace) {
 		Project project = PathService.projectForPath(path);
-		if (!permitMetadataEdit(project, true) || !permitMetadataEdit(project,true)) forbidden();
+		if (!permitMetadataEdit(project, false) || !permitMetadataEdit(project,true)) forbidden();
 		
 		String rel = PathService.getRelativeString(path);
 		String imageQuery = String.format("SELECT i FROM DatabaseImage i WHERE path LIKE '%s' AND path NOT LIKE '%s' AND hash IS NOT NULL",rel+"/%",rel+"/%/%");
