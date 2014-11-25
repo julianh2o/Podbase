@@ -15,7 +15,7 @@ define(
 				
 				this.render();
 				
-				if (!(this.access.PROJECT_FILE_UPLOAD || this.access.PROJECT_FILE_DELETE)) {
+				if (!(this.access.FILE_UPLOAD || this.access.FILE_DELETE)) {
 					$(".upload-files",this.el).hide();
 				}
 				
