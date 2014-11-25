@@ -5,7 +5,7 @@
 		</td>
 		
 		<td>
-			<%= user.email %> (<a href="#" class="mimic-user">mimic</a>)
+			<%= user.email %> 
 		</td>
 	</tr>
 	<tr>
@@ -31,6 +31,15 @@
 			</td>
 		</tr>
 	<% } %>
+	<tr>
+		<td>
+			Actions
+		</td>
+		<td>
+			<a href="#" class="mimic-user">Mimic User</a> <br/>
+			<a href="#" class="delete-user" data-userid="<%= user.id %>" data-confirm="Are you sure you want to delete this user? (<%= user.email %>)">Delete User</a>
+		</td>
+	</tr>
 </table>
 
 <div class="permissions"></div>

@@ -21,6 +21,8 @@ public enum AccessType {
 	DELETE_PAPER("Allows user to delete papers",new String[] {"user"}),
 	
 	CREATE_USERS("Allows user to create users",new String[] {"user"}),
+	DELETE_USERS("Allows user to delete users",new String[] {"user"}),
+	MIMIC_USERS("Allows user to mimic users",new String[] {"user"}),
 
 	//Paper and Project permissions
 	PARTICIPANT("User participates in this object",new String[] {"paper","project"}),

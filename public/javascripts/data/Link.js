@@ -139,6 +139,7 @@ define(['data/Loader'],function(Loader) {
 		this.getAllUsers = new Loader("@{UserController.getAllUsers}");
 		this.changePassword = new Loader("@{UserController.changePassword}?oldpassword={oldpassword}&newpassword={newpassword}");
 		this.createUser = new Loader("@{UserController.createUser}?email={email}");
+		this.deleteUser = new Loader("@{UserController.deleteUser}?user.id={userId}");
 		this.resendActivation = new Loader("@{UserController.resendActivation}?email={email}");
 		this.doActivate = new Loader("@{UserController.doActivate}?activationCode={activationCode}");
 		this.completeActivation = new Loader("@{UserController.completeActivation}?user.id={userId}&activationCode={activationCode}&password={password}&confirm={confirm}");

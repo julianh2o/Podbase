@@ -13,11 +13,10 @@ import org.apache.commons.lang.RandomStringUtils;
 
 import access.Access;
 import access.AccessType;
-
 import play.Play;
 import play.mvc.Util;
 import play.mvc.With;
-
+import services.PermissionService;
 import models.Activation;
 import models.Directory;
 import models.Project;
@@ -47,20 +46,25 @@ public class UserController extends ParentController {
 		jsonOk();
 	}
 	
+	@Access(AccessType.CREATE_USERS)
 	public static void createUser(String email) {
 		if (email.contains("\0")) forbidden();
 		
 		User user = new User(email,null);
 		user.save();
-		System.out.println("user: "+user);
 		
 		Activation.generateActivationCode(user, 30);
-		System.out.println("user: "+user);
-		System.out.println("securityuser: "+Security.getUser());
 		Email.newAccount(Security.getUser(),user);
-		System.out.println("user: "+user);
 		
 		renderJSON(user);
+	}
+	
+	@Access(AccessType.DELETE_USERS)
+	public static void deleteUser(User user) {
+		if (user.special) forbidden("You cannot delete special users!");
+		
+		user.delete();
+		jsonOk();
 	}
 	
 	public static void resendActivation(String email) {
@@ -118,7 +122,7 @@ public class UserController extends ParentController {
 	}
 	
 	public static void mimicUser(User user) {
-		if (Security.getUser().isRoot() || Play.id.contains("dev")) {
+		if (PermissionService.hasInheritedAccess(Security.getUser(), null, AccessType.MIMIC_USERS) || Play.id.contains("dev")) {
 			session.put("username", user.email);
 			ok();
 		} else {

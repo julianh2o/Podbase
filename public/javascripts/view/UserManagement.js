@@ -12,6 +12,18 @@ define(
 			initialize: function(opt) {
 				this.access = opt.access;
 				Link.getAllUsers().asap($.proxy(this.refresh,this));
+				
+				var self = this;
+				$(this.el).on("click","a.delete-user",function(e) {
+					var yes = confirm($(this).data("confirm"));
+					var userId = $(this).data("userid");
+					if (yes) {
+						Link.deleteUser(userId).post().always(function() {
+							Link.getAllUsers().pull();
+						});
+					}
+					e.preventDefault();
+				});
 			},
 			
 			refresh : function() {
@@ -20,7 +32,7 @@ define(
 				if (!Util.permits(this.access,"CREATE_USERS")) {
 					$(".add",this.el).hide();
 				}
-				
+			
 				this.users = Link.getAllUsers().getData();
 				this.userList = Util.createView( $(".userlist",this.el), UserList, {users:this.users, decorator: this.userDecorator});
 				this.userPanel = Util.createView( $(".management",this.el), UserManagementPanel);
@@ -32,7 +44,6 @@ define(
 			
 			userDecorator : function(event,user,$el) {
 				if (user.lastActive) {
-					//console.log(serverTime,moment(user.lastActive).unix(),serverTime-moment(user.lastActive).unix());
 					var timeSince = serverTime-moment(user.lastActive).unix();
 					var text = "";
 					if (timeSince < 60*2) text = "online";
@@ -46,6 +57,8 @@ define(
 			
 			userSelected : function(e,userId,user) {
 				this.userPanel.setUser(user);
+				$(".mimic-user",this.el).toggle(Util.permits(this.access,"MIMIC_USERS") !== undefined);
+				$(".delete-user",this.el).toggle(Util.permits(this.access,"DELETE_USERS") !== undefined);
 			},
 			
 			createUserClicked : function(e) {
@@ -59,6 +72,7 @@ define(
 					alert("The user has been sent an email with instructions on how to activate their account.");
 					Link.getAllUsers().pull();
 				});
+				e.preventDefault();
 			}
 		});
 

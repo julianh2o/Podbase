@@ -13,7 +13,7 @@ define(
 				this.project = Util.createView( $(".projects",this.el), ProjectList);
 				this.paper = Util.createView( $(".papers",this.el), PaperList);
 				
-				Link.getCurrentUserPermissions().asap($.proxy(this.refresh,this));
+				Link.getCurrentUserPermissions().loadOnce($.proxy(this.refresh,this));
 			},
 			
 			refresh : function() {
