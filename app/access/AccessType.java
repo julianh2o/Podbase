@@ -12,6 +12,10 @@ import play.data.validation.Required;
 import play.db.jpa.*;
 import play.libs.Codec;
 
+/////////////// IMPORTANT
+// DO NOT ADD ENUMS TO THE BEGINNING/MIDDLE OF THIS LIST. ONLY ADD TO THE END.
+// Doing so will mess up the indexing in the database
+/////////////// IMPORTANT
 public enum AccessType {
 	//General permissions
 	CREATE_PROJECT("Allows user to create new projects",new String[] {"user"}),
@@ -34,14 +38,8 @@ public enum AccessType {
 	EDIT_DATA_METADATA("The user can edit data-mode metadata",new String[] {"paper","project"}),
 	EDIT_ANALYSIS_METADATA("The user can edit analysis-mode metadata",new String[] {"paper","project"}),
 	
-	VIEW_DATA_HISTORY("This user can view the data-mode history of an image attribute", new String[] {"project"}),
-	VIEW_ANALYSIS_HISTORY("This user can view the analysis-mode history of an image attribute", new String[] {"project"}),
-
 	MANAGE_PERMISSIONS("The user is allowed to manage permissions for this entity",new String[] {"paper","project","user"}),
 	
-	FILE_UPLOAD("The user can upload files",new String[] {"project"}),
-	FILE_DELETE("The user can delete files",new String[] {"project"}),
-
 	SET_TEMPLATE("The user can set the template used by a directory",new String[] {"project"}),
 	VIEW_TEMPLATES("The user can view templates",new String[] {"project"}),
 	CREATE_TEMPLATES("The user can edit templates",new String[] {"project"}),
@@ -52,6 +50,12 @@ public enum AccessType {
 	OWNER("The user is considered an owner of this entity and can perform any actions",new String[] {"paper","project"},true),
 	TEMPLATE_EDITOR("The user can manage templates",new String[] {"project"},true),
 	MANAGER("The user can fully manage the project",new String[] {"project"},true),
+	
+	FILE_UPLOAD("The user can upload files",new String[] {"project"}),
+	FILE_DELETE("The user can delete files",new String[] {"project"}),
+	
+	VIEW_DATA_HISTORY("This user can view the data-mode history of an image attribute", new String[] {"project"}),
+	VIEW_ANALYSIS_HISTORY("This user can view the analysis-mode history of an image attribute", new String[] {"project"}),
 	
 	DELETE_USERS("Allows user to delete users",new String[] {"user"}),
 	MIMIC_USERS("Allows user to mimic users",new String[] {"user"});
