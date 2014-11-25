@@ -4,10 +4,12 @@
 	</div>
 	<div class="span9 values">
 		<% _.each(values,function(item,index) { %>
-			<div class="value <%= item.templated ? 'templated' : '' %> <%= item.data ? 'data' : 'analysis' %>" data-id="<%= item.id %>" data-index="<%= index %>">
-				<%= item.value %>
-				<span class="delete-attribute"><i class="icon-remove"/></span>
-				<a href="#" class="historyIndicator" <%= item.hasHistory > 0 ? "" : "style='display:none;'" %> data-attribute="<%= item.id %>"><i class="icon-edit" /></a>
+			<div class="valueContainer">
+				<div class="value <%= item.templated ? 'templated' : '' %> <%= item.data ? 'data' : 'analysis' %>" data-id="<%= item.id %>" data-index="<%= index %>">
+					<%= item.value %>
+					<span class="delete-attribute"><i class="icon-remove"/></span>
+				</div>
+				<a href="#" class="historyIndicator" <%= showHistory && item.hasHistory > 0 ? "" : "style='display:none;'" %> data-attribute="<%= item.id %>"><i class="icon-edit" /></a>
 			</div>
 		<% }); %>
 	</div>

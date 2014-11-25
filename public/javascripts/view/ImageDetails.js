@@ -25,6 +25,7 @@ define(
 				
 				this.$attributeHistoryDialog = $(".attribute-history-dialog",this.el);
 				this.$attributeHistoryDialog.modal("hide");
+				$("body").on("click",".historyIndicator",$.proxy(this.showAttributeHistory,this));
 				
 				$("html").on("ReloadImageDetails",$.proxy(this.reload,this));
 			},
@@ -202,6 +203,7 @@ define(
 					attr:attributeName,
 					attrs:attributes,
 					hidden:hidden,
+					access:this.access,
 					link:this.link,
 					projectId: this.project.id,
 					path: this.file.path,
@@ -209,7 +211,6 @@ define(
 				});
 				
 				this.$body.append(imageAttribute.el);
-				$(".historyIndicator",imageAttribute.el).on("click",$.proxy(this.showAttributeHistory,this));
 				
 				$(imageAttribute.el).click($.proxy(this.selectAttribute,this));
 				

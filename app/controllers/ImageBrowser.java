@@ -203,14 +203,14 @@ public class ImageBrowser extends ParentController {
 	}
 	
 	//TODO remove me
-	public static void checkHash(Path path) throws IOException {
-		DatabaseImage image = DatabaseImage.forPath(path);
-		StringBuffer sb = new StringBuffer();
-		sb.append("Stored hash: "+image.hash+"\n");
-		String imageHash = PathService.calculateImageHash(path);
-		sb.append("File hash:   "+imageHash);
-		renderText(sb.toString());
-	}
+//	public static void checkHash(Path path) throws IOException {
+//		DatabaseImage image = DatabaseImage.forPath(path);
+//		StringBuffer sb = new StringBuffer();
+//		sb.append("Stored hash: "+image.hash+"\n");
+//		String imageHash = PathService.calculateImageHash(path);
+//		sb.append("File hash:   "+imageHash);
+//		renderText(sb.toString());
+//	}
 	
 	@ModelAccess(AccessType.LISTED)
 	public static void downloadAttributes(Project project, Path path, boolean dataMode) {
@@ -324,6 +324,8 @@ public class ImageBrowser extends ParentController {
 	}
 	
 	public static void fetchAttributeHistory(ImageAttribute attribute) {
+		User currentUser = Security.getUser();
+		if (!PermissionService.hasInheritedAccess(currentUser, attribute.project, attribute.data ? AccessType.VIEW_DATA_HISTORY : AccessType.VIEW_ANALYSIS_HISTORY)) forbidden();
 		renderJSON(attribute.history);
 	}
 	

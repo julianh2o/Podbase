@@ -16,6 +16,8 @@ define(
 				this.dataMode = options.dataMode;
 				
 				this.attributes = options.attrs;
+				this.access = options.access;
+				this.canViewHistory = this.dataMode ? Util.permits(this.access,"VIEW_DATA_HISTORY") : Util.permits(this.access,"VIEW_ANALYSIS_HISTORY");
 				
 				this.link.asap($.proxy(this.refresh,this));
 			},
@@ -26,7 +28,7 @@ define(
 					return;
 				}
 				
-				this.model = {name:this.attributeName,hidden:this.hidden, values:this.attributes};
+				this.model = {name:this.attributeName,hidden:this.hidden, values:this.attributes, showHistory:this.canViewHistory};
 				this.render();
 				var self = this;
 				$(this.el).find("[data-index]").each(function() {
@@ -52,7 +54,7 @@ define(
 			},
 			
 			deleteComplete : function() {
-				this.link.pull();
+				$("html").trigger("ReloadImageDetails");
 			},
 			
 			triggerEditAttribute : function() {

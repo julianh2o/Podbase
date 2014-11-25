@@ -25,7 +25,6 @@ define(['data/Loader'],function(Loader) {
 		this.setMultipleVisible = new Loader("@{ImageBrowser.setMultipleVisible}?project.id={projectId}&ids={ids}&visible={visible}");
 		this.imageMetadata = new Loader("@{ImageBrowser.imageMetadata}?path={path}");
 		this.resolveFile = new Loader("@{ImageBrowser.resolveFile}?path={path}&mode={mode}&project.id={projectId}&scale={scale}&width={width}&height={height}&brightness={brightness}&contrast={contrast}&histogram={histogram}&slice={slice}");
-		this.checkHash = new Loader("@{ImageBrowser.checkHash}?path={path}");
 		this.downloadAttributes = new Loader("@{ImageBrowser.downloadAttributes}?project.id={projectId}&path={path}&dataMode={dataMode}");
 		this.importAttributes = new Loader("@{ImageBrowser.importAttributes}?project.id={projectId}&path={path}&file={file}&dataMode={dataMode}");
 		this.fetchInfo = new Loader("@{ImageBrowser.fetchInfo}?project.id={projectId}&path={path}&dataMode={dataMode}");
