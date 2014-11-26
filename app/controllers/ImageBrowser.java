@@ -96,11 +96,27 @@ public class ImageBrowser extends ParentController {
 	}
 	
 	@ModelAccess(AccessType.SET_VISIBLE)
-	public static void setMultipleVisible(Project project, String ids, boolean visible) {
-		for (String id : ids.split(",")) {
-			long longid = Long.parseLong(id);
-			DatabaseImage image = DatabaseImage.findById(longid);
-			ProjectVisibleImage.setVisible(project,image,visible);
+	public static void setMultipleVisible(Project project, String rootPath, String names, boolean visible) {
+		for (String name : names.split(",")) {
+			Path path = PathService.resolve(rootPath+"/"+name);
+			if (path.toFile().isDirectory()) {
+				recursiveSetVisibility(project, path, visible);
+			} else {
+				DatabaseImage image = DatabaseImage.forPath(path);
+				ProjectVisibleImage.setVisible(project,image,visible);
+			}
+		}
+	}
+	
+	@Util
+	public static void recursiveSetVisibility(Project project, Path path, boolean visible) {
+		for (Path p : PathService.listPaths(path)) {
+			if (p.toFile().isDirectory()) {
+				recursiveSetVisibility(project,p,visible);
+			} else {
+				DatabaseImage image = DatabaseImage.forPath(p);
+				ProjectVisibleImage.setVisible(project,image,visible);
+			}
 		}
 	}
 	

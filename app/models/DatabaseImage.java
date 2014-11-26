@@ -99,6 +99,8 @@ public class DatabaseImage extends TimestampModel {
 				return image;
 			}
 		} catch (IOException e) {
+			//e.printStackTrace();
+			//probably a directory..
 			return null;
 		}
 		

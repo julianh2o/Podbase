@@ -20,6 +20,7 @@ define(
 					this.file = null;
 					this.files = file;
 					this.fileCount = _.chain(this.files).pluck("isDir").filter(function(val) {return !val;}).value().length
+					this.dirCount = _.chain(this.files).pluck("isDir").filter(function(val) {return val;}).value().length
 				} else if (file && file.length) {
 					this.file = file[0];
 					this.files = file;
@@ -32,7 +33,7 @@ define(
 				}
 				
 				this.canEdit = (this.dataMode && Util.permits(this.access,"EDIT_DATA_METADATA")) || (!this.dataMode && Util.permits(this.access,"EDIT_ANALYSIS_METADATA"));
-				this.model = {file:this.file,files:this.files,fileCount:this.fileCount, access: this.access, Util: Util, dataMode: this.dataMode, canEdit: this.canEdit};
+				this.model = {file:this.file,files:this.files,fileCount:this.fileCount, dirCount:this.dirCount, access: this.access, Util: Util, dataMode: this.dataMode, canEdit: this.canEdit};
 				
 				this.render();
 				
@@ -48,8 +49,12 @@ define(
 				this.overs = 0;
 				$(".preview-image img",this.el).hover($.proxy(this.imageHoverIn,this),$.proxy(this.imageHoverOut,this));
 				
+				this.$setVisible = $(".set-visible",this.el);
+				this.$setInvisible = $(".set-invisible",this.el);
 				this.$toggleVisible = $(".toggle-visible",this.el);
 				this.$toggleVisible.click($.proxy(this.toggleVisible,this));
+				this.$setVisible.click($.proxy(this.toggleVisible,this,true));
+				this.$setInvisible.click($.proxy(this.toggleVisible,this,false));
 				
 				this.$copy = $(".copy",this.el);
 				this.$copy.click($.proxy(this.doCopy,this));
@@ -152,26 +157,30 @@ define(
 				}
 			},
 			
-			toggleVisible : function(e) {
-				if (this.file) {
-					Link.setVisible(this.file.project.id,this.file.image.id,!this.file.visible).post();
+			toggleVisible : function(visible,e) {
+				if (this.file && this.file.isDir) {
+					var dirName = Util.getFileName(this.file.path);
+					var parent = Util.getParentDirectory(this.file.path);
+					Link.setMultipleVisible(this.project.id,parent,dirName,visible).post();
+				} else if (this.file) {
+					var vis = visible == undefined ? !this.file.visible : visible;
+					Link.setVisible(this.file.project.id,this.file.image.id,vis).post();
 					this.browser.fileBrowser.reload();
 					
-					this.file.visible = !this.file.visible;
+					this.file.visible = vis;
 					this.updateVisibleText();
 				} else if (this.files) {
-					var ids = [];
-					var project = null;
+					var names = [];
+					var dir = null;
 					_.each(this.files,function(file) {
+						names.push(Util.getFileName(file.path));
+						dir = Util.getParentDirectory(file.path);
+						
 						if (file.isDir) return;
-						
-						if (file.project) project = file.project;
-						
-						file.visible = this.toggleStatus;
-						ids.push(file.image.id);
+						file.visible = visible;
 					});
 					
-					Link.setMultipleVisible(project.id,ids,this.toggleStatus).post();
+					Link.setMultipleVisible(this.project.id,dir,names,visible).post();
 					this.browser.fileBrowser.reload();
 					
 					this.updateVisibleText();

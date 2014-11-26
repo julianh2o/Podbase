@@ -22,7 +22,7 @@ define(['data/Loader'],function(Loader) {
 		this.index = new Loader("@{ImageBrowser.index}");
 		this.fetchProjectPath = new Loader("@{ImageBrowser.fetchProjectPath}?project.id={projectId}&path={path}");
 		this.setVisible = new Loader("@{ImageBrowser.setVisible}?project.id={projectId}&image.id={imageId}&visible={visible}");
-		this.setMultipleVisible = new Loader("@{ImageBrowser.setMultipleVisible}?project.id={projectId}&ids={ids}&visible={visible}");
+		this.setMultipleVisible = new Loader("@{ImageBrowser.setMultipleVisible}?project.id={projectId}&rootPath={rootPath}&names={names}&visible={visible}");
 		this.imageMetadata = new Loader("@{ImageBrowser.imageMetadata}?path={path}");
 		this.resolveFile = new Loader("@{ImageBrowser.resolveFile}?path={path}&mode={mode}&project.id={projectId}&scale={scale}&width={width}&height={height}&brightness={brightness}&contrast={contrast}&histogram={histogram}&slice={slice}");
 		this.downloadAttributes = new Loader("@{ImageBrowser.downloadAttributes}?project.id={projectId}&path={path}&dataMode={dataMode}");

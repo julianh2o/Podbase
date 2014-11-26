@@ -8,12 +8,21 @@
 			<div class="directory faint">
 				Directory Selected
 			</div>
+			<a href="#" class="set-visible">Set all visible (recursive)</a>
+			<br/>
+			<a href="#" class="set-invisible">Set all invisible (recursive)</a>
 		<% } else if (files.length > 1) { %>
 			<div class="directory faint">
 				Multiple files selected
 			</div>
-			<% if (fileCount) { %>
-				<a href="#" class="toggle-visible"></a>
+			<% if (dirCount) { %>
+				<a href="#" class="set-visible">Set all visible (recursive)</a>
+				<br/>
+				<a href="#" class="set-invisible">Set all invisible (recursive)</a>
+			<% } else { %>
+				<a href="#" class="set-visible">Set all visible</a>
+				<br/>
+				<a href="#" class="set-invisible">Set all invisible</a>
 			<% } %>
 		<% } else { %>
 			<%= file.display %>
@@ -44,8 +53,8 @@
 			<% } %>
 			
 			<% if (Util.permits(access,"SET_VISIBLE")) { %>
-			<a href="#" class="toggle-visible"></a>
-			<br/>
+				<a href="#" class="toggle-visible"></a>
+				<br/>
 			<% } %>
 			
 			<% if (canEdit) { %>
