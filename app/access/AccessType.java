@@ -58,9 +58,9 @@ public enum AccessType {
 	VIEW_ANALYSIS_HISTORY("This user can view the analysis-mode history of an image attribute", new String[] {"project"}),
 	
 	DELETE_USERS("Allows user to delete users",new String[] {"user"}),
-	MIMIC_USERS("Allows user to mimic users",new String[] {"user"}),
+	MIMIC_USERS("Allows user to mimic users",new String[] {"user"});
 	
-	VIEW_DATA_MODE("Allows the user to view data mode data",new String[] {"project"});
+	//VIEW_DATA_MODE("Allows the user to view data mode data",new String[] {"project"});
 	
 	public String description;
 	public String[] types;
