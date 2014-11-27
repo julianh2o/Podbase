@@ -11,7 +11,9 @@ define(
 				this.access = this.options.access;
 				this.dataMode = this.project.dataMode;
 				
-				this.dataMode = this.dataMode;
+				if (this.dataMode && !Util.permits(this.access,"SET_DATA_MODE")) {
+					this.dataMode = false;
+				}
 				
 				this.render();
 				

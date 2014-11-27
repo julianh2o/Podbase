@@ -133,6 +133,6 @@ public class PodbaseUtil {
 	}
 
 	public static String argumentHash(Object... arguments) {
-		return new String(Base64.encodeBase64(org.apache.commons.codec.digest.DigestUtils.md5(argumentString(arguments).getBytes())));
+		return new String(Base64.encodeBase64(org.apache.commons.codec.digest.DigestUtils.md5(argumentString(arguments).getBytes()))).replaceAll("/", "_");
 	}
 }

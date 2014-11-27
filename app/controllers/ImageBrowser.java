@@ -156,8 +156,9 @@ public class ImageBrowser extends ParentController {
 		
 		String argumentString = PodbaseUtil.argumentString(path,mode,scale,width,height,brightness,contrast,histogram,slice,noWatermark);
 		String argumentHash = PodbaseUtil.argumentHash(path,mode,scale,width,height,brightness,contrast,histogram,slice,noWatermark);
-		Path cachedImagePath = PathService.calculateHashFolderPath(Paths.get("./tmp/cache/"),argumentHash+".png");
-		Path cacheMetadataPath = PathService.calculateHashFolderPath(Paths.get("./tmp/cache/"),argumentHash+".txt");
+		Path cacheFolder = PathService.getApplicationPath().resolve("./tmp/cache");
+		Path cachedImagePath = PathService.calculateHashFolderPath(cacheFolder,argumentHash+".png");
+		Path cacheMetadataPath = PathService.calculateHashFolderPath(cacheFolder,argumentHash+".txt");
 		File cachedImageFile = cachedImagePath.toFile();
 		if (cacheMetadataPath.toFile().exists()) {
 			String cachedArguments = FileUtils.readFileToString(cacheMetadataPath.toFile());
