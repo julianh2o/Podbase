@@ -231,6 +231,7 @@ public class ImageBrowser extends ParentController {
 	
 	@ModelAccess(AccessType.LISTED)
 	public static void downloadAttributes(Project project, Path path, boolean dataMode) {
+		if (dataMode && !PermissionService.hasInheritedAccess(Security.getUser(), project,AccessType.SET_DATA_MODE)) dataMode = false; //TODO change this
 		if (!PermissionService.userCanAccessPath(Security.getUser(),path)) forbidden();
 		
 		DatabaseImage image = DatabaseImage.forPath(path);
@@ -247,6 +248,7 @@ public class ImageBrowser extends ParentController {
 	}
 	
 	public static void importAttributes(Project project, Path path, File file, boolean dataMode) throws IOException {
+		if (!PermissionService.hasInheritedAccess(Security.getUser(), project,dataMode ? AccessType.EDIT_DATA_METADATA : AccessType.EDIT_ANALYSIS_METADATA)) forbidden();
 		if (!PermissionService.userCanAccessPath(Security.getUser(),path)) forbidden();
 		
 		DatabaseImage dbi = DatabaseImage.forPath(path);
