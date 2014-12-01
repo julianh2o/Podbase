@@ -8,6 +8,7 @@ define(['data/Loader'],function(Loader) {
 		// ############################################
 		this.index = new Loader("@{Application.index}");
 		this.heartbeat = new Loader("@{Application.heartbeat}");
+		this.updateDocs = new Loader("@{Application.updateDocs}");
 		this.entry = new Loader("@{Application.entry}?projectId={projectId}");
 		this.paper = new Loader("@{Application.paper}?paperId={paperId}");
 		this.loadJavascript = new Loader("@{Application.loadJavascript}?path={path}");
@@ -23,6 +24,7 @@ define(['data/Loader'],function(Loader) {
 		this.fetchProjectPath = new Loader("@{ImageBrowser.fetchProjectPath}?project.id={projectId}&path={path}");
 		this.setVisible = new Loader("@{ImageBrowser.setVisible}?project.id={projectId}&image.id={imageId}&visible={visible}");
 		this.setMultipleVisible = new Loader("@{ImageBrowser.setMultipleVisible}?project.id={projectId}&rootPath={rootPath}&names={names}&visible={visible}");
+		this.recursiveSetVisibility = new Loader("@{ImageBrowser.recursiveSetVisibility}?project.id={projectId}&path={path}&visible={visible}");
 		this.imageMetadata = new Loader("@{ImageBrowser.imageMetadata}?path={path}");
 		this.resolveFile = new Loader("@{ImageBrowser.resolveFile}?path={path}&mode={mode}&project.id={projectId}&scale={scale}&width={width}&height={height}&brightness={brightness}&contrast={contrast}&histogram={histogram}&slice={slice}");
 		this.downloadAttributes = new Loader("@{ImageBrowser.downloadAttributes}?project.id={projectId}&path={path}&dataMode={dataMode}");

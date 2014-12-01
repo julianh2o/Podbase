@@ -12,6 +12,21 @@ define(
 				this.footer = Util.createView( $(".footer",this.el), Footer);
 				this.project = Util.createView( $(".projects",this.el), ProjectList);
 				this.paper = Util.createView( $(".papers",this.el), PaperList);
+				this.updateDocs = $(".update-docs",this.el).hide();
+				
+				Link.getCurrentUser().loadOnce($.proxy(function(link) {
+					var user = link.getData();
+					if (user.email == "root") this.updateDocs.show();
+					this.updateDocs.click(function(e) {
+						Link.updateDocs().post().done(function() {
+							alert("Successfully updated docs!");
+						})
+						.fail(function() {
+							alert("Failed to update docs");
+						});
+						e.preventDefault();
+					});
+				},this));
 				
 				Link.getCurrentUserPermissions().loadOnce($.proxy(this.refresh,this));
 			},

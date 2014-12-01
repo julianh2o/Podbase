@@ -50,16 +50,19 @@ public class Application extends ParentController {
     public static void updateDocs() throws IOException, InterruptedException {
     	User user = Security.getUser();
     	if (!user.isRoot()) forbidden();
-        ProcessBuilder pb = new ProcessBuilder("/usr/local/bin/git","status");
-        pb.directory(new File(Play.applicationPath.getAbsolutePath()+"/tmp"));
-        Process p = pb.start();
-        p.waitFor();
-        BufferedReader buf = new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-        String line;
-        while((line = buf.readLine()) != null ) {
-          System.out.println(line);
-        }
+    	File tmpFolder = Play.applicationPath.toPath().resolve("./tmp").toFile();
+    	File docsFolder = Play.applicationPath.toPath().resolve("./tmp/Podbase_docs").toFile();
+    	String gitPath = "/usr/local/bin/git";
+    	if (docsFolder.exists()) {
+	        ProcessBuilder pb = new ProcessBuilder(gitPath,"pull","origin","master");
+	        pb.directory(docsFolder);
+	        Process p = pb.start();
+    	} else {
+	        ProcessBuilder pb = new ProcessBuilder(gitPath,"clone","https://github.com/julianh2o/Podbase_docs");
+	        pb.directory(tmpFolder);
+	        Process p = pb.start();
+    	}
+    	jsonOk();
     }
     
     @ModelAccess(AccessType.LISTED)
