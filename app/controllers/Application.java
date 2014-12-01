@@ -47,6 +47,10 @@ public class Application extends ParentController {
     	user.save();
     }
     
+    public static void redirectTo(String url) {
+    	redirect(url);
+    }
+    
     public static void updateDocs() throws IOException, InterruptedException {
     	User user = Security.getUser();
     	if (!user.isRoot()) forbidden();

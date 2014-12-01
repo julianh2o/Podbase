@@ -28,7 +28,7 @@ GET /@search/reopen/{name} modules.search.Administration.reopen
 
 
 # Map static resources from the /app/public folder to the /public path
-GET     /public/help                            staticFile:tmp/Podbase_docs/index.html
+GET     /public/help                            Application.redirectTo(url:'/public/help/')
 GET     /public/help/                           staticDir:tmp/Podbase_docs
 GET		/public/javascripts/lib/ 	  			staticDir:public
 GET		/public/javascripts/{<.*>path} 			Application.loadJavascript
