@@ -12,10 +12,12 @@ import play.modules.search.store.FilesystemStore;
 import play.mvc.*;
 import services.PathService;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -31,7 +33,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.ivy.util.FileUtil;
 
 import jobs.SearchIndexMaintenance;
-
 import models.*;
 
 @With(Security.class)
@@ -44,6 +45,21 @@ public class Application extends ParentController {
     	User user = Security.getUser();
     	user.lastActive = new Date();
     	user.save();
+    }
+    
+    public static void updateDocs() throws IOException, InterruptedException {
+    	User user = Security.getUser();
+    	if (!user.isRoot()) forbidden();
+        ProcessBuilder pb = new ProcessBuilder("/usr/local/bin/git","status");
+        pb.directory(new File(Play.applicationPath.getAbsolutePath()+"/tmp"));
+        Process p = pb.start();
+        p.waitFor();
+        BufferedReader buf = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+        String line;
+        while((line = buf.readLine()) != null ) {
+          System.out.println(line);
+        }
     }
     
     @ModelAccess(AccessType.LISTED)
