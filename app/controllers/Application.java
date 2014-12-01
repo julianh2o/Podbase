@@ -52,7 +52,8 @@ public class Application extends ParentController {
     	if (!user.isRoot()) forbidden();
     	File tmpFolder = Play.applicationPath.toPath().resolve("./tmp").toFile();
     	File docsFolder = Play.applicationPath.toPath().resolve("./tmp/Podbase_docs").toFile();
-    	String gitPath = "/usr/local/bin/git";
+    	String gitPath = Play.configuration.getProperty("podbase.gitpath",null);
+    	if (gitPath == null) throw new RuntimeException("Git path not set! Configure podbase.gitpath to use this feature");
     	if (docsFolder.exists()) {
 	        ProcessBuilder pb = new ProcessBuilder(gitPath,"pull","origin","master");
 	        pb.directory(docsFolder);
