@@ -6,7 +6,11 @@
 		<% _.each(values,function(item,index) { %>
 			<div class="valueContainer">
 				<div class="value <%= item.templated ? 'templated' : '' %> <%= item.data ? 'data' : 'analysis' %>" data-id="<%= item.id %>" data-index="<%= index %>">
-					<%= item.value %>
+					<% if (item.interpretation && item.interpretation.href) { %>
+						<a href="<%= item.interpretation.href %>"><%= item.interpretation.name %></a>
+					<% } else { %>
+						<%= item.value %>
+					<% } %>
 					<span class="delete-attribute"><i class="icon-remove"/></span>
 				</div>
 				<a href="#" class="historyIndicator" <%= showHistory && item.hasHistory > 0 ? "" : "style='display:none;'" %> data-attribute="<%= item.id %>"><i class="icon-edit" /></a>

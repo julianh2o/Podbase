@@ -17,9 +17,13 @@ import java.lang.reflect.Type;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.codec.binary.Base64;
 
+import services.PathService;
 import models.Activation;
 import models.DatabaseImage;
 import models.GsonTransient;
@@ -42,6 +46,50 @@ import controllers.ImageBrowser;
 
 public class PodbaseUtil {
 	
+	public static HashMap<String, String> interpretAttribute(ImageAttribute attr) {
+		HashMap<String,String> map = new HashMap<>();
+		if (attr.value.startsWith("http://") || attr.value.startsWith("https://")) {
+			if (isPodbaseLink(attr.value)) {
+				DatabaseImage image = getDatabaseImageFromLink(attr.value);
+				if (image != null) {
+					map.put("name", image.getPath().toFile().getName());
+					map.put("href", attr.value);
+					return map;
+				}
+			} else {
+				map.put("name", attr.value);
+				map.put("href", attr.value);
+				return map;
+			}
+		}
+		
+		Pattern pattern = Pattern.compile("(.*?)\\|(https?:\\/\\/.*)");
+		Matcher m = pattern.matcher(attr.value);
+		if (m.find()) { //named link
+			map.put("name", m.group(1));
+			map.put("href", m.group(2));
+			return map;
+		}
+		
+		return null;
+	}
+	
+	private static DatabaseImage getDatabaseImageFromLink(String value) {
+		Pattern pattern = Pattern.compile(".*entry\\/([0-9]+)#(.*)");
+		Matcher m = pattern.matcher(value);
+		if (m.find()) {
+			String project = m.group(1);
+			String path = m.group(2);
+			return DatabaseImage.forPath(PathService.resolve(path));
+		}
+		
+		return null;
+	}
+
+	private static boolean isPodbaseLink(String value) {
+		return value.toLowerCase().contains("podbase.net/entry");
+	}
+
 	private static class ImageAttributeAdaptor implements JsonSerializer<ImageAttribute> {
 		@Override
 		public JsonElement serialize(ImageAttribute attr, Type type, JsonSerializationContext context) {
@@ -49,6 +97,15 @@ public class PodbaseUtil {
 			obj.addProperty("id", attr.id);
 			obj.add("created", context.serialize(attr.created));
 			obj.add("modified", context.serialize(attr.modified));
+			try {
+				HashMap<String,String> interpretation = interpretAttribute(attr);
+				if (interpretation != null) {
+					obj.add("interpretation",context.serialize(interpretation));
+				}
+			} catch (Exception e) {
+				//fail gracefully
+				e.printStackTrace();
+			}
 			obj.addProperty("hasHistory", attr.history.size());
 			obj.addProperty("attribute", attr.attribute);
 			obj.addProperty("value", attr.value);
@@ -58,6 +115,7 @@ public class PodbaseUtil {
 			obj.addProperty("templated", attr.templated);
 			return obj;
 		}
+
 	}
 	
 	private static class AccessTypeAdaptor implements JsonSerializer<AccessType> {
