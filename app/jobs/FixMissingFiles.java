@@ -99,6 +99,7 @@ public class FixMissingFiles extends ManagedJob {
     	}
     	if (index != 0) sql.append(");\n");
     	
+    	index = 0;
     	for (Long id : imageDeleteList) {
     		if (index == 0) 
     			sql.append("DELETE FROM DatabaseImage WHERE id IN (");
