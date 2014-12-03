@@ -15,6 +15,7 @@ migrate*
 build.xml
 nohup.out
 sqlbak*
+out/*
 
 *.class
 *.jar

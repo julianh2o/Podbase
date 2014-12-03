@@ -44,6 +44,15 @@ public class PathService {
 		return applicationPath.toPath();
 	}
 	
+	public static Path getOutputDirectory() {
+		return getApplicationPath().resolve("out");
+	}
+	
+	public static File prepareOutputFile(String name) {
+		getOutputDirectory().toFile().mkdirs();
+		return getOutputDirectory().resolve(name).toFile();
+	}
+	
 	public static Path getRootImageDirectory() {
 		return Paths.get(getApplicationPath() + "/data");
 	}

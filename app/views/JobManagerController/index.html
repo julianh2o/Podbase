@@ -1,0 +1,44 @@
+#{extends 'main.html' /}
+#{set title:'Podbase - Job Manager' /}
+#{set 'moreStyles'}
+    <link rel="stylesheet" type="text/css" media="screen" href="/public/stylesheets/index.less" />
+#{/set}
+
+<div class="main">
+	<div class="header">
+		<div class="row-fluid">
+			<div class="span4">
+			</div>
+			<div class="span4 header">
+				<a href="/">
+					<img src="/public/images/logo.png" />
+				</a>
+			</div>
+			<div class="span4">
+			</div>
+		</div>
+	</div>
+
+	<div id="jobmanager">
+		<table>
+			<tr>
+				<th>Name</th>
+				<th>Status</th>
+			</tr>
+			#{list items:jobs, as:'job'}
+				<tr>
+					<td>${job.name}</td>
+					<td>${job.status}</td>
+					<td>
+						#{if job.active}
+							<a href="@{JobManagerController.stopJob(job.index)}">Kill job</a>
+						#{/if}
+						#{else}
+							<a href="@{JobManagerController.startJob(job.index)}">Start</a>
+						#{/else}
+					</td>
+				</tr>
+			#{/list}
+		</table>		
+	</div>
+</div>
