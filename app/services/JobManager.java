@@ -8,6 +8,7 @@ import java.util.List;
 
 import play.libs.F.Promise;
 import services.JobManager.JobContainer;
+import jobs.FindMissingFileMatches;
 import jobs.FixDuplicateDatabaseImageEntries;
 import jobs.FixMissingFiles;
 import jobs.ManagedJob;
@@ -15,7 +16,8 @@ import jobs.ManagedJob;
 public class JobManager {
 	static List<Class> jobClasses = new ArrayList<Class>(Arrays.asList(
 		FixDuplicateDatabaseImageEntries.class,
-		FixMissingFiles.class
+		FixMissingFiles.class,
+		FindMissingFileMatches.class
 	));
 	
 	static JobManager instance = null;

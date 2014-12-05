@@ -35,6 +35,8 @@ public class TaskCompletionEstimator {
 	
 	long lastTick = -1;
 	long startTime = -1;
+	long reportFrequency;
+	long lastReport = 0;
 	
 	public TaskCompletionEstimator(int window, int resolution, int expectedTicks) {
 		this.window = window;
@@ -42,12 +44,22 @@ public class TaskCompletionEstimator {
 		this.expectedTicks = expectedTicks;
 		this.slidingWindow = new LinkedList<Long>();
 		this.currentTick = 0;
+		this.reportFrequency = 10*1000;
 	}
 	
 	public void tick() {
+		tick(false);
+	}
+	
+	public void tick(boolean doReport) {
 		if (startTime == -1) startTime = System.currentTimeMillis();
 		if (currentTick % resolution == 0) recordTick();
 		currentTick++;
+		
+        if (System.currentTimeMillis() - lastReport > this.reportFrequency) {
+			lastReport = System.currentTimeMillis();
+        	System.out.println(getStatusLine());
+        }
 	}
 	
 	private void recordTick() {
