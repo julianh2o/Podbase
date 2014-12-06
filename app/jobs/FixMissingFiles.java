@@ -2,11 +2,13 @@ package jobs;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -129,7 +131,7 @@ public class FixMissingFiles extends ManagedJob {
 	
     private static HashSet<String> getAllFiles(Path root) throws IOException {
     	final HashSet<String> paths = new HashSet<>();
-    	Files.walkFileTree(root, new SimpleFileVisitor<Path>() {
+		Files.walkFileTree(root,EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
 		    @Override
 		    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 		    	System.out.println(PathService.getRelativeString(file));

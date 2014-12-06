@@ -6,12 +6,14 @@ package services;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -28,12 +30,9 @@ import org.yaml.snakeyaml.Yaml;
 
 import controllers.ImageBrowser;
 import controllers.ParentController;
-
 import access.AccessType;
-
 import play.mvc.Util;
 import util.PodbaseUtil;
-
 import models.Activation;
 import models.DatabaseImage;
 import models.Directory;
@@ -90,7 +89,7 @@ public class ImportExportService {
 	public static List<DatabaseImage> findImportables(Path path) {
 		final List<DatabaseImage> importable = new LinkedList<DatabaseImage>();
 		try {
-			Files.walkFileTree(path,new SimpleFileVisitor<Path>() {
+			Files.walkFileTree(path,EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
 				@Override
 				public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException {
 					if (PathService.isImage(path)) {
