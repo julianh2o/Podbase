@@ -56,13 +56,13 @@ public class FixMissingFiles extends ManagedJob {
 		Stopwatch sw = new Stopwatch();
 		List<Long> pviDeleteList = new LinkedList<>();
 		List<Long> imageDeleteList = new LinkedList<>();
-		int found = 0;
+		int notFound = 0;
     	for (DatabaseImage img : images) {
     		sw.start("all");
     		est.tick();
     		boolean pathExists = existingPaths.contains(img.getStringPath());
     		if (!pathExists) {
-    			found ++;
+    			notFound ++;
     			boolean isDirectory = img.getPath().toFile().isDirectory();
     			if (isDirectory) {
     				directories++;
@@ -87,7 +87,7 @@ public class FixMissingFiles extends ManagedJob {
     		sw.stop("all");
     	}
     	
-    	System.out.println("found: "+found+" of "+images.size());
+    	System.out.println("missing: "+notFound+" of "+images.size());
     	
     	StringBuilder sql = new StringBuilder();
     	int index = 0;
@@ -134,7 +134,6 @@ public class FixMissingFiles extends ManagedJob {
 		Files.walkFileTree(root,EnumSet.of(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
 		    @Override
 		    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-		    	System.out.println(PathService.getRelativeString(file));
 		    	paths.add(PathService.getRelativeString(file));
 		        return FileVisitResult.CONTINUE;
 		    }
