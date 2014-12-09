@@ -39,7 +39,7 @@ define(
 				Link.addUserByEmail({modelId:this.modelObject.id,email:email}).post().done(function() {
 					Link.getListedUsers({modelId:self.modelObject.id}).pull();
 				}).fail(function(data) {
-					console.log(data);
+					consolelog(data);
 					alert("User not found!");
 				});
 			},
@@ -51,7 +51,7 @@ define(
 				Link.loadAll([
 	                ["getUserAccess",{modelId:this.modelObject.id,userId:Link.getCurrentUser().getData().id}],
 	                ["getListedUsers",{modelId:this.modelObject.id}]
-	                ],$.proxy(this.usersLoaded,this),false);
+	                ],$.proxy(this.usersLoaded,this),true);
 			},
 			
 			usersLoaded : function() {

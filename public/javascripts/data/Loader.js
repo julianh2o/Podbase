@@ -50,7 +50,7 @@ define([], function() {
 				type : "GET",
 				url : this.url
 			});
-			$.ajax(options);
+			return $.ajax(options);
 		},
 		post : function(opt) {
 			if (opt) {
