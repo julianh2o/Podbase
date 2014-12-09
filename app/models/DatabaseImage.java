@@ -79,12 +79,12 @@ public class DatabaseImage extends TimestampModel {
 		
 		if (image != null) {
 			if (image.hash == null) {
-				System.err.println("Found image, but image hash is null! (creating image hash)");
+				System.err.println("Image hash is null: "+rel);
 				try {
 					image.hash = PathService.calculateImageHash(path);
 					image.save();
 				} catch (IOException e1) {
-					e1.printStackTrace();
+					
 				}
 			}
 			return image;
@@ -94,8 +94,19 @@ public class DatabaseImage extends TimestampModel {
 			String imageHash = PathService.calculateImageHash(path);
 			image = DatabaseImage.find("hash",imageHash).first();
 			if (image != null) {
+				String oldPath = image.path;
 				image.path = rel;
 				image.save();
+				Path newPath = PathService.resolve(rel);
+				Project p = PathService.projectForPath(newPath);
+				Project oldProject = PathService.projectForPath(PathService.resolve(oldPath));
+				for (ImageAttribute attr : image.attributes) {
+					if (attr.project.id == oldProject.id) {
+						//System.out.println("attribute: "+attr.attribute+"="+attr.value+" migrating from "+oldProject.name+" to "+p.name+" (image: "+attr.image.id+")");
+						attr.project = p;
+						attr.save();
+					}
+				}
 				return image;
 			}
 		} catch (IOException e) {
