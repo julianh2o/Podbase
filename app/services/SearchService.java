@@ -70,18 +70,34 @@ public class SearchService {
 		int imageAttributes = 0;
 		String imageAttributeList = "";
 		String queryBody = "";
+		String pathQuery = "";
 		for (String tok : tokens) {
 			imageAttributeList+=", ImageAttribute a"+imageAttributes;
 			queryBody += " AND a"+imageAttributes+".image.id=d.id";
 			queryBody += " AND a"+imageAttributes+".project.id="+project.id;
-			queryBody += " AND a"+imageAttributes+".value LIKE '%"+tok+"%'";
+			
+			if (tok.indexOf('=') != -1) {
+				String[] split = tok.split("=");
+				queryBody += " AND a"+imageAttributes+".attribute='"+split[0]+"'";
+				queryBody += " AND a"+imageAttributes+".value LIKE '%"+split[1]+"%'";
+			} else {
+				queryBody += " AND a"+imageAttributes+".value LIKE '%"+tok+"%'";
+			}
+			pathQuery += " AND d.path LIKE '%"+tok+"%'";
 			imageAttributes++;
 		}
 		
 		queryBody = queryBody.substring(5);
+		pathQuery = pathQuery.substring(5);
 		String jql = String.format("SELECT d from DatabaseImage d%s WHERE %s",imageAttributeList,queryBody);
-		List<DatabaseImage> imageResults = DatabaseImage.find(jql).fetch();
-		return new HashSet<DatabaseImage>(imageResults);
+		System.out.println(jql);
+		List<DatabaseImage> queryResults = DatabaseImage.find(jql).fetch(20);
+		Set<DatabaseImage> results = new HashSet<DatabaseImage>(queryResults);
+		jql = String.format("SELECT d from DatabaseImage d WHERE %s",pathQuery);
+		System.out.println(jql);
+		queryResults = DatabaseImage.find(jql).fetch(20);
+		results.addAll(queryResults);
+		return results;
 	}
 	
 	private static List<String> tokenizeQuery(String query) {
