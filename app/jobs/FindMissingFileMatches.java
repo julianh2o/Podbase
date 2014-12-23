@@ -36,6 +36,7 @@ public class FindMissingFileMatches extends ManagedJob {
 		StringBuilder byHash = new StringBuilder();
 		StringBuilder byName = new StringBuilder();
 		StringBuilder noMatch = new StringBuilder();
+		List<Long> ids = new LinkedList<Long>();
     	for (String line : lines) {
     		String[] split = line.split("\t");
     		String imgRelPath = split[1];
@@ -43,6 +44,10 @@ public class FindMissingFileMatches extends ManagedJob {
     		if (img == null) {
     			noMatch.append("null image for: "+imgRelPath+"\n");
     			continue;
+    		}
+    		
+    		if (!img.getPath().toFile().exists()) {
+    			ids.add(img.id);
     		}
     		List<DatabaseImage> withMatchingName = DatabaseImage.find("path like ?", "%"+img.getPath().getFileName().toString()).fetch();
     		List<DatabaseImage> withMatchingHash = DatabaseImage.find("byHash", img.hash).fetch();
@@ -94,6 +99,14 @@ public class FindMissingFileMatches extends ManagedJob {
     		est.tick(true);
     	}
     	
+    	String del = "DELETE from DatabaseImage WHERE id IN (";
+    	for (Long id : ids) {
+    		del += id+",";
+    	}
+    	del = del.substring(0, del.length()-2);
+    	del += ");";
+    	FileUtils.writeStringToFile(PathService.prepareOutputFile("deleteMissingEntries.sql"), del);
+    
     	FileUtils.writeStringToFile(PathService.prepareOutputFile("matchedFiles.txt"), "Matched by hash: \n"+byHash.toString()+"\n\n\nMatched by name\n"+byName.toString()+"\n\n\nNot Matched:\n"+noMatch.toString());
 	}
 }
