@@ -12,11 +12,12 @@ define(
 				this.footer = Util.createView( $(".footer",this.el), Footer);
 				this.project = Util.createView( $(".projects",this.el), ProjectList);
 				this.paper = Util.createView( $(".papers",this.el), PaperList);
-				this.updateDocs = $(".update-docs",this.el).hide();
+				this.updateDocs = $(".update-docs",this.el);
+				var $rootonly = $(".rootonly",this.el).hide();
 				
 				Link.getCurrentUser().loadOnce($.proxy(function(link) {
 					var user = link.getData();
-					if (user.email == "root") this.updateDocs.show();
+					if (user.email == "root") $rootonly.show();
 					this.updateDocs.click(function(e) {
 						Link.updateDocs().post().done(function() {
 							alert("Successfully updated docs!");
