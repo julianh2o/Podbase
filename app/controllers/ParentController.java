@@ -36,6 +36,14 @@ public class ParentController extends Controller {
     }
     
     @Before
+    static void setSecurityHeaders() {
+    	response.setHeader("X-Content-Type-Options", "nosniff");
+    	response.setHeader("X-Frame-Options", "SAMEORIGIN");
+    	response.setHeader("Referrer-Policy", "same-origin");
+    	if (request.secure) response.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+    }
+    
+    @Before
     static void startTimer() {
     	renderArgs.put("renderStart", System.currentTimeMillis());
     }

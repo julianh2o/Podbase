@@ -28,6 +28,7 @@ import java.nio.file.SimpleFileVisitor;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 import access.Access;
 import access.AccessType;
@@ -90,8 +91,30 @@ public class Application extends ParentController {
     	render(paper);
     }
     
-	public static void loadJavascript(String path) {
+	// Relative paths of the form dir/sub/file.js or tmpl/File.html. No leading slash,
+	// no backslashes, no ".." segments.
+	private static final Pattern SAFE_SCRIPT_PATH = Pattern.compile("^[A-Za-z0-9_\\-]+(/[A-Za-z0-9_\\-.]+)*\\.(js|html)$");
+
+	/**
+	 * Serves files under public/javascripts through the template engine (so they
+	 * can use @{...} reverse routing). Only .js / .html files that really live
+	 * inside public/javascripts are served; anything else is a 404. This used to
+	 * pass the raw path to renderTemplate, which allowed ../ traversal to any
+	 * file on disk (including conf/application.conf).
+	 */
+	public static void loadJavascript(String path) throws IOException {
+		if (!isSafeScriptPath(path)) notFound();
 		renderTemplate("/public/javascripts/"+path);
+	}
+
+	private static boolean isSafeScriptPath(String path) throws IOException {
+		if (path == null || path.isEmpty() || path.contains("..") || path.indexOf('\0') >= 0) return false;
+		if (!SAFE_SCRIPT_PATH.matcher(path).matches()) return false;
+
+		File base = new File(Play.applicationPath, "public/javascripts").getCanonicalFile();
+		File target = new File(base, path).getCanonicalFile();
+		if (!target.getPath().startsWith(base.getPath() + File.separator)) return false;
+		return target.isFile();
 	}
 	
 	public static void getCurrentUser() {

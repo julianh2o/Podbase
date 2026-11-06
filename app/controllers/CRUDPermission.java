@@ -12,6 +12,8 @@ import models.Permission;
 import play.*;
 import play.mvc.*;
 
+// Root-only, and off unless podbase.admin.enabled=true. See AdminSecurity.
+@With(AdminSecurity.class)
 @CRUD.For(Permission.class)
 public class CRUDPermission extends CRUD {
 
