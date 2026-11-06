@@ -4,6 +4,7 @@
 // See the LICENSE file for details.
 package models;
 
+import java.security.SecureRandom;
 import java.util.*;
 
 import javax.persistence.*;
@@ -29,7 +30,7 @@ public class Activation extends TimestampModel {
 		Activation a = new Activation();
 		a.user = u;
 		u.activation = a;
-		a.activationCode = RandomStringUtils.randomAlphanumeric(40);
+		a.activationCode = RandomStringUtils.random(40, 0, 0, true, true, null, new SecureRandom());
 		
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.DATE, validForDays);

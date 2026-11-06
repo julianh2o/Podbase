@@ -12,7 +12,9 @@ application.mode=prod
 # ~~~~~
 # The secret key is used to secure cryptographics functions
 # If you deploy your application to several instances be sure to use the same key !
-application.secret=Z9vKuyw1V9E9xgLiaUpMa40Tu8O6dpY95T1LTL1rUOhWmWjSWNI1p8F55VF99abW
+# Never commit a real secret. Generate one with `play secret` and supply it via
+# the environment. Anyone who knows this value can forge session cookies.
+application.secret=${PODBASE_APP_SECRET}
 
 # i18n
 # ~~~~~
@@ -42,6 +44,9 @@ http.port=80
 # application.session.cookie=PLAY
 # application.session.maxAge=1h
 # application.session.secure=false
+# Once Podbase is served over HTTPS, mark the session cookie secure + httpOnly:
+# application.session.secure=true
+application.session.httpOnly=true
 
 # JVM configuration
 # ~~~~~
@@ -76,6 +81,10 @@ db=fs
 # db.driver=org.postgresql.Driver
 # db.user=root
 # db.pass=secret
+#
+# Keep credentials out of this file: Play expands ${ENV_VAR} references, e.g.
+# db=mysql:podbase:${PODBASE_DB_PASSWORD}@podbase
+# mail.smtp.pass=${PODBASE_SMTP_PASSWORD}
 #
 # Connections pool configuration :
 # db.pool.timeout=1000
@@ -170,7 +179,12 @@ play.search.path=tmp/index
 # ~~~~~
 
 application.log.path=/log4j-prod.properties
-podbase.root.password=password
+# Only used the first time the database is bootstrapped. Supply via the environment.
+podbase.root.password=${PODBASE_ROOT_PASSWORD}
+
+# Play CRUD admin panel (/admin). Root-only, and disabled unless set to true.
+# It's a development tool; leave it off in production.
+podbase.admin.enabled=false
 #jpa.dialect=org.hibernate.dialect.MySQLDialect
 
 
@@ -179,6 +193,9 @@ podbase.root.password=password
 %dev.jpa.ddl=create
 #%dev.mail.smtp=mock
 %dev.http.port=9001
+%dev.podbase.admin.enabled=true
+%dev.application.secret=dev-only-secret-not-for-production
+%dev.podbase.root.password=password
 %dev.application.log.path=/log4j-dev.properties
 #%dev.jpa.debugSQL=true
 #%dev.hibernate.show_sql=true
@@ -187,6 +204,10 @@ podbase.root.password=password
 %test.application.mode=dev
 %test.db=mem
 %test.jpa.ddl=create
+%test.evolutions.enabled=false
 %test.mail.smtp=mock
 %test.http.port=9001
+%test.podbase.admin.enabled=true
+%test.application.secret=test-only-secret-not-for-production
+%test.podbase.root.password=password
 %test.application.log.path=/log4j-dev.properties

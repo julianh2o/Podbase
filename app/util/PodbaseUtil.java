@@ -143,11 +143,15 @@ public class PodbaseUtil {
 	}
 	
 	private static class ActivationAdaptor implements JsonSerializer<Activation> {
+		private final boolean includeCode;
+		ActivationAdaptor(boolean includeCode) { this.includeCode = includeCode; }
+
 		@Override
 		public JsonElement serialize(Activation obj, Type type, JsonSerializationContext context) {
 			JsonObject json = new JsonObject();
 			json.addProperty("id", obj.id);
-			json.addProperty("activationCode", obj.activationCode);
+			// The code is a password-reset credential; only serialize it when asked to.
+			if (includeCode) json.addProperty("activationCode", obj.activationCode);
 			json.addProperty("expirationDate", obj.expirationDate.getTime());
 			return json;
 		}
@@ -161,6 +165,15 @@ public class PodbaseUtil {
 	}
 
 	public static Gson getGsonExcludesGsonTransient() {
+		return buildGson(false);
+	}
+
+	/** Same as getGsonExcludesGsonTransient, but includes activation codes. Root-only callers. */
+	public static Gson getGsonIncludingActivationCodes() {
+		return buildGson(true);
+	}
+
+	private static Gson buildGson(boolean includeActivationCodes) {
 		Gson gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
 			@Override
 			public boolean shouldSkipClass(Class<?> arg0) {
@@ -175,7 +188,7 @@ public class PodbaseUtil {
 			.registerTypeAdapter(ImageAttribute.class, new ImageAttributeAdaptor())
 			.registerTypeAdapter(AccessType.class, new AccessTypeAdaptor())
 			.registerTypeAdapter(VirtualAccessType.class, new VirtualAccessTypeAdaptor())
-			.registerTypeAdapter(Activation.class, new ActivationAdaptor())
+			.registerTypeAdapter(Activation.class, new ActivationAdaptor(includeActivationCodes))
 			.registerTypeAdapter(Date.class, new DateAdaptor())
 			.create();
 		return gson;
